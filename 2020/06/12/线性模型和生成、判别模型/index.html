@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ML," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Qingfengbangzuo" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="一句话概括机器学习从数据出发，假设存在一个映射f（x） &#x3D; y，学习器的任务就是从样本的假设空间里面找到一个h来逼近f。  机器学习三要素：模型、策略、算法。模型决定了要学什么，对应的是h(x)；策略决定了怎么学，对应于损失函数；算法决定了具体的学习步骤；                                                   ——————by  李航 感知机（Perc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="生成模型与判别模型">
+<meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/12/%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B%E5%92%8C%E7%94%9F%E6%88%90%E3%80%81%E5%88%A4%E5%88%AB%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:site_name" content="Qingfengbangzuo">
+<meta property="og:description" content="一句话概括机器学习从数据出发，假设存在一个映射f（x） &#x3D; y，学习器的任务就是从样本的假设空间里面找到一个h来逼近f。  机器学习三要素：模型、策略、算法。模型决定了要学什么，对应的是h(x)；策略决定了怎么学，对应于损失函数；算法决定了具体的学习步骤；                                                   ——————by  李航 感知机（Perc">
+<meta property="article:published_time" content="2020-06-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-06-12T10:56:00.164Z">
+<meta property="article:author" content="qingfengbangzuo">
+<meta property="article:tag" content="ML">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":20,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://qingfengbangzuo.github.io/2020/06/12/线性模型和生成、判别模型/"/>
+
+
+
+
+
+  <title>生成模型与判别模型 | Qingfengbangzuo</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://your-url" target="_blank" rel="noopener" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+    
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Qingfengbangzuo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">私人博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://qingfengbangzuo.github.io/2020/06/12/%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B%E5%92%8C%E7%94%9F%E6%88%90%E3%80%81%E5%88%A4%E5%88%AB%E6%A8%A1%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="qingfengbangzuo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Qingfengbangzuo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">生成模型与判别模型</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-12T00:00:00+08:00">
+                2020-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Machine Learning</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
+                    <span itemprop="name">线性模型</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  161
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  1
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="一句话概括机器学习"><a href="#一句话概括机器学习" class="headerlink" title="一句话概括机器学习"></a>一句话概括机器学习</h3><p>从数据出发，假设存在一个映射f（x） = y，学习器的任务就是从样本的假设空间里面找到一个h来逼近f。</p>
+<p> 机器学习三要素：模型、策略、算法。模型决定了要学什么，对应的是<script type="math/tex">h(x)</script>；策略决定了怎么学，对应于损失函数；算法决定了具体的学习步骤；                                                   ——————by  李航</p>
+<h3 id="感知机（Perceptron-Linear-Algorithm-PLA）"><a href="#感知机（Perceptron-Linear-Algorithm-PLA）" class="headerlink" title="感知机（Perceptron Linear Algorithm,PLA）"></a>感知机（Perceptron Linear Algorithm,PLA）</h3><p>感知机算法的基本思想：</p>
+<script type="math/tex; mode=display">
+For \quad \mathbf{x} = (x_1,x_2,...,x_d),计算一个权重和(weight_score) :\\
+\begin{align}
+approve\quad &if \quad &\sum_{i=1}^d w_ix_i>threshold.\\
+deny  \quad &if       &\sum_{i=1}^d w_ix_i<threshold.\\ 
+\end{align}</script><p>$\mathbf{y}:{+1(approve),-1(deny)}$，存在$h\in \mathbf{H}$(假设空间)</p>
+<script type="math/tex; mode=display">
+h(x) = sign((\sum_{i=1}^d w_ix_i)-threshold)</script><p>sign是一类符号函数。</p>
+<p><strong>注意：</strong>1.如果刚好在threhold上，那么根据需要把该样本归类为两类中任何一类。</p>
+<p>​            2.除了数据之外，决定感知机算法的是两个量<strong>权重</strong>和<strong>门限值</strong>。</p>
+<p>下面对公式做一些变形，将threshold放到累和公式内部。</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+h(x) &= sign((\sum_{i=1}^d w_ix_i)-threshold)\\
+     &=sign((\sum_{i=1}^d w_ix_i)+(-threshold)·(+1))\\
+
+令w_0 = -threshold, x_0 = 1 \\
+\\
+    & = sign(\sum_{\mathbf{i=0}}^d w_ix_i)\\
+    & = sign(\mathbf{W^Tx})
+
+\end{align*}</script><p>请记住我们的终极目的是得到一个最优的<script type="math/tex">h(x)</script>,但是假设空间那么大， 如何判断哪一个$h$最好呢？这是贯穿机器学习始终的一个问题，现实中我们评价一个学生的学习好，一般是依据他的成绩来下论断的，那么我们自然而然地会想到是不是也可以找到一个打分标准来反应$h(x)$的好坏呢？答案是肯定的，那就是损失函数。这个东西的具体形式多种多样，不过它的功能是一样的，就是给每个$h(x)$打分。</p>
+<p>引入了损失函数，我们就可以反过来想，如果我希望知道我们班学习最好的人是谁，那么我只需要查看谁的分数最高就行了，同样地，如果我希望得到一个最好的$h(x)$，通过最小化损失函数不就ok了吗？那么我们就得到了优化目标。</p>
+<script type="math/tex; mode=display">
+argmin_h \quad O(x)</script><p>再来，有了训练模型的公式<strong>h(x)</strong>和损失函数$O(x)$，以及一堆数据,我们依然不知道该如何下手，回想所有的启发式优化方法，我们似乎应该明确地抛给训练器一些$w$的一些初值，这样就会产生一个初始的$h(x)$，有了初始值事情就好办了。</p>
+<p>回想控制论里面的负反馈回路，并与这里进行对比，数据$x$是输入，$h(x)$代表训练器，y是输出，$O(x)$是反馈回路，$y^l$是标签，$O(x)$就像是一个门卫一样，一旦我们训练出来的$h(x)$的损失不够小，就会被打回去，并连损失一块反馈回去再造，这个再造的过程就是算法的训练过程。但是我们的目的是得到一个最优的$h(x)$，$O(x)$的设定是模糊的，到底多小才算最小，当然损失为0最好，但这是理想情况下，事实上，$O(x)$很可能存在一个下限，但是我们并不知道。鉴于此，我们必定需要设定一个停止条件，让它在尽量满足我们的$O(x)$最小的情况下适时地停下来，这个条件一般是达到某个训练轮数或者$O(x)$的变化小到某个范围。</p>
+<p>这大概就是一个机器学习的流程，这个流程中需要注意几点：</p>
+<ol>
+<li><p>损失函数的构造</p>
+<p>损失函数并不是只有误差损失函数一种，这只是最常见的一种，好的损失函数可以提高训练速度。</p>
+</li>
+<li><p>改进过程</p>
+<p>注意到上面的描述，机器学习过程分为了两个过程，一个是训练，一个是改进，训练过程比较简单，因为有公式$h(x)$的存在，改进过程一般比较困难，改进策略也有很多。</p>
+<p>感知机算法这里给出了一种：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+&当\quad sign(\mathbf{W_t^Tx_{n(t)}}) \neq y_n(t)\\
+\\
+做以下修正：\\
+\\
+&\mathbf{W_{t+1}} \larr \mathbf{W_t} + y_{n(t)}\mathbf{x_{n(t)}}
+
+\end{align}</script><p>有一个有意思的现象是</p>
+<script type="math/tex; mode=display">
+y_n \mathbf{W_{t+1}^Tx_n}\geq y_n\mathbf{W_t^Tx_n}</script><p>这个式子是恒成立的，这个式子反应的是改进过程。$y_n\in \{-1,1\}$, 这个式子反应的意思是改进以后的离$y_n$更近了。我们知道如果更新之前wx与$y_n$异号，那么更新的方向就是朝着同号的方向更新，可能在这次更新之后依旧没有同号，但至少离那条线更近了。</p>
+</li>
+</ol>
+<ol>
+<li><p>初始值的给定</p>
+<p>初始值的设的好也可以提高训练速度，如果初始值设在了距离最小值很近的地方，那么目标函数就会很快地收敛到极值。这是影响收敛速度的一个因素。</p>
+</li>
+<li><p>停止条件的设定</p>
+<p>停止条件的设定一般为训练次数达到了某个要求，但是往往这个要求也是很模糊的，设的大了影响性能，设的小了，收敛不够。有些估计方法可以估计出来这个训练次数。</p>
+<p>一般当$O(x)$变化很小的时候，可以说明已经收敛到了某个极值点，注意是极值点，不是最小值。因为存在局部最优的情况。</p>
+<p>还有其他的停止条件。</p>
+<p>对感知机等线性分类模型来讲，如果数据集是线性可分的，由其收敛性可得当其损失函数为0时，算法会停止。</p>
+</li>
+<li><p>如何避免陷入局部最优</p>
+</li>
+<li><p>如何提高训练速度</p>
+<p>影响训练速度的几个因素：数据的好坏、初值的设定、梯度下降的快慢（损失函数的设置）</p>
+</li>
+</ol>
+<h4 id="PLA算法训练次数的界"><a href="#PLA算法训练次数的界" class="headerlink" title="PLA算法训练次数的界"></a>PLA算法训练次数的界</h4><p>前提假设:训练数据集线性可分。</p>
+<p>由前提假设我们可知存在一个超平面将数据集线性可分$\mathbf{W_o^Tx=0}$($b=w_o,x_0 = 1$),$\mathbf{W_o}$是该平面的法向量，那么对于任何一个样本，有如下关系：</p>
+<script type="math/tex; mode=display">
+y_i(\mathbf{W_o^Tx_i}) = y_i(\mathbf{W_ox_i}+b_o) \geq \gamma</script><p>令$R = max_{1\leq i\leq N}||x_i||$,则感知机算法在训练数据集上的误分类次数满足不等式</p>
+<script type="math/tex; mode=display">
+k\leq (\frac{R}{\gamma})^2</script><p>注意到李航书中的一句话：</p>
+<p><strong>当训练数据集线性可分时，感知机学习算法存在无穷多个解，其解由于不同的初值或不同的迭代顺序而可能有所不同。</strong></p>
+<p>初值的不同意味这误分类点的集合不同，这样经过的迭代次数也会不同（因为感知机的更新机制为逢错才更新），导致最终得到的解不同。</p>
+<p>迭代顺序不同也会影响迭代的次数，根据式子$k\leq (\frac{R}{\gamma})^2$,我们知道迭代是缓慢变化的，如果相邻两次更新变化过大，则会使得误分类点集合也发生变化，有些已经纠正过的误分类点又会回到误分类集合中。</p>
+<h3 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h3><p>从模型的功能来讲，机器学习分为预测模型与分类模型，从标签的角度考虑，又分为监督学习和无监督学习。根据模型的数据原理，又分为线性模型、神经网络、概率统计模型等等。可见分类指标的不同，对机器学习算法分类结果就会不同。</p>
+<p>感知机算法与线性回归都属于线性模型，也就是说，他们的模型在表达形式上都包含线性项$W^TX$。相应的将线性模型扩展到广义概念，产生广义线性模型（generalized linear model）。它有如下形式：</p>
+<script type="math/tex; mode=display">
+y = g^{-1}(W^Tx + b)</script><p>$g^{-1}$称为链接函数（link function），显然线性回归是最初始的线性模型，而</p>
+<script type="math/tex; mode=display">
+lny = w^Tx+b</script><p>被称作对数线性回归。</p>
+<p>无论是感知机还是线性回归，其实有一个隐含条件，那就是变量x都是连续的。</p>
+<p>那么除了模型的任务不同以外，他们之间的联系是什么？如何由感知机推出线性模型？</p>
+<p>所有的线性模型的结果都是得到一组$(W,b)$构成一个超平面。对于线性分类来讲，是找到一个超平面将数据分割开来，而线性回归则是找到一个超平面囊括所有样本。</p>
+<p>也就是说，对于线性分类，要求不同类别的数据与分割面满足：</p>
+<script type="math/tex; mode=display">
+y_i(\mathbf{W_ox_i}+b_o) \geq \gamma</script><p>所有的点离分割面越远越好。</p>
+<p>而线性回归，则是要求数据点尽量靠近靠近平面，最好能找到一个平面包含所有数据点：</p>
+<script type="math/tex; mode=display">
+y_i(\mathbf{W_ox_i}+b_o) \leq \gamma</script><p>当等号成立时为理想情况，也就是所有点都位于该平面上。</p>
+<p>在感知机中，我们使用的损失函数为</p>
+<script type="math/tex; mode=display">
+min-\frac{1}{||W||_2}y_i\sum_i^d(\mathbf{W^Tx_i})</script><p>$x_i\in R$, $R$为误分类点集合，$||W||_2 = 1$。</p>
+<p>而在线性回归中我们使用均方误差作为损失函数</p>
+<script type="math/tex; mode=display">
+min \sum_i^d (f(x_i)-y_i)^2 = min \sum_i^d(\mathbf{W^Tx_i}-y_i)^2</script><p>对于均方误差有固定的求解方式，那就是最小二乘法。这大大方便了我们的训练过程，因为有现成的公式直接套用就可以了。这也是线性回归模型训练时间短的原因之一。</p>
+<script type="math/tex; mode=display">
+w = \frac{\sum_{i=1}^m y_i(x_i-\bar{x})}{\sum_{i=1}^mx_i^2-\frac{1}{m}(\sum_{i=1}^mx_i)^2}  \\
+
+b = \frac{1}{m}\sum_{i=1}^m(y_i-wx_i) \\
+
+向量形式：   
+
+\mathbf{W = (X^TX)^{-1}X^Ty}</script><p>但是使用最小二乘需要满足$X^TX$满秩，但显示任务中我们会遇到大量的变量，其数目甚至超过样例数目，导致$X$的列数多于行数，$X^TX$显然不满秩。此时可以求出多个$W$,他们都能使均方误差最小化，但是选择哪一个作为输出呢？</p>
+<h3 id="不使用最小二乘的原因"><a href="#不使用最小二乘的原因" class="headerlink" title="不使用最小二乘的原因"></a>不使用最小二乘的原因</h3><p>1、最小二乘估计器虽然是无偏估计，但是拥有巨大的方差，这样会造成模型的不稳定，预测精度下降。预测精度可以通过shrink一些参数（包括稀疏为0）来提高，虽然这样会造成一些偏差，但是大幅度降低了方差，是一种变差换方差的方法。</p>
+<p>2、可解释性不高。当变量达到成千上万的级别时，倾向于使用那些有较大影响的子集作为估计器的变量，而那些影响不大的变量，我们希望忽略掉</p>
+<p>（下面是自己加的）</p>
+<p>3、最小二乘的前提是$X^TX$满秩，当不满秩时会产生多个解，这时候需要采取某种策略来选取较好的模型。</p>
+<p>解决上述问题有两种思路，一种是特征选择，筛选影响较大的特征。另一种是shrink参数。</p>
+<h4 id="正则化"><a href="#正则化" class="headerlink" title="正则化"></a>正则化</h4><p><strong>正则化的作用是模型选择，另外一种模型选择的工具是交叉验证。</strong>也就是在众多的模型中选择出某个复杂度适当的模型达到避免过拟合的目的。产生过拟合的原因是估计器的高方差，而正则化的作用就是通过偏差换方差。</p>
+<p>正则化项可以取不同的形式，在回归问题，损失函数是平方损失，正则化项可以是参数向量的L1或者L2范数</p>
+<p>L2正则化：</p>
+<script type="math/tex; mode=display">
+L(w) = \frac{1}{N}\sum_{i=1}^N(f(x_i;w)-y_i)^2+\frac{\lambda}{2}||w||^2</script><p>作用：</p>
+<ol>
+<li><p>权重衰减。</p>
+<p>使用正则化后的更新公式变为：</p>
+<script type="math/tex; mode=display">
+w_{k+1} = (1-\eta\lambda)w_k - \eta y_ix_i</script><p>可见，通过更新，参数衰减的更快了。</p>
+</li>
+<li><p>限制参数的大小。</p>
+<p>假设我给了一个大的$\lambda$，那么为了使得整体最小化，我必须使得后面这样一项最小，要想使得后面的一项不太大，方法只能是让$\sum_{i=1}^N||w||^2$不太大，以此来削弱后一项的权重。这样通过控制$\lambda$就能把参数控制在一个不大的范围里面。</p>
+</li>
+</ol>
+<p>参数较小意味着模型的抗干扰能力强，因为较小的参数对数据差异化做出的反应不会很大。另一方面，对于多项式模型，小的参数会削弱高次项带来的影响，使得模型更简单更趋于线性。</p>
+<p>L1正则化：</p>
+<script type="math/tex; mode=display">
+L(w) = \frac{1}{N}\sum_{i=1}^N(f(x_i;w)-y_i)^2 + \lambda||w||1</script><p>L1正则化是通过加上或减去一个常量$\eta\lambda$，让w向0靠近。当$|w|$很大时，L2对权重的衰减速度比L1大的多，当|w|很小时，L1对权重的缩小比L2快的多。这是由于L2是比例缩小，而L1是减去固定值，这也解释了为什么L1正则可以让模型变得稀疏，L1对于小权重减小地很快，对大权重减小地较慢，因此模型主要集中在那些重要度高的特征上，对于不重要的特征，权重会很快地趋近于0.所以最终权重w会变得稀疏。</p>
+<p>Lasso回归更新每个变量通过减去一个固定的因子，在零处截断，这被称作’soft threshold’，而特征选择是删除所有系数小于某个阈值的变量，这是一种’hard threshold’。</p>
+<p><strong>Ridge回归和Lasso回归都是有偏的。</strong></p>
+<p>优缺点：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th></th>
+<th>岭回归</th>
+<th style="text-align:left">Lasso回归</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>优</td>
+<td>可以有效控制方差，达到避免过拟合的效果。在有相关性的变量上表现比较好。</td>
+<td style="text-align:left">通过收缩系数，可以产生稀疏矩阵，达到筛选变量的目的</td>
+</tr>
+<tr>
+<td>缺</td>
+<td>模型结果中包含了所有的变量系数，如果变量过多会导致模型的结果不够精确，对数据的干扰没有Lasso好。</td>
+<td style="text-align:left">当变量数目大于样本数目的时候，Lasso只能得到min(N，p)个变量，由于稀疏了大量变量，所以会导致模型不够精确。如果预测变量具有群组效应，则用Lasso回 归时，只能选出其中的一个预测变量．对于通常的N&gt;PN&gt;P的情形，如果预测变量中 存在很强的共线性，Lasso的预测表现受控于岭回 归．即在具有相关性的预测变量上表现不好。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>因此2005年有人提出了 弹性网回归方法 （elastic net Regression）</p>
+<p>正则项</p>
+<script type="math/tex; mode=display">
+\lambda \sum_{j=1}^p(\alpha \beta_j^2+(1-\alpha|\beta_j|))</script><p>损失函数为</p>
+<script type="math/tex; mode=display">
+L(w) = \frac{1}{N}\sum_{i=1}^N(f(x_i;w)-y_i)^2 +\lambda_1\sum_{i=1}^N|w_i|+\lambda_2 \sum_{i=1}^Nw_i^2</script><p>令$\lambda = \lambda_1+\lambda_2$, $a = \frac{\lambda_1}{\lambda_1+\lambda_2}$</p>
+<script type="math/tex; mode=display">
+L(w) = \frac{1}{N}\sum_{i=1}^N(f(x_i;w)-y_i)^2 +\lambda \sum_{j=1}^p(\alpha \beta_j^2+(1-\alpha|\beta_j|))</script><p>对于正则化通式</p>
+<script type="math/tex; mode=display">
+argmin_w (\frac{1}{N}\sum_{i=1}^N(f(x_i;w)-y_i)^2+ \lambda\sum_{i=1}^N|w_i|^q)</script><p><strong>subset selection、lasso、ridge都是可以视为估计器的贝叶斯先验分布，但是请注意他们是作为后验模式导出的，即后验最大化，一般的，我们更希望使用贝叶斯估计器的后验分布的均值，而岭回归是后验平均，而lasso和subset selection不是</strong></p>
+<p>但为什么不可以使得q小于1，或者使得q大于2呢？为什么恰好是$1\leq q \leq2$呢？</p>
+<p>观察一下，不同q值下情况，当小于1时，先验分布不为uiform，且当为q&gt;= 1时，约束区域刚好为凸的，而非凸优化问题使得优化问题更难。</p>
+<p>当q&gt;2时，会发现图形是越来越向矩形变化的，使用高于2的正则化项，按照书中的说法</p>
+<p>“our experience is that it is not worth the effort for the extra variance incurred”</p>
+<p>我理解的意思是一味地的追去限制方差是不值得的，因为随着越来越紧地限制方差，参数会逐渐地偏离0，就是说我们得到的最终模型，那些无关紧要的变量的参数再也不是趋于零了。</p>
+<p>但是我们十分希望既获得lasso将无关紧要参数设为0的能力，也希望将方差限制的更紧一点（偏好是尽量选择后验平均）。</p>
+<p>因此提出了弹性网，来平衡这两点原因.</p>
+<p>总之，elastic-net的优点如下</p>
+<p>“The elastic-net selects variables like the lasso, and shrinks together the coefficients of correlated predictors like ridge.”</p>
+<p>在变量选择上表现像lasso，在相关性变量上的表现像ridge。</p>
+<p>subset selection方法有：best subset selection (指定阈值)、forward stepwise 、forward stagewise </p>
+<p>shrinking method : ridge、lasso、PCR(principal component regression) 、PLS(partial Least squares)。</p>
+<p>PLS和PCR用来处理数据变量之间的强相关问题。他们的思想是通过在原数据上进行线性组合构成新的预测变量。</p>
+<p>下面是对这几种策略的一个总结。</p>
+<p>“It is interesting to compare the shrinkage behavior of these different<br>methods. Recall that ridge regression shrinks all directions, but shrinks<br>low-variance directions more. Principal components regression leaves M<br>high-variance directions alone, and discards the rest. Interestingly, it can<br>be shown that partial least squares also tends to shrink the low-variance<br>directions, but can actually inflate some of the higher variance directions.<br>This can make PLS a little unstable, and cause it to have slightly higher<br>prediction error compared to ridge regression. A full study is given in Frank<br>and Friedman (1993). These authors conclude that for minimizing prediction<br>error, ridge regression is generally preferable to variable subset selection,<br>principal components regression and partial least squares. However<br>the improvement over the latter two methods was only slight.</p>
+<p>To summarize, PLS, PCR and ridge regression tend to behave similarly.<br>Ridge regression may be preferred because it shrinks smoothly, rather than<br>in discrete steps. Lasso falls somewhere between ridge regression and best<br>subset regression, and enjoys some of the properties of each.”</p>
+<p>ridge 回归是在所有方向上进行shrink，且在low_variance的方向上做的更多。PCR是选择留下M个high-variance的方向，其余的全部抛弃。而PLS虽然也倾向于shrink low_variance方向，但是会使得高high-variance方向的有些膨胀（应该是参数值会显得较大），这会使得PLS显得有些不稳定（这是因为低方差的参数集合使得模型更稳定）。且相对于ridge会多产生轻微的预测误差。Frank and Friedman认为在最小化预测误差上问题上，ridge比subset selection、PCR、PLS都表现地更好，不过相比后面两种只有轻微的优势。</p>
+<p>总结来说，PLS、PCR、和ridge都表现地很接近，但ridge表现的更加平滑，而PLS和PCR由于过程是离散的，所以表现欠佳。lasso的效果介于ridge和subset selection之间，兼具两者的优点（压缩参数和稀疏解）。</p>
+<h3 id="从概率角度理解线性回归"><a href="#从概率角度理解线性回归" class="headerlink" title="从概率角度理解线性回归"></a>从概率角度理解线性回归</h3><p>首先，我们可以假设目标变量 t（就是标签y’）有下面的形式构成:</p>
+<script type="math/tex; mode=display">
+t = y(x,w)+\epsilon</script><p>即数据标签有决策函数加随机误差构成。一般假设这个偏差服从零一高斯分布，由一个精度变量$\beta$控制。</p>
+<p>那么由于误差服从高斯分布，决策函数是线性的（也有可能使用了basis函数，这时候就不是线性的了，但无论是否线性，这里的决策函数只改变标签分布的均值），标签的分布就可以写成：（单一参数呈高斯分布）</p>
+<script type="math/tex; mode=display">
+p(t|x,w,\beta) = N(t|y(x,w),\beta^{-1})</script><p>这个结果是直观的，因为当我们认为误差是高斯的时候，就是相当于在决策值上下进行高斯波动。</p>
+<p>也有下面的式子：</p>
+<script type="math/tex; mode=display">
+E[t|x] = \int tp(t|x)dt = y(x,w)</script><p>因为误差服从的是0-1分布。 </p>
+<p>至此，将标签扩展到更大的数据集，我们可以写出最大似然函数，<strong>最大似然的前提是各变量间相互独立、</strong>（所有参数和标签的似然估计）</p>
+<script type="math/tex; mode=display">
+p(\mathbf{t}|\mathbf{X,w},\beta) = \prod_{n=1}^NN(t_n|\mathbf{w^T}\phi(x_n),\beta^{-1})</script><p>对数似然：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+lnp(\mathbf{t}|w,\beta) &= \sum_{n=1}^Nln N(t_n|\mathbf{w^T}\phi(x_n),\beta^{-1}) \\
+& = \frac{N}{2}ln \beta - \frac{N}{2}ln(2\pi)-\beta E_D(\mathbf{w})
+\end{align}</script><p>接下来就是见证奇迹的时刻</p>
+<script type="math/tex; mode=display">
+E_D(\mathbf{w}) = \frac{1}{2}\sum_{n=1}^N\{t_n -\mathbf{w^T}\phi(x_n)\}^2</script><p>这就是我们平时使用的sum-of-squares error项。</p>
+<p>对数似然取梯度有：</p>
+<script type="math/tex; mode=display">
+\nabla lnp(\mathbf{t|w},\beta) = \sum_{n=1}^N\{t_n -\mathbf{w^T}\phi(x_n)\}\phi(x_n)^T</script><p>令梯度为0 可得最小二乘解</p>
+<script type="math/tex; mode=display">
+w_{ML} = \mathbf{(\phi^T\phi)^{-1}\phi^T t}\\
+
+w_0 = \bar{t} - \sum_{n=1}^{M-1} w_j\bar{\phi_j}</script><p>$w_0  = \frac{1}{N}\sum_{n=1}^N t_n$,               $\bar{\phi_j}= \frac{1}{N}\sum_{n=1}^N\phi_j(x_n)$</p>
+<p>这样就从贝叶斯角度把线性回归给串起来了。</p>
+<p>下面再讨论几个分布：</p>
+<h4 id="参数分布"><a href="#参数分布" class="headerlink" title="参数分布"></a>参数分布</h4><p>先假设参数先验分布服从 <script type="math/tex">p(w) = N(w|m_0,S_0)</script>.</p>
+<p>有贝叶斯后验关系得到</p>
+<script type="math/tex; mode=display">
+p(w|t) = \frac{p(t|w)p(w)}{p(t)}</script><p>p(t|w)是似然函数，p(w)是w的先验分布（假设为高斯），p(t)是标签的先验分布。原话是这样说的：</p>
+<p>“which is proportional to the product of the likelihood function and the prior。Due to the choice of a conjugate Gaussian prior distribution, the posterior will also be Gaussian”</p>
+<p>这里不是很清楚。</p>
+<p>然后，p(w|t)就是一高斯分布$p(w|t) = N(w|m_N.S_N)$</p>
+<script type="math/tex; mode=display">
+\mathbf{m_N} = S_N(S_0^{-1}m_0+\beta\Phi^T\mathbf{t}) \\
+\mathbf{S_N^{-1}} = S_0^{-1} + \beta\Phi^T\Phi</script><p>可见，当取$W_{MAP} = m_N$,我们就可以得到最大权重向量。</p>
+<p>注意上述的式子，当w的先验分布的方差为无限情况时，有$S_0^{-1}$ = 0，$m_N$等于最大似然估计。而当N=0时，此时相当于没有数据信息，此时后验分布相当于先验，有$m_N = m_0$。</p>
+<p>下面考虑一种特殊情况，假设w服从zero-mean isotropic高斯分布，由一精度参数$\alpha$控制</p>
+<script type="math/tex; mode=display">
+p(w|\alpha) = N(w|0,\alpha^{-1}\mathbf{I})</script><p>有</p>
+<script type="math/tex; mode=display">
+m_N = \beta S_N\Phi^T\mathbf{t}\\
+S_N^{-1} = \alpha I + \beta\Phi^T\Phi</script><p>似然函数</p>
+<script type="math/tex; mode=display">
+lnp(w|\mathbf{t}) = -\frac{\beta}{2} \sum_{n=1}^N\{t_n - \mathbf{w}^T\phi(x_n)\}^2 - \frac{\alpha}{2}\mathbf{w^Tw}+const</script><p>这和我们的正则化函数非常像。我们可以近似地认为加了正则项的函数得到的参数是服从均值为0的高斯分布，这也就是为什么加了正则化以后，参数都会变得比较小。这就相当于我们假设了，参数的先验分布服从均值为0的高斯分布。这是从贝叶斯角度出发来解释正则化。</p>
+<h4 id="预测值分布"><a href="#预测值分布" class="headerlink" title="预测值分布"></a>预测值分布</h4><p>预测值分布的定义：</p>
+<script type="math/tex; mode=display">
+p(t|x,t,\alpha,\beta)  = N(t|\mathbf{m_N^T}\phi(x),\delta^2_N(x))</script><p>方差</p>
+<script type="math/tex; mode=display">
+\delta^2_N(x) = \frac{1}{\beta}+\phi(x)^TS_N\phi(x)</script><p>预测值的分布由误差和参数的波动共同决定，当数据点越来越多的时候，方差$\delta_N^2$会越来越小，因为数据点的增长，不断缩小着参数的取值范围，当数据点（采样得到的）达到一定数目趋近于无穷大时，方差的第二项会为0。</p>
+<h3 id="线性分类问题"><a href="#线性分类问题" class="headerlink" title="线性分类问题"></a>线性分类问题</h3><script type="math/tex; mode=display">
+y(x) = \mathbf{wx}+w_0</script><p>对于如上的线性函数，为了方便理解，我们总希望把它放到一个空间里来解释，我们考虑一个二维或者三维的空间，上述方程对应的就是一条线或者是一个平面，$\mathbf{w}$就是它的法向量，决定该决策边界的方向，其实当决策边界是线性的时候，应当立即想到该决策边界是一条线或平面，当决策边界是非线性的时候，应当立即想到是一条曲线或者曲面。$w_0$表示该平面的位移，用来决定该平面的位置。当提到决策边界的时候，应当立即想到，所有在决策边界上的点到给决策边界的距离为0，而其他没有在决策边界上的点到决策边界的绝对值距离都大于0.前面提到，回归与分类都是找到一个决策边界，回归是寻找一个决策边界将所有点都拟合，而分类是寻找一个决策边界将所有点都分开。</p>
+<p>多分类的思路：</p>
+<p>one versus rest：就是找到k-1个分类器，每个分类器的作用是将k类中的某一类与剩余的其他类分开。这样最终会出现k-1个分类器。这样，当出现一个新数据点的时候，穷尽这k-1个分类器就可以找到它合适的类别。</p>
+<p>缺点：1、可能会出现一个数据属于多个类的情况。</p>
+<p>​            2、数据点不平衡。就是比方说，属于类K1的数据点只有10%，而反例占到了90%.这样的数据胡影响结果。</p>
+<p>one versus one：这种方法是找到k(k-1)/2个分类器，每个分类器的作用是将两两对应的类别分开，也就是说每个分类器只负责将其相邻的两类分开，但是这引入了一个问题，就是“模糊区域”。</p>
+<p>解决这个问题的方法是改变决策函数的定义方式：</p>
+<script type="math/tex; mode=display">
+\mathbf{(w_k-w_j)^Tx}+(w_{k0}-w_{j0}) = 0</script><p>$\mathbf{w_k、w_j}$是one-vs-rest分类器，这样定义出来的决策边界相当于从这些$w_k,w_J$相交的线段夹角的中心分离出一条线，这些分离出来的线段顶端会交于一点，所以就避免了“模糊区域”的产生。</p>
+<p>优点：可以视为多个模型投票的结果。比较健壮。</p>
+<p>将线性回归用于分类问题，有一个显著的问题。当分类标签大于3的时候，而输入空间只有2维时，会出现某个标签被其他标签覆盖（masked）问题。</p>
+<p>解决这种问题的方法是扩展输入空间为多项式空间，就是在原数据的基础上增加高次幂的多项式和多项式的內积，比如将（$x_1,x_2$）扩展为($x_1,x_2,x_1x_2,x_1^2,x_2^2$).这样就将线性回归转变为了quadratic 拟合，也就是曲线拟合。可以想象一个曲线分割面可以将三类数据很好的分割开来。那么可以想象，当数据有4类的时候，就需要cubic 拟合，即扩展到更高维的输入空间。</p>
+<p><strong>一个常用的技巧是当K&gt;3类时，就需要扩展多项式到K-1次幂的级别，加上cross-products 即內积项，总共要扩展$O(p^{k-1})$项。</strong></p>
+<p>对于线性回归，只要当问题有一个大的类别，却有一个小维度的输入空间时，就可能会发生上述的覆盖问题。</p>
+<p>以上是线性回归用作分类时存在的弊端，书中的意思是使用线性判别方法可以避免这种现象。</p>
+<h4 id="生成类模型对数几率版本"><a href="#生成类模型对数几率版本" class="headerlink" title="生成类模型对数几率版本"></a>生成类模型对数几率版本</h4><p>一个重要的发现是，无论是从线性回归出发的逻辑回归还是从线性判别出发的LDA，都涉及到了对数几率：</p>
+<p>Logistic regression:</p>
+<script type="math/tex; mode=display">
+log\frac{y}{1-y} =  \mathbf{w^Tx}+b\\
+
+
+这里 \quad y  = \frac{1}{1+e^{-wx+b}}</script><p>LDA:</p>
+<script type="math/tex; mode=display">
+log\frac{P(G=k|X=x)}{P(G=l|X=x)} = log\frac{f_k(x)}{f_l(x)}+log\frac{\pi_k}{\pi_l}\\=log\frac{\pi_k}{\pi_l} -\frac{1}{2}(\mu_k+\mu_l)^T\Sigma^{-1}(\mu_K-\mu_l)+x^T\Sigma^{-1}(\mu_k-\mu_l)
+\\ 
+
+f_k(x) = P(X=x|G=k)      是当G=k类时X的概率密度函数，有等式\\
+P(G=k|X=x) = \frac{f_k(x)\pi_k}{\sum_{l=1}^Kf_l(x)\pi_l}</script><p>上面和标准的条件分布有些许不同，这里是使用概率密度代替了概率。</p>
+<p>在周志华的书中，是直接给了我们sigmod函数，原因是我们需要找到一个函数将输出空间映射到一个（0，1）范围内，然后推出了对数几率。下面从概率角度再次进行强化：</p>
+<script type="math/tex; mode=display">
+p(G1|x) = \frac{p(x|G1)p(G1)}{p(x|G1)p(G1)+p(x|G2)p(G2)}</script><p>上面是贝叶斯公式，从输出来看，也就是等号左边是一个概率值，我们要建立这样一个思想，sigmod函数的重要性在于它能把一个输入映射到（0，1）的空间内，所以，上述贝叶斯的输出空间就相当于一个sigmod函数的输出空间。因为我们把上述形式转换成sigmod函数形式</p>
+<script type="math/tex; mode=display">
+\begin{align}
+p(G1|x) &= \frac{p(x|G1)p(G1)}{p(x|G1)p(G1)+p(x|G2)p(G2)}\\
+        &= \frac{1}{1-exp(-a)}=\sigma(a)
+\end{align}</script><p>这里的$a = ln\frac{p(x|G1)p(G1)}{p(x|G2)p(G2)}$,因此有</p>
+<script type="math/tex; mode=display">
+a = ln(\frac{\sigma}{1-\sigma})</script><p><strong>而无论是逻辑回归还是LDA，在假设$p(x|G=k)$分布是高斯的情况下，都可以得出对数几率是线性的这样的结论，当后验概率相等，也就是对数几率为0的时候，误分类率降到最低。</strong></p>
+<p>且有：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\mathbf{w} &= \mathbf{\Sigma^{-1}(u_1-u_2)}\\
+w_0  &= -\frac{1}{2}\mathbf{u_1^T\Sigma^{-1}u_1+\frac{1}{2}u_2^T\Sigma^{-1}u_2+ln\frac{p(G1)}{p(G2)}}
+\end{align}</script><h4 id="放宽假设带来的后果"><a href="#放宽假设带来的后果" class="headerlink" title="放宽假设带来的后果"></a>放宽假设带来的后果</h4><p>在上面的结果中还有一个重要的假设是假设所有的$p(x|G=k)$都有一个共享的协方差矩阵(‘shared covariance matrix’)，才可以实现约分。这里我的理解是，每个类的数据点的分散情况都差不多，大家都是以相同的协方差拥簇在均值周围。当然这是理想情况，事实上，类的数据点的分布未必有相同的协方差，这时候我们就需要放宽假设条件了，让每个$p(x|G=k)$都拥有各自的方差。</p>
+<p>这样带来的后果是什么呢？这样带来的最重要的后果就是决策边界不是线性的啦，是quadratic decision boundaries。因为不能共享一个协方差矩阵，所以不能实现约分，会留下2次项。</p>
+<h4 id="最大似然版本"><a href="#最大似然版本" class="headerlink" title="最大似然版本"></a>最大似然版本</h4><p>由贝叶斯公式：</p>
+<script type="math/tex; mode=display">
+p(G1|x) = p(G1)p(x|G1) = \pi N(x_n|u_1,\Sigma)\\
+p(G2|x) = p(G2)p(x|G2) = (1-\pi) N(x_n|u_2,\Sigma)</script><p>假设二分类，且$y \in {0,1}$，有$p(y_i|x_i;w,b) = y_ip(G1|x)+(1-y_i)p(G2|x)$或者$p(y_i|x_i;w,b) = p(G1|x)^{t_i}·p(G2|x)^{1-t_i}$</p>
+<p>最大似然函数</p>
+<script type="math/tex; mode=display">
+L = \prod_{i=1}^N p(y_i|x_i;w,b)</script><p>带入$p(y_i|x_i;w,b)$然后取对数可得对数似然估计函数。</p>
+<p><strong>注意一点，对数似然不仅可以用来估计w,还可以用来估计$\pi$。事实上，我们直接将$\pi_1$（类的先验分布）视为$\frac{N_1}{N_1+N_2}$就是通过对数似然函数对$\pi$求导得来的。</strong></p>
+<p>事实上，所有的参数$u_1、u_2、\Sigma$都可以通过对数似然函数得出，结果如下</p>
+<script type="math/tex; mode=display">
+\begin{align}
+u_1 &= \frac{1}{N_1}\sum_{n=1}^N t_nx_n\\
+
+u_2 &= \frac{1}{N_2}\sum_{n=1}^N(1-t_n)x_n \\
+
+\Sigma  &= S = \frac{N_1}{N}S_1+\frac{N_2}{N}S_2 \\
+
+S1 &= \frac{1}{N_1}\sum_{n\in G1} (x_n-u_1)(x_n-u_1)^T \\
+S2 &= \frac{1}{N_2}\sum_{n\in G2} (x_n - u_2)(x_n - u_2)^T
+\end{align}</script><p>对于K类中的任何一类，有如下决策函数</p>
+<script type="math/tex; mode=display">
+a_k(x) = \mathbf{w}_k^Tx + w_{k0}\\
+
+\quad \\
+\mathbf{w} = \Sigma^{-1} u_k\\
+w_{k0} = -\frac{1}{2}u_k^T\Sigma^{-1}u_k + ln p(C_k)</script><p>而两类之间的决策边界由如下公式得到</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\mathbf{w} &= \mathbf{\Sigma^{-1}(u_1-u_2)}\\
+w_0  &= -\frac{1}{2}\mathbf{u_1^T\Sigma^{-1}u_1+\frac{1}{2}u_2^T\Sigma^{-1}u_2+ln\frac{p(G1)}{p(G2)}}
+\end{align}</script><p>最后，给出一个新样本x，如何确定它的类别呢，根据贝叶斯决策论可知要找到x的类别，就需要最大化后验概率</p>
+<script type="math/tex; mode=display">
+argmax_y \quad p(y|x) = argmax_y \quad \frac{p(x|y)p(y) }{p(x)} = argmax_y \quad p(x|y)p(y)</script><p>即找到使得上述后验概率最大的y。</p>
+<h3 id="什么是贝叶斯决策论"><a href="#什么是贝叶斯决策论" class="headerlink" title="什么是贝叶斯决策论"></a>什么是贝叶斯决策论</h3><p>贝叶斯决策论是一个使用贝叶斯回归和分类的基础理论，它就强调了一件事，<strong>“要想获得最小的误分类率就需要选择能使得后验概率p(c|x)最大的类别标记”。</strong></p>
+<p>定义一个条件风险：</p>
+<script type="math/tex; mode=display">
+R(c_{i}|x) = \sum_{i=1}^N\lambda_{ij}P(c_j|x)</script><p>条件风险表明了在样本x上选择类别$c_i$的风险，$\lambda_{ij}$是风险因子。我们的目标是寻找一个判定准则$h:x\rarr y$最小总体条件风险</p>
+<script type="math/tex; mode=display">
+R(h) = \mathbf{E}_x[R(h(x)|x)]</script><p>那么我们就得到了一个最优分类器</p>
+<script type="math/tex; mode=display">
+h^*(x) = argmin_{c\in y} R(c|x)</script><p>以上呢，$R(h)$称为贝叶斯风险，$1-R(h^*)$反应了分类器所能达到的最优性能，即理论模型的精度上限。</p>
+<p>一般令</p>
+<script type="math/tex; mode=display">
+\lambda_{ij} = 0 \quad if \quad i=j \\
+\lambda_{ij} = 1 \quad if \quad otherwise</script><p>此时条件风险就变为了</p>
+<script type="math/tex; mode=display">
+R(c|x) = 1-P(c|x)</script><p>于是最小化分类错误率的贝叶斯最优分类器为</p>
+<script type="math/tex; mode=display">
+h^*(x) = argmax_{c \in y}P(c|x)</script><p>于是得到了最初的结论，贝叶斯决策论的核心就是给最大化后验概率这一损失函数提供理论支持。</p>
+<p>但是直接得到后验分布往往是不现实的，比较好的方法是通过贝叶斯理论用先验概率和类条件概率来替代后验概率，这样就可以把后验概率表示出来了，然后再通过最大似然估计分别把参数求出来，这是一整套贝叶斯生成方法的基本逻辑。</p>
+<h3 id="逻辑回归的损失函数"><a href="#逻辑回归的损失函数" class="headerlink" title="逻辑回归的损失函数"></a>逻辑回归的损失函数</h3><p>像逻辑回归这种用到了贝叶斯决策论的算法，它的损失函数是类似的。其实贝叶斯决策论已经告诉了我们损失函数</p>
+<p>就是这个</p>
+<script type="math/tex; mode=display">
+R(c_{i}|x) = \sum_{i=1}^N\lambda_{ij}P(c_j|x)</script><p>$\lambda_{ij}$是惩罚因子，这就是训练数据集上的损失函数。</p>
+<p>在二分类情况中，我们定义$\lambda_{ij}$只取1，这样损失函数的大小就由类后验概率决定了，对于逻辑回归就是由下面的后验概率决定</p>
+<script type="math/tex; mode=display">
+L（t_n,y_n) = -t_nlog(y_n)- (1-t_n)log(1-y_n)</script><p>我们这里使用的是对数损失。正好是对数似然的负数。</p>
+<h3 id="生成模型之Naive-Bayes"><a href="#生成模型之Naive-Bayes" class="headerlink" title="生成模型之Naive Bayes"></a>生成模型之Naive Bayes</h3><p>朴素贝叶斯是针对离散变量的，而高斯判别针对的是连续变量。</p>
+<p>朴素贝叶斯在文本识别类问题中有较好的效果，以垃圾邮件分类为例。</p>
+<p>显然这是一个二分类问题，我们定义一个垃圾邮件字典，该字典中包含了50000个垃圾邮件中的常见单词，我们把这50000个单词作为我们的特征，令$x_i\in \{0,1\}$. 这样$x \in \{0,1\}^{50000}$, $y \in \{0,1\}$。显然$p(x_i|y)$和$p(y)$均服从二阶伯努利分布。那么类条件概率</p>
+<script type="math/tex; mode=display">
+p(x|y) = p(x_1,x_2,...,x_{50000}|y) =p(x_1|y,x_2,x_3,...,x_{50000})p(x_2|y,x_3,x_4,...,x_{50000})...p(x_{50000}|y)</script><p><strong>假设，特征之间相互独立</strong>，上式可变为</p>
+<script type="math/tex; mode=display">
+p(x|y) = \prod_{i=1}^{50000}p(x_i|y)</script><p>由于$p(x_i|y)$和$p(y)$均服从二阶伯努利分布，那么极大似然函数为</p>
+<script type="math/tex; mode=display">
+p(y|x) = \prod_{n=1}^M [\prod_{i=1}^{50000}p(x_i|y)]·p(y)</script><p>根据上面的似然函数，我们可以得到一些参数，比如p(x_i|y)和p(y)等等，</p>
+<script type="math/tex; mode=display">
+p(x_i|y=1) = \frac{\sum_{n=1}^{M}\mathbf{1}\{x_i =1,y=1\}}{\sum_{n=1}^M\mathbf{1}\{y=1\}}</script><script type="math/tex; mode=display">
+p(y=1) = \frac{\sum_{n=1}^M \mathbf{1}\{y=1\}}{M}</script><p>NB的决策函数和高斯判别一样，给定一个新样本，选取使得后验概率最大的那个类：</p>
+<script type="math/tex; mode=display">
+argmax_y \quad p(x_{new}|y)p(y)</script><p>有一个问题，当训练数据中没有出现某个特征的样本时，比方说$x_{3000}$这个属性在训练数据集中没有出现，那么经过最大似然估计得出的$p(x_{3000}|y)$就为0.显然这是不合常理的，仅仅是因为训练数据中没有出现该属性就判定给属性出现的概率为0 显然不合适。为了解决这个问题，就需要引入拉普拉斯平滑，令N表示训练集D中可能的类别数，$N_i$表示第i个属性可能的取值数相应的变化为</p>
+<script type="math/tex; mode=display">
+p(x_i|y=1) = \frac{\sum_{n=1}^{M}\mathbf{1}\{x_i =1,y=1\}+1}{\sum_{n=1}^M\mathbf{1}\{y=1\}+N_i}</script><script type="math/tex; mode=display">
+p(y=1) = \frac{\sum_{n=1}^M \mathbf{1}\{y=1\}+1}{M+N}</script><p>需要注意的几点，最重要的是朴素贝叶斯的假设是个属性变量之间相互独立，这个条件是苛刻的，但是即使在这个苛刻的前提下，NB的表现经常能取得不错的效果。</p>
+<p>第二个需要注意的地方是使用拉普拉斯平滑的原因是因为训练数据中未出现相应的属性样本。</p>
+<p>第三个需要注意的是NB有连续输入的版本，即将P(x|y)假设为服从高斯分布，其他的步骤相似，不再展开。</p>
+<h3 id="对朴素贝叶斯的进行扩展"><a href="#对朴素贝叶斯的进行扩展" class="headerlink" title="对朴素贝叶斯的进行扩展"></a>对朴素贝叶斯的进行扩展</h3><p>上述的NB算法，我们假设$x_i\in\{0,1\}$，但在实际中，$x_i$的取值往往有多个，比如说，对年龄变量进行离散后，我们可能得到了多个区间，每个区间对应一个取值（0，18]，（19,30],（31,50]，(51,80]像这样，我们记录了多个取值。显然上述的NB算法不能需要扩展为多项式。</p>
+<p>更改假设$x_i \in \{0,1,…,k\}$。那么$p(x_i|y)$服从的就不是二阶伯努利分布，而是多项式分布。</p>
+<script type="math/tex; mode=display">
+P(X_1=n_1,X_2=n_2，...,X_k = n_k) =\{
+\begin{array}
+  \quad n!\prod_{i=1}^K\frac{p_i^{n_i}}{n_i!},\quad \sum_{i=1}^Kn_i=n \\
+  0 \quad otherwise
+\end{array}</script><p>那么</p>
+<script type="math/tex; mode=display">
+p(x|y) = \prod_{i=1}^{50000}p(x_i|y)</script><p>另外，我们改变特征向量的形式：之前是固定了特征向量为我们的字典长度，现在特征向量变为邮件的长度。比如邮件中有300个单词，那么每个单词就是一个特征，取值为字典中相应单词的索引，比如我么的字典依旧为50000长度，然后每个特征$x_i$的取值就是[0,49999]。</p>
+<script type="math/tex; mode=display">
+p(x_1,x_2,...x_{300} | y) = \prod_{i=1}^{300}p(x_i=k|y) \quad and \quad k \in [0,49999]</script><p>即p(x|y)服从多项式分布，似然函数为</p>
+<script type="math/tex; mode=display">
+\prod_{n=1}^M [\prod_{i=1}^{300}p(x_i=k|y)]·p(y)</script><p>有似然函数得到的参数为(经过拉普拉斯平滑)</p>
+<script type="math/tex; mode=display">
+p(x=k|y=1) = \frac{\sum_{n=0}^M\mathbf{1}\{y=1\}\sum_{j=1}^{n_i}\mathbf{1}\{x_j = k\}+1}{\sum_{n=1}^M\mathbf{1}\{y = 1\}·n_i+k}</script><p>p(x=k|y=0)可仿照上面得出，p(y)和朴素贝叶斯计算方式一样。</p>
+<p>得出这些参数以后，利用决策函数就可以进行判断了</p>
+<script type="math/tex; mode=display">
+argmax_y \quad p(x_{new}|y)p(y)</script><p>在文档分类问题中，扩展的NB模型的表现总是比NB要好一点，关于其中的具体原因，目前也没有一个明确的解释，一个可能的原因是多项式事件模型比NB多考虑了词出现的次数。</p>
+<p>值得注意到的是，向NB或者多项式事件模型以及高斯判别模型这类生成模型，由于其假设p(x|y)均为指数分布簇，利用前面的结论，所有的指数分布簇函数均可推导出logistic后验分布，可知，这一一类的模型最终得到的决策边界均是线性的，也即是说这些分类器均是线性的。</p>
+<h3 id="判别类模型之逻辑回归"><a href="#判别类模型之逻辑回归" class="headerlink" title="判别类模型之逻辑回归"></a>判别类模型之逻辑回归</h3><p>生成模型和判别模型的主要区别是，生成模型是使用类条件概率和类先验概率来近似后验概率，核心是贝叶斯决策论。判别类模型不使用先验分布，因此它的假设条件比较松，判别类模型焦点集中在数据本身。</p>
+<p>从我自己的观点来看，两类模型的区别就是使用类先验分布和不使用类先验分布的区别，表现在似然函数上的不同</p>
+<p>生成模型的似然函数</p>
+<script type="math/tex; mode=display">
+p(t|x_i;w,\pi,u,\Sigma) = \prod_{i=1}^N \pi_1N(u_1,\Sigma)^{t_i}·\pi_2N(u_2,\Sigma)^{1-t_2}</script><p>判别模型的似然函数</p>
+<script type="math/tex; mode=display">
+p(t|w) = \prod_{i=1}^N y_i^{t_i}·(1-y_i)^{1-t_i}</script><p>这里的$y_i = \sigma(wx)$.</p>
+<p>这里无论是生成类模型也好，判别类模型也好，其中都包含参数$w$，也就是说，通过最大似然估计，两个其实都可以估计出合适的参数w. 上面已经介绍了生成类模型的参数计算方法。下面介绍判别类参数计算法方法，以逻辑回归为例</p>
+<script type="math/tex; mode=display">
+\begin{align}
+p(t|w) &= \prod_{i=1}^N y_i^{t_i}·(1-y_i)^{1-t_i} \\ 
+E(w) &= \sum_{i=1}^N t_iln(y_i)+(1-t_i)ln(1-y_i)
+\end{align}</script><p>对于$\sigma（a）$函数有这样的性质</p>
+<script type="math/tex; mode=display">
+\frac{d\sigma}{da} = \sigma(1-\sigma)</script><p>对上述$E(w)$求梯度可得</p>
+<script type="math/tex; mode=display">
+\nabla E(w) = \sum_{i=1}^N (y_i - t_i)x</script><p>这里得出了逻辑回归似然函数的一阶梯度公式，使用梯度下降和牛顿法都可以进行求解。</p>
+<h4 id="逻辑回归多分类情况"><a href="#逻辑回归多分类情况" class="headerlink" title="逻辑回归多分类情况"></a>逻辑回归多分类情况</h4><p>对于多分类情况，后验概率为,注意到这里$y_k(\phi)$的 变化。</p>
+<script type="math/tex; mode=display">
+p(G_k|\phi) = y_k(\phi) =  \frac{exp(a_k)}{\sum_jexp(a_j)}</script><p>这里的$a_k = w_k^T\phi$.这种叫做soft-max方式。</p>
+<p>偏导公式</p>
+<script type="math/tex; mode=display">
+\frac{dy_k}{da_j} = y_k(I_{kj}-y_j)</script><p>最大似然函数</p>
+<script type="math/tex; mode=display">
+p(T|w_1,w_2,w_3,...w_k) = \prod_{n=1}^N\prod_{k=1}^K p(c_k|\phi)^{t_{nk}} = \prod_{n=1}^N\prod_{k=1}^K y_{nk}^{t_nk}</script><p>误差函数由最大似然函数取负对数组成</p>
+<script type="math/tex; mode=display">
+E(w_1,w_2,...,w_k) = -lnp(T|w_1,w_2,...,w_k) = -\sum_{n=1}^N\sum_{k=1}^K t_{nk}ln(y_{nk})</script><p>一阶梯度有</p>
+<script type="math/tex; mode=display">
+\nabla_{w_j}E(w_1,w_2,...,w_k) = \sum_{n=1}^N(y_{nj}-t_{nj})\phi_n</script><p>同样使用牛顿法可以求解w值。</p>
+<h3 id="生成类模型和判别类模型的区别"><a href="#生成类模型和判别类模型的区别" class="headerlink" title="生成类模型和判别类模型的区别"></a>生成类模型和判别类模型的区别</h3><p>从算法思想来看，生成类模型和判别类模型的构造思想不一样，生成类模型的构造思想是通过标签学习特征，注重的是当前类下存在哪些特征，也就是说，我想达到一个效果，就是给我一个标签，我能知道这个类下大致有哪几类特征，当我做判断的时候，如果数据符合这几类特征，那么八成就是该类了，也就是说这些特征是我学到的东西。而判别类模型，不聚焦于这些特征，它只有一个目的，就是让我的误判损失最小就可以了，对当前数据来讲，让它归于哪一类可以使误判损失最小，那就把它归到哪一类。</p>
+<p>从理论上来讲，两个的终极目的都是使得误判损失最小化，也都拥有最大似然版本，但两个版本的不同点在于，生成类似然函数中使用到了类先验概率和类条件概率，也就是通过这两个概率，让我们学到了一些特征。而判别类似然版本相对显得简单粗暴，它直接用数据估计使得误判损失最小的参数w。关于这一点，更正确的解释是，我们在判别类模型中使用的似然函数是joint liklihood(p(x,y)=p(x|y)p(y)),而在判别类模型中，我们使用到的确实conditional -likeihood（p(y|x) = p(y|x;$\theta$)）. 另外，判别类模型需要给出后验分布的表达式（逻辑回归假设的是后验分布服从sigmod函数），而先验分布不需要。</p>
+<p>生成模型的优点是可以学习到参数w以外的一些东西，缺点是需要对数据分布进行高斯假设，当真实数据分布和假设相似的时候，效果很好，但是当真实数据和假设不同的时候，效果不如判别类算法。判别模型的优点是假设较宽，但可解释性较差。还有一个显著的对比是，生成模型，比如高斯判别由于做出了更强的假设，通常需要更少的数据，而判别模型，例如逻辑回归虽然有较弱的假设，但是为了拟合模型通常需要更多的样本。也就是说，当数据样本较少时，生成模型的表现可能较判别模型较好。</p>
+<h3 id="高斯判别（生成模型）和逻辑回归（判别模型）之间有趣的关系"><a href="#高斯判别（生成模型）和逻辑回归（判别模型）之间有趣的关系" class="headerlink" title="高斯判别（生成模型）和逻辑回归（判别模型）之间有趣的关系"></a>高斯判别（生成模型）和逻辑回归（判别模型）之间有趣的关系</h3><p>在吴恩达的课程中提到了一个有趣的关系，</p>
+<p>1、给定训练集(x,t)使用高斯判别可以拟合出两个高斯模型p(x|t=0)和p(x|t=1)，大致图形就是两个均值不同的鈡型曲线曲线相交</p>
+<p>2、如果我计算这些训练样本的p(y=1|x)值，并拟合出一条曲线，会发现该拟合出来的曲线和sigmod函数非常相似。（鉴于sigmod函数和正太分布的关系，这里的曲线貌似就是sigmod函数）</p>
+<p>3、如果假设p(x|y)服从高斯分布$\rarr$logistic函数（对数据点求p(y=1|x)） 但是这个结论反向推导并不成立，也就是说从logistic后验分布，不能推导出p(x|y)服从高斯分布。因为当我们假设p(x|y)服从泊松分布，同样可以导出logistic后验分布。<strong>因此，假设p(x|y)服从高斯分布是一个比假设logistic后验分布更强的假设。事实上只要是指数分布簇函数都可推导出logistic后验分布，从这个角度讲，充分体现了logistic后验分布假设的鲁棒性，因为所有的指数分布簇函数都包含了该假设</strong></p>
+<p>关于最大似然估计</p>
+<p>最大似然估计对于线性模型相当于一个soft constrain，它要求所拟合的直线越靠近数据点越好。</p>
+<hr>
+<h3 id="核策略"><a href="#核策略" class="headerlink" title="核策略"></a>核策略</h3><p>什么是核函数？</p>
+<script type="math/tex; mode=display">
+k(x,x') = \phi(x)^T\phi(x')</script><p>上面是核函数的定义。$\phi(x)$是基函数（basis function ）。</p>
+<p>通俗理解就是定义了这样的一组两个基函数的內积，<strong>核函数的类型以及是否线性取决于基函数的形式</strong>，比如当$\phi(x) = x$时，它就是一线性核，此时的核函数就是$k(x,x’) = x^Tx’$.而当基函数是其他形式的时候 ，情况就不同了。当基函数是高斯基函数的时候，得到的就是一个高斯核。另外定义两个类型的核函数：</p>
+<p>静态核函数：当$k(x,x’)= k(x-x’)$是这种形式时，通过核函数映射不改变它的输入空间，这样的核函数叫做静态核函数。</p>
+<p>径向基函数（radial basis function）：当$k(x,x’) = k(||x-x’||)$是种形式时，即核函数之和两个变量之间的距离有关，这样的核函数称为径向基函数。</p>
+<p>我们来简单讨论一下为什么一个线性决策函数能够转化为核函数。</p>
+<p>对于一个最简单的线性决策函数</p>
+<script type="math/tex; mode=display">
+y(x) = w\phi(x)</script><p>w是我们待求的参数向量，但是根据最小二乘所求的参数表示</p>
+<script type="math/tex; mode=display">
+w = (\phi(x)^T\phi(x))^{-1}\phi(x)^Ty</script><p>可以w是一个只跟$\phi(x)$和target有关的向量。按照我们定义的核函数的形式，既然w就是一个基函数和标签的表示，我们可以想象，我们是否可以将我们的w用我们定义的核函数形式来替换表示呢?经过一系列的论证，发现这个是可以做到的，也就是说我们可以将一个以w为待求参数的决策函数转变为一个没有参数变量的决策函数，或者说参数变量的本质就存在与我们的训练数据之中，我们只是用数值向量的形式把它表示出来了而已，如果我们溯本清源，将参数变量仍有训练数据表示，那么就可以得到一个由我们定义的核函数来表示的这样一个决策函数，这个决策函数最大的特征就是用到了所有的训练数据，这是一种算法思想上的变化，因为之前我们的方法是用训练数据求出一个具体的参数，然后就把训练数据丢了。</p>
+<h4 id="核函数的优点："><a href="#核函数的优点：" class="headerlink" title="核函数的优点："></a>核函数的优点：</h4><p>“However, the advantage of the dual formulation, as we shall see, is that it is expressed entirely in terms of the kernel function k(x, x). We can therefore work directly in terms of kernels and avoid the explicit introduction of the feature vector φ(x), which allows us implicitly to use feature spaces of high, even infinite, dimensionality</p>
+<p>”</p>
+<p>我们可以避开特征空间的限制，直接使用核函数，也就是说无论原始的特征空间是多大，都没关系，我们可以通过一个核函数将其甚至映射到无限大的特征空间，都不会改变我们的结果。</p>
+<h4 id="构建一个核函数需要注意那些地方"><a href="#构建一个核函数需要注意那些地方" class="headerlink" title="构建一个核函数需要注意那些地方"></a>构建一个核函数需要注意那些地方</h4><p>1、一个核函数$k(x,x’)$是关于x和x’的函数，这样的函数有个特性，就是可以通过变化转换成基函数映射的形式,也就是$k(x,x’) = \phi(x)^T\phi(x)$的形式，$\phi(x)$本质是一个映射函数，就是将x映射到更高维度的与x相关的空间比方说$(x,x^2,x^3)$. 总之一句话，我们构建的核函数一定要能转化成经基函数映射后的內积形式。</p>
+<p>2、要满足上述的要求，有一个替代检测方法，就是检查格拉姆矩阵$K$是否半正定。$K$是一个由元素$k(x_m.x_m)$构成的向量。</p>
+<p>3、可以在一些核函数的基础上进行扩展，比如k1和k2是两个有效的核函数，那么有以下的一些性质可以利用</p>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ML/" rel="tag"><i class="fa fa-tag"></i>ML</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/11/%E5%BC%80%E7%AF%87%E8%AF%8D/" rel="next" title="开篇词">
+                <i class="fa fa-chevron-left"></i> 开篇词
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/12/%E9%99%8D%E7%BB%B4%E7%AE%97%E6%B3%95%E4%B8%8E%E5%BA%A6%E9%87%8F%E5%AD%A6%E4%B9%A0/" rel="prev" title="降维算法与度量学习">
+                降维算法与度量学习 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">qingfengbangzuo</p>
+              <p class="site-description motion-element" itemprop="description">世界上只有一种英雄主义，那就是看清生活的真相之后依然热爱生活。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7Carchive">
+              
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/qingfengbangzuo" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="cqupt_lixz@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                推荐阅读
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://ife.baidu.com/" title="百度前端技术学院" target="_blank">百度前端技术学院</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一句话概括机器学习"><span class="nav-number">1.</span> <span class="nav-text">一句话概括机器学习</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#感知机（Perceptron-Linear-Algorithm-PLA）"><span class="nav-number">2.</span> <span class="nav-text">感知机（Perceptron Linear Algorithm,PLA）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PLA算法训练次数的界"><span class="nav-number">2.1.</span> <span class="nav-text">PLA算法训练次数的界</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线性回归"><span class="nav-number">3.</span> <span class="nav-text">线性回归</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不使用最小二乘的原因"><span class="nav-number">4.</span> <span class="nav-text">不使用最小二乘的原因</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#正则化"><span class="nav-number">4.1.</span> <span class="nav-text">正则化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#从概率角度理解线性回归"><span class="nav-number">5.</span> <span class="nav-text">从概率角度理解线性回归</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参数分布"><span class="nav-number">5.1.</span> <span class="nav-text">参数分布</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#预测值分布"><span class="nav-number">5.2.</span> <span class="nav-text">预测值分布</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线性分类问题"><span class="nav-number">6.</span> <span class="nav-text">线性分类问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#生成类模型对数几率版本"><span class="nav-number">6.1.</span> <span class="nav-text">生成类模型对数几率版本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#放宽假设带来的后果"><span class="nav-number">6.2.</span> <span class="nav-text">放宽假设带来的后果</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#最大似然版本"><span class="nav-number">6.3.</span> <span class="nav-text">最大似然版本</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是贝叶斯决策论"><span class="nav-number">7.</span> <span class="nav-text">什么是贝叶斯决策论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#逻辑回归的损失函数"><span class="nav-number">8.</span> <span class="nav-text">逻辑回归的损失函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成模型之Naive-Bayes"><span class="nav-number">9.</span> <span class="nav-text">生成模型之Naive Bayes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对朴素贝叶斯的进行扩展"><span class="nav-number">10.</span> <span class="nav-text">对朴素贝叶斯的进行扩展</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#判别类模型之逻辑回归"><span class="nav-number">11.</span> <span class="nav-text">判别类模型之逻辑回归</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#逻辑回归多分类情况"><span class="nav-number">11.1.</span> <span class="nav-text">逻辑回归多分类情况</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成类模型和判别类模型的区别"><span class="nav-number">12.</span> <span class="nav-text">生成类模型和判别类模型的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高斯判别（生成模型）和逻辑回归（判别模型）之间有趣的关系"><span class="nav-number">13.</span> <span class="nav-text">高斯判别（生成模型）和逻辑回归（判别模型）之间有趣的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#核策略"><span class="nav-number">14.</span> <span class="nav-text">核策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#核函数的优点："><span class="nav-number">14.1.</span> <span class="nav-text">核函数的优点：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#构建一个核函数需要注意那些地方"><span class="nav-number">14.2.</span> <span class="nav-text">构建一个核函数需要注意那些地方</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">qingfengbangzuo</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">24.3k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  
+
+
+
+  
+  
+
+
+
+  
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="https://github.com/jjandxa/canvas_sphere"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="https://github.com/zproo/canvas-ribbon"></script>
+  
+
+  
+  
+    <script id="ribbon" type="text/javascript" size="300" alpha="0.6"  zIndex="-1" src="https://github.com/ethantw/Han"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+  <script src="/live2d-widget/autoload.js"></script>
+  
+</body>
+</html>
