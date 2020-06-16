@@ -112,7 +112,7 @@
 
 
 
-  <meta name="keywords" content="ML," />
+  <meta name="keywords" content="其他," />
 
 
 
@@ -125,17 +125,19 @@
 
 
 
-<meta name="description" content="周志华关于AdaBoost的讲座对理解AdaBoost的前世今生很有帮助。B站上可以搜到相关视屏。 AdaBoost 源于Kearns 和 Valiant的一个提问，强可学习 是否等价于  弱可学习 ？ 在概率近似正确（Probably Approximately correct ,PAC）的框架下，一个概念如果存在一个多项式的学习算法能够学习它，并且正确率很高，那么就称这个概念是强可学习的，若果">
+<meta name="description" content="安装tensorflow cpu 2.0以上版本。 python2.0已经支持python3.7了。不过我装的还是3.6的pyhon。 Anaconda的安装教程就不说了，按照网上来就OK了。这里只简单记录下如何安装tensorflow-cpu版本。 安装命令： 1234560: conda config --add channels https:&#x2F;&#x2F;mirrors.tuna.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Adaboost">
-<meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/12/AdaBoost/index.html">
+<meta property="og:title" content="tensorflow2.0以上cpu版本安装方法">
+<meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/15/tensorflow2.0%E4%BB%A5%E4%B8%8Acpu%E7%89%88%E6%9C%AC%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95/index.html">
 <meta property="og:site_name" content="Qingfengbangzuo">
-<meta property="og:description" content="周志华关于AdaBoost的讲座对理解AdaBoost的前世今生很有帮助。B站上可以搜到相关视屏。 AdaBoost 源于Kearns 和 Valiant的一个提问，强可学习 是否等价于  弱可学习 ？ 在概率近似正确（Probably Approximately correct ,PAC）的框架下，一个概念如果存在一个多项式的学习算法能够学习它，并且正确率很高，那么就称这个概念是强可学习的，若果">
-<meta property="article:published_time" content="2020-06-11T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-06-12T10:54:27.471Z">
+<meta property="og:description" content="安装tensorflow cpu 2.0以上版本。 python2.0已经支持python3.7了。不过我装的还是3.6的pyhon。 Anaconda的安装教程就不说了，按照网上来就OK了。这里只简单记录下如何安装tensorflow-cpu版本。 安装命令： 1234560: conda config --add channels https:&#x2F;&#x2F;mirrors.tuna.">
+<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/15/tensorflow2.0%E4%BB%A5%E4%B8%8Acpu%E7%89%88%E6%9C%AC%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95/%E6%8D%95%E8%8E%B7.png">
+<meta property="article:published_time" content="2020-06-15T01:27:15.080Z">
+<meta property="article:modified_time" content="2020-06-15T01:29:55.921Z">
 <meta property="article:author" content="qingfengbangzuo">
-<meta property="article:tag" content="ML">
+<meta property="article:tag" content="其他">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://qingfengbangzuo.github.io/2020/06/15/tensorflow2.0%E4%BB%A5%E4%B8%8Acpu%E7%89%88%E6%9C%AC%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95/%E6%8D%95%E8%8E%B7.png">
 
 
 
@@ -165,13 +167,13 @@
 
 
 
-  <link rel="canonical" href="https://qingfengbangzuo.github.io/2020/06/12/AdaBoost/"/>
+  <link rel="canonical" href="https://qingfengbangzuo.github.io/2020/06/15/tensorflow2.0以上cpu版本安装方法/"/>
 
 
 
 
 
-  <title>Adaboost | Qingfengbangzuo</title>
+  <title>tensorflow2.0以上cpu版本安装方法 | Qingfengbangzuo</title>
   
 
 
@@ -310,7 +312,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://qingfengbangzuo.github.io/2020/06/12/AdaBoost/">
+    <link itemprop="mainEntityOfPage" href="https://qingfengbangzuo.github.io/2020/06/15/tensorflow2.0%E4%BB%A5%E4%B8%8Acpu%E7%89%88%E6%9C%AC%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="qingfengbangzuo">
@@ -327,7 +329,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Adaboost</h1>
+          <h1 class="post-title" itemprop="name headline">tensorflow2.0以上cpu版本安装方法</h1>
         
 
         <div class="post-meta">
@@ -339,8 +341,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-12T00:00:00+08:00">
-                2020-06-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-15T09:27:15+08:00">
+                2020-06-15
               </time>
             
 
@@ -362,19 +364,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
-                    <span itemprop="name">Machine Learning</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Machine-Learning/%E9%9B%86%E6%88%90%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
-                    <span itemprop="name">集成模型</span>
+                  <a href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/" itemprop="url" rel="index">
+                    <span itemprop="name">疑难杂症</span>
                   </a>
                 </span>
 
@@ -404,7 +395,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.6k
+                  737
                 </span>
               
 
@@ -420,7 +411,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  6
+                  3
                 </span>
               
             </div>
@@ -441,109 +432,21 @@
       
 
       
-        <p>周志华关于AdaBoost的讲座对理解AdaBoost的前世今生很有帮助。B站上可以搜到相关视屏。</p>
-<p>AdaBoost 源于Kearns 和 Valiant的一个提问，强可学习 是否等价于  弱可学习 ？</p>
-<p>在概率近似正确（Probably Approximately correct ,PAC）的框架下，一个概念如果存在一个多项式的学习算法能够学习它，并且正确率很高，那么就称这个概念是强可学习的，若果存在一个多项式的学习算法能够学习它，学习的正确率仅比随机猜测略好，那么就成这个概念是弱可学习的。</p>
-<p>Schapire证明强可学习与弱可学习是等价的，也即是说，在PAC学习的框架下，一个概念是强可学习的充分必要条件是这个概念是弱可学习的。这是一个非常有启发的证明，并且据周志华介绍，当时Schapire不仅给出了理论证明，也指出了具体的实现思路。因为，一般来讲，得到一个弱学习器的代价是相比较小的，由于上面理论的成立，我们可以根据某种方式，将弱学习提升称为强学习器，因为他们是等价的。</p>
-<p>在这个理论成立的前提下，Freund和Schapire于1995年提出AdaBoost.提升树由Friedman于2000年提出。</p>
-<h3 id="常见损失函数"><a href="#常见损失函数" class="headerlink" title="常见损失函数"></a>常见损失函数</h3><p>对于机器学习爱好者，一定要知道这几种损失函数是什么</p>
-<ol>
-<li><p>0-1损失函数</p>
-<script type="math/tex; mode=display">
-L(y, f(x)) = \begin{cases} 1, &  {y \neq f(x) } \\ 0, & {y = f(x)} \end{cases}</script></li>
-<li><p>平方损失函数</p>
-<script type="math/tex; mode=display">
-L(y, f(x)) = (y - f(x))^2</script></li>
-<li><p>对数损失函数</p>
-<script type="math/tex; mode=display">
-L(y, p(y|x)) = - \log p(y|x)</script></li>
-<li><p>绝对值损失函数</p>
-<script type="math/tex; mode=display">
-L(y, f(x)) = | y -f(x) |</script></li>
-<li><p>Hinge loss</p>
-<script type="math/tex; mode=display">
-L(w,b) = max \{0, 1-yf(x) \}</script><p>当SVM使用线性核的时候，使用该损失函数。 </p>
-</li>
-</ol>
-<h3 id="AdaBoost-M1"><a href="#AdaBoost-M1" class="headerlink" title="AdaBoost M1"></a>AdaBoost M1</h3><hr>
-<ol>
-<li><p>Initializa the observation weights $w_i = 1/N, i =1,2,…,N.$</p>
-</li>
-<li><p>For $m=1$to M:</p>
-<p>(a) Fit a classifier $G_m(x)$ to the training data using weights $w_i$. </p>
-<p>(b) Compute</p>
-<script type="math/tex; mode=display">
-err_m = \frac{\sum_{i=1}^Nw_i\mathbf{I}(y_i\ne G_m(x_i))}{\sum_{i=1}^Nw_i}</script><p>(c) Compute $a_m = log((1-err_m)/err_mm)$.</p>
-<p>(d) Set $w_i &lt;- w_i<em>exp[a_m</em>\mathbf{I}(y_i \ne G_m(x_i))],i= 1,2,…,N$</p>
-</li>
-<li><p>Output $G(x) = sign[\sum_{m=1}^Ma_mG_m(x)]$.</p>
-</li>
-</ol>
-<hr>
-<p>以上就是1997年 Freund 和Schapire提出的AdaBoost M1算法。可以看得出该算法精简巧妙，令人惊叹。</p>
-<p>但是学术界对该算法有多种推导方式，其中被广泛接受的是Friedman于2000年提出的AdaBoost是一种 <strong>”基于加性模型的最小化指数损失函数的前向分布算法”</strong>。</p>
-<p>西瓜书和李航书给出的AdaBoost具体算法为</p>
-<hr>
-<p>输入： 训练数据集$ D = \{(x_1,y_1),(x_2,y_2),…,(x_m,y_m)\}$</p>
-<p>​         基学习算法G；</p>
-<p>​         训练轮数T。</p>
-<p>过程：</p>
-<ol>
-<li><p>$D_1(x) = \frac{1}{m}$</p>
-</li>
-<li><p>for t = 1,2,…T do</p>
-<p>$h_t = G(D,D_t)$</p>
-<p>$\varepsilon_t = P_{x~D_t}(h_t(x)\ne f(x))$</p>
-<p>if $\varepsilon &gt; 0.5$ then break</p>
-<p>$a_t = \frac{1}{2}ln(\frac{1-\varepsilon_t}{\varepsilon})$;</p>
-<p>$D_{t+1}(x) = \frac{D_t(x)}{Z_t}* \begin{cases} exp(-a_t), &amp; if \quad h_t(x) = f(x) \\ exp(a_t), &amp; if \quad  h_t(x)\ne f(x) \end{cases}$</p>
-<p>​                = $\frac{D_t(x)exp(-a_tf(x)h_t(x))}{Z_t}$</p>
-<ol>
-<li>end for</li>
-</ol>
-</li>
-</ol>
-<p>输出:  $H(x) = sign(\sum_{t=1}^Ta_th_t(x))$</p>
-<hr>
-<p>上述两种算法是等价的。</p>
-<p>Boosting的核心理念是先从初始训练集训练出一个基学习器，然后根据基学习器的表现对数据分布进行调整，使得先前的基学习器做错的训练样本在后续收到更多关注，然后基于调整后的样本分布来训练下一个基学习器，如此重复进行，直至基学习器达到预先指定的某个指标，最终将这T个基学习器加权结合。</p>
-<p>AdaBoot的基本思想和上面介绍的差不多。这类方法被称为串行提升，就像流水线一样是一个串一个地不断改进。</p>
-<p>关于AdaBoost，需要解决两个问题，</p>
-<p>第一：如何更新数据的分布，也就是样本的权重？</p>
-<p>第二：如何确定基学习器结合的权重？</p>
-<p>任何一本教材几乎都会给出AdaBoost详细的推导过程，M1版本的算法已经给出了更新公式。这里我想把这些思路理一理，祈求能够得到一条清楚的逻辑。</p>
-<p>根据Friedman的解释，AdaBoost可以理解为一种<strong>以最小化指数损失函数的前向分布的加性模型。</strong>关于加性模型以及前向分布算法，下面的算法步骤大可帮助理解：</p>
-<hr>
-<p><strong>Forward Stagewise Additive Modeling</strong></p>
-<ol>
-<li><p>Initialize   $f_0(x) = 0$</p>
-</li>
-<li><p>For m =1 to M:</p>
-<p>(a) Compute </p>
-<script type="math/tex; mode=display">
-(\beta_m,\gamma_m) = argmin_{\beta,\gamma}\sum_{i=1}^NL(y_i,f_{m-1}(x_i)+\beta b(x_i;\gamma))</script><p>(b) Set $f_m(x) = f_{m-1}(x)+\beta b(x_i;\gamma))$</p>
-</li>
-</ol>
-<hr>
-<p>根据上面的模型，我们可以写出AdaBoost的优化目标，也就是最小化损失函数：</p>
-<script type="math/tex; mode=display">
-min_{\{\beta_m,\gamma_m\}} \sum_{i=1}^NL(y_i.\sum_{m=1}^M\beta_m b(x_i;\gamma_m))</script><p>根据前向分布算法，$\sum_{m=1}^M\beta_m b(x_i;\gamma_m) = f_{m-1}(x_i)+\beta_m b(x_i;\gamma_m)$.</p>
-<p>到这里只是形式化的表示出了损失函数，但并没有给出真正使用哪一种损失函数，常见的损失函数已经在上面列出。</p>
-<p>那为什么就一定是指数损失函数呢？</p>
-<script type="math/tex; mode=display">
-L(y,f(x)) = exp(-yf(x))</script><p>由于Friedman对算法给出了解释，大概是说假设采用指数损失函数，那么推导出来的权重更新公式正好和AdaBoost M1 差不多。由此可以认为损失函数是指数的。</p>
-<p>下面我们来看一下，在指数损失函数这个假设下，都能得出一些什么有意思的结论。、</p>
-<p>假设损失函数是指数损失，那么原优化目标为</p>
-<script type="math/tex; mode=display">
-min_HL_{exp}(H|D) = \mathbb{E}_{x~D}[e^{-f(x)H(x)}]</script><p>考虑$L（H|D）$对$H(x)$的偏导得：</p>
-<script type="math/tex; mode=display">
-H(x) = \frac{1}{2}ln\frac{P(f(x) = 1|x)}{p(f(x) = -1|x)}</script><p>到这里，我们得到了最优分类器为对数几率的一半。这个函数很眼熟，在逻辑回归也出现过。对它进行变形可能更好理解</p>
-<script type="math/tex; mode=display">
-P(f(x)=1|x) = \frac{1}{1+e^{-2H(x)}}</script><p>这样的函数称为对数几率函数。</p>
-<script type="math/tex; mode=display">
-sign(H(x)) = sign(\frac{1}{2}ln\frac{P(f(x )=1|x}{P(f(x)=-1|x)})\\
-=\begin{cases} 1 &P(f(x)=1|x )\\
--1 &P(f(x)=-1|x)\end{cases}</script><p>也就是说，它分类错误率上，和逻辑回归一样，AdaBoost也能达到贝叶斯最优错误率。</p>
+        <p>安装tensorflow cpu 2.0以上版本。</p>
+<p>python2.0已经支持python3.7了。不过我装的还是3.6的pyhon。</p>
+<p>Anaconda的安装教程就不说了，按照网上来就OK了。这里只简单记录下如何安装tensorflow-cpu版本。</p>
+<p>安装命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">0: conda config --add channels https:&#x2F;&#x2F;mirrors.tuna.tsinghua.edu.cn&#x2F;anaconda&#x2F;pkgs&#x2F;free&#x2F;</span><br><span class="line">0: conda config --set show_channel_urls yes  &#x2F;&#x2F;清华镜像 </span><br><span class="line">1: pip install tensorflow-cpu</span><br><span class="line">2: pip install tensorflow-cpu&#x3D;&#x3D;2.1.0 -i https:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;pypi&#x2F;simple</span><br><span class="line"></span><br><span class="line">3: pip install --ignore-installed --upgrade tensorflow  &#x2F;&#x2F;这个是老方法，已经不行了，最新的tensorflow是将cpu-gpu版本绑定在一起的，使用这条命令下载大概率会报错。推荐使用上面两条</span><br></pre></td></tr></table></figure>
+<p>安装完成，测试一下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"> </span><br><span class="line">version = tf.__version__</span><br><span class="line"><span class="comment"># pu_ok = tf.test.is_gpu_available()</span></span><br><span class="line">gpu_ok = tf.config.list_physical_devices(<span class="string">"GPU"</span>)</span><br><span class="line">print(<span class="string">"tf version:"</span>, version, <span class="string">"\nGPU number"</span>, gpu_ok)</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 输出结果</span></span><br><span class="line">tf version: <span class="number">2.1</span><span class="number">.0</span> </span><br><span class="line">GPU number[]</span><br></pre></td></tr></table></figure>
+<p>可能会报错，如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"C:\Programs\Python\tensorflow210_cpu\lib\site-packages\tensorflow_core\python\pywrap_tensorflow.py"</span>, line <span class="number">58</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    <span class="keyword">from</span> tensorflow.python.pywrap_tensorflow_internal <span class="keyword">import</span> * </span><br><span class="line">File <span class="string">"C:\Programs\Python\tensorflow210_cpu\lib\site-packages\tensorflow_core\python\pywrap_tensorflow_internal.py"</span>, line <span class="number">28</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    _pywrap_tensorflow_internal = swig_import_helper()</span><br><span class="line">  File <span class="string">"C:\Programs\Python\tensorflow210_cpu\lib\site-packages\tensorflow_core\python\pywrap_tensorflow_internal.py"</span>, line <span class="number">24</span>, <span class="keyword">in</span> swig_import_helper</span><br><span class="line">    _mod = imp.load_module(<span class="string">'_pywrap_tensorflow_internal'</span>, fp, pathname, description)</span><br><span class="line">  File <span class="string">"C:\Programs\Python\tensorflow210_cpu\lib\imp.py"</span>, line <span class="number">242</span>, <span class="keyword">in</span> load_module</span><br><span class="line">    <span class="keyword">return</span> load_dynamic(name, filename, file)</span><br><span class="line">  File <span class="string">"C:\Programs\Python\tensorflow210_cpu\lib\imp.py"</span>, line <span class="number">342</span>, <span class="keyword">in</span> load_dynamic</span><br><span class="line">    <span class="keyword">return</span> _load(spec)</span><br><span class="line">ImportError: DLL load failed: 找不到指定的模块。</span><br><span class="line"> </span><br><span class="line">During handling of the above exception, another exception occurred:</span><br><span class="line"> </span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">  File <span class="string">"C:\Programs\Python\tensorflow210_cpu\lib\site-packages\tensorflow\__init__.py"</span>, line <span class="number">101</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    <span class="keyword">from</span> tensorflow_core <span class="keyword">import</span> *</span><br><span class="line">  File <span class="string">"C:\Programs\Python\tensorflow210_cpu\lib\site-packages\tensorflow_core\__init__.py"</span>, line <span class="number">40</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    <span class="keyword">from</span> tensorflow.python.tools <span class="keyword">import</span> module_util <span class="keyword">as</span> _module_util</span><br><span class="line">  File <span class="string">"C:\Programs\Python\tensorflow210_cpu\lib\site-packages\tensorflow\__init__.py"</span>, line <span class="number">50</span>, <span class="keyword">in</span> __getattr__</span><br><span class="line">    module = self._load()</span><br><span class="line">  File <span class="string">"C:\Programs\Python\tensorflow210_cpu\lib\site-packages\tensorflow\__init__.py"</span>, line <span class="number">44</span>, <span class="keyword">in</span> _load</span><br><span class="line">    module = _importlib.import_module(self.__name__)</span><br><span class="line">  File <span class="string">"C:\Programs\Python\tensorflow210_cpu\lib\importlib\__init__.py"</span>, line <span class="number">127</span>, <span class="keyword">in</span> import_module</span><br><span class="line">    <span class="keyword">return</span> _bootstrap._gcd_import(name[level:], package, level)</span><br><span class="line">  File <span class="string">"C:\Programs\Python\tensorflow210_cpu\lib\site-packages\tensorflow_core\python\__init__.py"</span>, line <span class="number">49</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    <span class="keyword">from</span> tensorflow.python <span class="keyword">import</span> pywrap_tensorflow</span><br><span class="line">  File <span class="string">"C:\Programs\Python\tensorflow210_cpu\lib\site-packages\tensorflow_core\python\pywrap_tensorflow.py"</span>, line <span class="number">74</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    <span class="keyword">raise</span> ImportError(msg)</span><br><span class="line">ImportError: Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"C:\Programs\Python\tensorflow210_cpu\lib\site-packages\tensorflow_core\python\pywrap_tensorflow.py"</span>, line <span class="number">58</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    <span class="keyword">from</span> tensorflow.python.pywrap_tensorflow_internal <span class="keyword">import</span> *</span><br><span class="line">  File <span class="string">"C:\Programs\Python\tensorflow210_cpu\lib\site-packages\tensorflow_core\python\pywrap_tensorflow_internal.py"</span>, line <span class="number">28</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    _pywrap_tensorflow_internal = swig_import_helper()</span><br><span class="line">  File <span class="string">"C:\Programs\Python\tensorflow210_cpu\lib\site-packages\tensorflow_core\python\pywrap_tensorflow_internal.py"</span>, line <span class="number">24</span>, <span class="keyword">in</span> swig_import_helper</span><br><span class="line">    _mod = imp.load_module(<span class="string">'_pywrap_tensorflow_internal'</span>, fp, pathname, description)</span><br><span class="line">  File <span class="string">"C:\Programs\Python\tensorflow210_cpu\lib\imp.py"</span>, line <span class="number">242</span>, <span class="keyword">in</span> load_module</span><br><span class="line">    <span class="keyword">return</span> load_dynamic(name, filename, file)</span><br><span class="line">  File <span class="string">"C:\Programs\Python\tensorflow210_cpu\lib\imp.py"</span>, line <span class="number">342</span>, <span class="keyword">in</span> load_dynamic</span><br><span class="line">    <span class="keyword">return</span> _load(spec)</span><br><span class="line">ImportError: DLL load failed: 找不到指定的模块</span><br><span class="line">————————————————</span><br></pre></td></tr></table></figure>
+<p>原因说不清楚，不过有人给出了解决方法:</p>
+<p><strong>到微<a href="https://visualstudio.microsoft.com/zh-hans/downloads/?q=Microsoft+Visual+C%2B%2B+Redistributable" target="_blank" rel="noopener">软官方网</a>下载最新的Visual C++库的运行组件（链接下方），然后更新，重启，问题解决。</strong></p>
+<p>再把上面的测试代码写一遍就会显示正确信息了。</p>
+<p><img src="/2020/06/15/tensorflow2.0%E4%BB%A5%E4%B8%8Acpu%E7%89%88%E6%9C%AC%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95/捕获.png" alt="测试结果"></p>
+<p>然后去Anaconda用户页面选中需要的库安装，基本的比如ipython,jupyter notebook,spyder这些是要用到的，装一下。</p>
+<p>done!</p>
 
       
     </div>
@@ -567,7 +470,7 @@ sign(H(x)) = sign(\frac{1}{2}ln\frac{P(f(x )=1|x}{P(f(x)=-1|x)})\\
       
         <div class="post-tags">
           
-            <a href="/tags/ML/" rel="tag"><i class="fa fa-tag"></i>ML</a>
+            <a href="/tags/%E5%85%B6%E4%BB%96/" rel="tag"><i class="fa fa-tag"></i>其他</a>
           
         </div>
       
@@ -580,8 +483,8 @@ sign(H(x)) = sign(\frac{1}{2}ln\frac{P(f(x )=1|x}{P(f(x)=-1|x)})\\
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/12/EM%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/" rel="next" title="EM算法的理解">
-                <i class="fa fa-chevron-left"></i> EM算法的理解
+              <a href="/2020/06/12/Hierarchical/" rel="next" title="层次聚类">
+                <i class="fa fa-chevron-left"></i> 层次聚类
               </a>
             
           </div>
@@ -590,8 +493,8 @@ sign(H(x)) = sign(\frac{1}{2}ln\frac{P(f(x )=1|x}{P(f(x)=-1|x)})\\
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/06/12/%E9%AB%98%E6%96%AF%E8%BF%87%E7%A8%8B/" rel="prev" title="高斯过程">
-                高斯过程 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/06/16/%E4%BB%80%E4%B9%88%E6%98%AF%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/" rel="prev" title="语言模型">
+                语言模型 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -644,17 +547,8 @@ sign(H(x)) = sign(\frac{1}{2}ln\frac{P(f(x )=1|x}{P(f(x)=-1|x)})\\
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -751,22 +645,6 @@ sign(H(x)) = sign(\frac{1}{2}ln\frac{P(f(x )=1|x}{P(f(x)=-1|x)})\\
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#常见损失函数"><span class="nav-number">1.</span> <span class="nav-text">常见损失函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AdaBoost-M1"><span class="nav-number">2.</span> <span class="nav-text">AdaBoost M1</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       

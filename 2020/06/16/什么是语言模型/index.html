@@ -112,7 +112,7 @@
 
 
 
-  <meta name="keywords" content="ML," />
+  <meta name="keywords" content="NLP," />
 
 
 
@@ -125,22 +125,17 @@
 
 
 
-<meta name="description" content="kmeans算法数学原理目标函数：  J &#x3D; \sum_{j&#x3D;1}^K\sum_{i&#x3D;1}^N z_{i,j} dist(x_i,\hat{x_j})^2初始的kmeans算法使用的是欧几里得距离(l2)。 K代表聚类的数目，N代表数据的个数，$z_j$是latent变量, $\hat{x_j}$表示聚类j内的所有数据点的均值。 那我们规定:  z_{i,j} &#x3D; 1, if  \quad j &#x3D;">
+<meta name="description" content="当我们在讨论语言模型的时候，我们讨论的是什么？​      从字面意思上理解，语言模型（language model）无非是对语言的一种建模。那么对语言建模的目的是什么？为什么要对语言进行建模呢？ ​    回答这个不难，因为无论是机器翻译还是语音识别，所有的NLP领域都绕不开一个问题，那就是“到底什么是人话？”。一段文本，一段音频，我们将其称之为“信号”，是否符合人类语言特征，是否能够让人看得懂">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Kmeans">
-<meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/12/kmeans/index.html">
+<meta property="og:title" content="语言模型">
+<meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/16/%E4%BB%80%E4%B9%88%E6%98%AF%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/index.html">
 <meta property="og:site_name" content="Qingfengbangzuo">
-<meta property="og:description" content="kmeans算法数学原理目标函数：  J &#x3D; \sum_{j&#x3D;1}^K\sum_{i&#x3D;1}^N z_{i,j} dist(x_i,\hat{x_j})^2初始的kmeans算法使用的是欧几里得距离(l2)。 K代表聚类的数目，N代表数据的个数，$z_j$是latent变量, $\hat{x_j}$表示聚类j内的所有数据点的均值。 那我们规定:  z_{i,j} &#x3D; 1, if  \quad j &#x3D;">
-<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/12/kmeans/2020-05-09%2012-19-07%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png">
-<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/12/kmeans/2020-05-09%2012-50-28%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png">
-<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/12/kmeans/2020-05-09%2019-20-14%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png">
-<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/12/kmeans/2020-05-12%2011-08-48%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png">
-<meta property="article:published_time" content="2020-06-12T10:57:42.337Z">
-<meta property="article:modified_time" content="2020-06-12T10:59:49.658Z">
+<meta property="og:description" content="当我们在讨论语言模型的时候，我们讨论的是什么？​      从字面意思上理解，语言模型（language model）无非是对语言的一种建模。那么对语言建模的目的是什么？为什么要对语言进行建模呢？ ​    回答这个不难，因为无论是机器翻译还是语音识别，所有的NLP领域都绕不开一个问题，那就是“到底什么是人话？”。一段文本，一段音频，我们将其称之为“信号”，是否符合人类语言特征，是否能够让人看得懂">
+<meta property="article:published_time" content="2020-06-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-06-16T11:28:37.972Z">
 <meta property="article:author" content="qingfengbangzuo">
-<meta property="article:tag" content="ML">
+<meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://qingfengbangzuo.github.io/2020/06/12/kmeans/2020-05-09%2012-19-07%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png">
 
 
 
@@ -170,13 +165,13 @@
 
 
 
-  <link rel="canonical" href="https://qingfengbangzuo.github.io/2020/06/12/kmeans/"/>
+  <link rel="canonical" href="https://qingfengbangzuo.github.io/2020/06/16/什么是语言模型/"/>
 
 
 
 
 
-  <title>Kmeans | Qingfengbangzuo</title>
+  <title>语言模型 | Qingfengbangzuo</title>
   
 
 
@@ -315,7 +310,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://qingfengbangzuo.github.io/2020/06/12/kmeans/">
+    <link itemprop="mainEntityOfPage" href="https://qingfengbangzuo.github.io/2020/06/16/%E4%BB%80%E4%B9%88%E6%98%AF%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="qingfengbangzuo">
@@ -332,7 +327,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Kmeans</h1>
+          <h1 class="post-title" itemprop="name headline">语言模型</h1>
         
 
         <div class="post-meta">
@@ -344,8 +339,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-12T18:57:42+08:00">
-                2020-06-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-16T00:00:00+08:00">
+                2020-06-16
               </time>
             
 
@@ -367,19 +362,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
-                    <span itemprop="name">Machine Learning</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Machine-Learning/%E8%81%9A%E7%B1%BB%E7%AE%97%E6%B3%95/" itemprop="url" rel="index">
-                    <span itemprop="name">聚类算法</span>
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
                   </a>
                 </span>
 
@@ -409,7 +393,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  3.1k
+                  2.2k
                 </span>
               
 
@@ -425,7 +409,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  11
+                  8
                 </span>
               
             </div>
@@ -446,158 +430,64 @@
       
 
       
-        <h3 id="kmeans算法数学原理"><a href="#kmeans算法数学原理" class="headerlink" title="kmeans算法数学原理"></a>kmeans算法数学原理</h3><p>目标函数：</p>
+        <h3 id="当我们在讨论语言模型的时候，我们讨论的是什么？"><a href="#当我们在讨论语言模型的时候，我们讨论的是什么？" class="headerlink" title="当我们在讨论语言模型的时候，我们讨论的是什么？"></a>当我们在讨论语言模型的时候，我们讨论的是什么？</h3><p>​      从字面意思上理解，语言模型（language model）无非是对语言的一种建模。那么对语言建模的目的是什么？为什么要对语言进行建模呢？</p>
+<p>​    回答这个不难，因为无论是机器翻译还是语音识别，所有的NLP领域都绕不开一个问题，那就是“到底什么是人话？”。一段文本，一段音频，我们将其称之为“信号”，是否符合人类语言特征，是否能够让人看得懂，听得懂？这个是所有NLP任务的基本问题，能够很好地回答了这个问题，才能够继续做下一步。</p>
+<h3 id="为什么语言模型很重要？"><a href="#为什么语言模型很重要？" class="headerlink" title="为什么语言模型很重要？"></a>为什么语言模型很重要？</h3><p>有一个概念是这样讲的：</p>
+<p> Noisy Channel Model:</p>
+<p>机器翻译，语音识别，拼写纠错，OCR，密码破解等NLP任务都有一个相似之处，那就是问题的形式都是给定一段信号，然后预测在给定信号下的正确的输出。形式化描述：</p>
 <script type="math/tex; mode=display">
-J = \sum_{j=1}^K\sum_{i=1}^N z_{i,j} dist(x_i,\hat{x_j})^2</script><p>初始的kmeans算法使用的是欧几里得距离(l2)。</p>
-<p>K代表聚类的数目，N代表数据的个数，$z_j$是latent变量, $\hat{x_j}$表示聚类j内的所有数据点的均值。</p>
-<p>那我们规定:</p>
+P(text|source) \propto P(source|text)P(text)</script><p>分母上的$P(source)$被省略了，因为对于给定的source，$P(source)$是固定的，我们只讨论在给定source情况下的text正确性的问题。</p>
+<p>例如：</p>
+<p>​    机器翻译： 假设英文翻译成中文。</p>
 <script type="math/tex; mode=display">
-z_{i,j} = 1, if  \quad j = argmin_j ||x_i-\hat{x_j}||^2\\
-0,ohters.</script><p>对$\hat{x_j}$求偏导：</p>
+obj =argmax_{中文} P(中文|英文)</script><p>根据上面的NCM模型，可以有：</p>
 <script type="math/tex; mode=display">
-2\sum_{i=1}^Nz_{i,j}(x_i-\bar{x_j}) = 0</script><p>可得：</p>
+obj = argmax P(英文|中文)P(中文)</script><p>​    模型$P(英文|中文)$负责中英文间的映射，这个最简单的情况下可以由一个字典完成，模型$P(中文)$就是语言模型， 用来控制输出符合语言特征。</p>
+<p>​    比方说，对于“The brown fox skip over the lazy dog.”映射模型可以完成单词间的逐一映射，但是如何组合才符合中文的说法习性，就需要语言模型来控制。</p>
+<h3 id="如何解决？"><a href="#如何解决？" class="headerlink" title="如何解决？"></a>如何解决？</h3><p>​    然而要解决这个问题并不简单，原因是多方面的：</p>
+<ul>
+<li><p>1、语言天生的歧义和多变性。多变性是指一种含义可以有很多种方式来说，也可以指一种说法可以有很多种含义。</p>
+</li>
+<li><p>2、语言的规则不好定义。(ill-defined).很难有一套规则把某种语言给定义好，所谓的定义好就是指语言的表达模式完全遵从某种规则。对于中文来讲，尽管我们有标准的语法，但是在现实中一句话可能是语法的各种组合，或者我们讲话写作不用按照标准的语法也可以表达意思。</p>
+</li>
+<li><p>3、语义是无穷尽的，不同的单词可以组成不同的句子，不同的句子又可以表达不同的意思，这个组合没有上限。更何况人类的语言库一直在更新。因此，训练样本无法穷尽所有的情况。</p>
+</li>
+<li><p>4、解析语义是一个组合问题。单词-&gt;句子-&gt;文章/新闻/事件。复杂度骤增。</p>
+</li>
+<li>5、最后一个没有理解到位，NLP问题具有sparseness(稀疏性)?</li>
+</ul>
+<p>业界对语言模型的一个定义是：</p>
+<p>Assigning a probability to sentences or sequence of words in a language.</p>
+<p>不仅要能够给一句话的出现概率，还要能够给出，给定语境下的目标单词的条件概率。</p>
+<p>上述两个问题等价于一个问题。根据条件概率公式：</p>
 <script type="math/tex; mode=display">
-\hat{x_{j}} = \frac{\sum_{i}r_{i,j}x_i}{\sum_{n}r_{i,j}}</script><p>当我们引入latent变量以后，我们发现，通过给定$\hat{x_j}$一个初值，我们可以计算出所有数据的$r_{i,j}$（E步），而后，根据偏导我们又可以得到$\hat{x_j}$，这个值从表面上看就是属于聚类j的所有点的均值(M步)。</p>
-<p>要注意这个值是从偏导得来的。</p>
-<p>因此，kmeans算法可以简单的归结为：</p>
-<p>1.初始化聚类数目和初始的中心点$\hat{x_j}$.</p>
-<p>2.根据最小化$dist(x_i,\hat{x_j})^2$，对隐含变量$z_{i,j}$赋值。</p>
-<p>3.根据得到的$z_{i,j}$,更新中心点$\hat{x_j}$。</p>
-<p>4.重复步骤２，３，直到算法满足停止条件，结束迭代。</p>
-<p>5.输出中心点坐标。</p>
-<p>对于$\hat{x_j}$的更新公式有一个在线版本：</p>
+p(w_{1:n}) = p(w_1)p(w_2|w_1)p(w_3|w_{1:2})...p(w_n|w_{1:n-1})\\
+p(w_{1:n-1}) = p(w_1)p(w_2|w_1)p(w_3|w_{1:2})...p(w_{n-1}|w_{1:n-2})\\
+p(w_n|w_{1:n-1}) = \frac{p(w_{1:n})}{p(w_{1:n-1})}</script><p>假设我们知道每个句子的概率，那我们也可以知道给定序列下每个词的出现概率。</p>
+<h4 id="传统的方法是采用马尔科夫假设。"><a href="#传统的方法是采用马尔科夫假设。" class="headerlink" title="传统的方法是采用马尔科夫假设。"></a>传统的方法是采用马尔科夫假设。</h4><p>我们对后面一个问题应用马尔科夫假设，准确地说是kth order markov-assumption。</p>
+<p>即目标单词的出现概率仅与之前出现的前k个单词有关。</p>
 <script type="math/tex; mode=display">
-\mathbf{u_j}^{new} = \mathbf{u_j}^{old}+\eta_i(\mathbf{x_i}-\mathbf{u_j^{old}})</script><p><strong>算法不足</strong></p>
-<p>１、对异常点敏感。主要原因是平均值对噪声比较敏感。</p>
-<p>２、很难发现大小差别很大的簇，也就是说小簇很容易被归为大簇。</p>
-<p>３、依赖于k值和初始质心的选择，不好的质心容易陷入局部最优。</p>
-<p>４、对离散特征的处理不是很好。</p>
-<p><strong>初始值</strong></p>
-<p>SSE下降幅度越大，说明初始质心选择教好。</p>
-<p>初始值选择会影响到kmeans最终的收敛效果。</p>
-<h3 id="效果衡量指标"><a href="#效果衡量指标" class="headerlink" title="效果衡量指标"></a>效果衡量指标</h3><p><strong>SSE (sum of square error)：误差平方和</strong></p>
+P(w_{i+1}|w_{1:i}) \approx P(w_{i+1}|w_{i-k:i})</script><p>根据上面的公式：</p>
 <script type="math/tex; mode=display">
-SSE = \sum_{i=1}^k\sum_{p\in C_i}|p-m_i|^2</script><p>$C_i$表示簇i。$m_i$表示簇i的簇质心。$p$属于簇内的样本点。</p>
-<p>SSE表示簇内样本点到质心的距离之和，反应簇内的松散度。簇越紧密SSE越小，反之越大。</p>
-<p>SSE受到初始质心位置的选择的影响，当质心选的不好的时候，SSE的变化教缓。而当质心选的好的时候，SSE的变化会先呈现剧烈下降，而后平缓下降。</p>
-<p><strong>肘策略(Elbow method)</strong></p>
-<p>SSE随着聚类的簇的数量增加会呈现出减小的趋向。当只有一类的时候，此时SSE为整个数据集上最大，当有n类（n是样本量）时，SSE为０．</p>
-<p>从这个角度看，我们可以根据SSE随k变化的走向来选取合适的k。合适的k有这样的特征，小于k的SSE做急速下降，大于k的SSE做平缓下降。</p>
-<p><strong>轮廓系数SC(Silhouette Coefficient)</strong></p>
+P_{MLE} (w_{i+1} = m|w_{i-k:i}) = \frac{\#(w_{i-k:i+1})}{\#(w_{i-k:i})}</script><p>至此，我们就得到了一个baseline模型。</p>
+<p>但是这个baseline模型有一个缺点，就是对于没有观察到的句子，这个概率是无穷大。因此，又有人在这个基础上做了平滑。</p>
 <script type="math/tex; mode=display">
-S = \frac{(b-a)}{max(a,b)}</script><p>从公式可以看出$S \in [0,1]$. a表示样本i到同一簇内的其他点的不相似度（距离）的平均值。b表示样本i到其他簇的平均不相似（距离）度的最小值。a越小说明它更应该被分到该簇，反之相反。b越大说明改点离其他簇的距离越大，说明簇的离散度更好，反之则说明两个簇贴的比较近。</p>
-<p><img src="/2020/06/12/kmeans/2020-05-09 12-19-07屏幕截图.png" alt="2020-05-09 12-19-07屏幕截图"></p>
-<p>轮廓系数结合了凝聚度和离散度两个指标。每次聚类后每个样本都会有一个轮廓系数，当它为１时，说明这个聚类对于该样本点来说非常好，当它为０的时候，说明这个点可能处在边界上，当小于０时，暗示分类错误了。</p>
-<p>但是仅仅使用sc这一个指标无法很好的衡量聚类效果，因为当一些小的聚类被聚合成了一个大类时，这个指标反应不出来这种情况。因此需要结合另一个指标，轮廓宽度。轮廓宽度即字面意思，表示单个簇的轮廓大小。在sc差不多的情况下，各簇的轮廓宽度越均匀越好。轮廓宽度指的是簇的样本数目大小。</p>
-<p>轮廓宽度可以用平均SSE来衡量？</p>
-<p><strong>ＣＨ(Calinski-Harabasz)</strong></p>
-<p>类别内部数据的距离平方和越小越好，类别之间的距离平方和越大越好，CH的值越大说明聚类效果越好。</p>
-<script type="math/tex; mode=display">
-CH(k) = \frac{SSB}{SSW}\frac{m-k}{k-1} \\
-SSW = \sum_{i=1}^m||x_i-C_{pi}||^2 \\
-SSB = \sum_{j=1}^kn_j||C_j-mean(X)||^2</script><p>m为训练集数目，k为类别数。<img src="/2020/06/12/kmeans/2020-05-09 12-50-28屏幕截图.png" alt="2020-05-09 12-50-28屏幕截图"></p>
-<p>mean(X)表示训练集所有数据点的中心点。$n_j$表示第j个簇内样本点的个数。$C_j$表示簇内质心。</p>
-<p>(m-k)/(k-1)的含义是希望使用尽可能少的类来聚合尽可能多的数据集。</p>
-<p>还有一个和CH差不多的指标</p>
-<p><strong>WB</strong></p>
-<script type="math/tex; mode=display">
-WB = K\frac{SSW}{SSB}</script><p>这个指标是越小越好，表达的意思和上面CH差不多。</p>
-<h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><p>鉴于kmeans算法的缺点</p>
-<p>1、对异常值敏感</p>
-<p>解决方法：标准化</p>
-<p>2、容易将小类数据归并为大类</p>
-<p>３、容易收到初始参数的影响：k值和初始知心的选择。</p>
-<p><strong>Canopy(树冠)算法帮助确定k值</strong></p>
-<p>Canopy算法的大致思路为：</p>
-<p>确定一个半径为$T_1$和一个半径为$T_2$的圆，$T_1&lt;T_2$。随机选定一个初始点Ｏ，然后以此为中心以$T_1$ 和$T_2$为半径画两个圆，那么数据集将会被$T_1，T_2$划分为三部分，第一部分为$T_1$内部，被标为初始质心的近点。其次为$T_1$　和$T_2$的截出来的空心圆，落在该区域内的点被标为模棱两可的点。最后是$T_2$外侧的点，被标记为远点。</p>
-<p>然后在落在远点区域的数据点中，随机选出一个数据点E执行以上操作，$T_1$和$T_2$不变，会发现，原先落在空心圆内的一部分数据点现在被标为了E为质心的圆的近点。</p>
-<p>在O和E的共同外点中随机选择一点Q执行以上操作，知道所有的外点都被标为了近点。</p>
-<p>最终根据Canopy算法返回的k值(质心数目)作为kmeans算法k值选取的参考，可以大致确定k值的取值范围。</p>
-<p><strong>评价：</strong>这种方法在一定程度上能够帮助确定kmeans算法k值的选择，但是有一个痛点就是$T_1$和$T_2$的选择不好确定。</p>
-<p><strong>KMeans++</strong></p>
-<p>该算法是对kmeans算法的改进，针对的是kmeans算法初始质心选择的问题。</p>
-<p>kmeans++认为初始质心的选择相隔的越远越好，这个<strong>远</strong>通过公式</p>
-<script type="math/tex; mode=display">
-P = \frac{D(x)^2}{\sum_{x\in X}D(x)^2}</script><p>来刻画。就是说先随机确定一个质心，然后根据上面的公式选取另Ｐ足够大的另一个数据点作为第二个质心。这里的p是一个概率值，选第二个质心的时候是依据概率Ｐ选的，p值越大，说明被选的概率越大。</p>
-<p>但是这样做有几个地方没有解释清楚，１、这种方式明显受离群值的影响较大。２、到底多远算是合适，选择距离初始质心最远的点显然也不合适。3、多个质心的时候如何选择。</p>
-<p><strong>二分KMeans</strong></p>
-<p>二分kmeans算法遵循了一个原则，SSE越大的簇，聚类情况越不好，内部可能包含了多个小簇。因此对它进行二分。</p>
-<p>算法流程：</p>
-<p>１、对数据集选定两个初始质心，进行二分。</p>
-<p>２、计算SSE，在当前所有的簇中，找出SSE较大的那个簇。</p>
-<p>３、对２步骤中找出簇进行选点，二分。</p>
-<p>４、重复2-3，知道簇的数量达到了k设定的数量。(这里个人认为也可以将SSE下限作为停止条件，或者两者结合使用)</p>
-<p>二分kmeans的优点是算法原理清晰，效率高。且受初始质心的选择的影响小。因为即使一开始选择了一个不怎么好的质心，在接下来的分裂中也会把这个不好的簇再次划分开。但是，受影响小不代表不受影响，如果一开始就选择的质心不好，会使得后续的分裂过程增加，且容易使得某些簇过小。因此，结合kmeans的思想，初始质心的选择最好分的越开越好。</p>
-<p>二分kmeans的另一个优点是，最后划分的簇中，每个簇的SSE都不会很大。</p>
-<p><strong>Kernel KMeans</strong></p>
-<p>原理：在低维线性不可分的数据集，映射到高维可能线性可分。(核函数的机制)</p>
-<p>kernel kmeans对于低维线性不可分的数据相对传统的kmeans算法有较大的提升，但是随之而来的计算开销也陡然上升。</p>
-<p>因此传统的kmeans适用于低维线性可分的情况，而kernel kmeas适用于低维线性不可分的情况。两者各有利弊。</p>
-<p><strong>k-medoids(k-中心聚类)</strong></p>
-<p>该算法针对kmeans算法对异常值敏感这一痛点进行优化。核心思想是利用数据点本身作为质心。这样可以避免异常值带来质心偏移。</p>
-<p>算法流程：</p>
-<p>１、选点，任意选取k个点作为初始质心。</p>
-<p>２、聚类。距离使用的是曼哈顿距离。（sum of Absolute Differences）</p>
-<script type="math/tex; mode=display">
-SAD = \sum_{m=1}^k\sum_{p_i \in C_i}dist(p_i,o_i)=
-\sum_{m=1}^k\sum_{p_i \in C_i}\sqrt{\sum_{j=1}^{n_{C_i}}(p_{i,j}-o_{i,j})^２}</script><p>３、遍历。对于第i类中的所有点，遍历第i类中除medoids外的所有点作为质心时的代价，选择代价最小的值作为新的质心。</p>
-<p>４、迭代。重复２－３，直到medoids不再变化。</p>
-<p>５、返回聚类结果。</p>
-<p>k-medoisds算法的pors 和cons</p>
-<p>优点是：对异常值不敏感，因为使用的是实际的数据点。其次，，每次运行的偏差小。最后，对初始的medoisds设置不敏感。<strong>对类别特征也适用。</strong></p>
-<p>缺点是: 运算复杂度高，适合低维小数据量。而当数据量升高时，较少的异常值对kmeans算法的影响也有限，因此kmeans算法实际应用的频率要高于k-medoisds。(kmeans计算复杂度要低)<img src="/2020/06/12/kmeans/2020-05-09 19-20-14屏幕截图.png" alt="2020-05-09 19-20-14屏幕截图"></p>
-<p><strong>ISODATA(Iterative Self Organizing Data Analysis Techniques Algorithm)</strong></p>
-<p>该算法的一个显著特点就是类别数目会随着聚类的过程而变化，比方说初始设定的k值为２０,那么最终的聚类结果会在[k/2, 2k]之间。</p>
-<p>对类别数的“合并”：当聚类结果的某一类中的样本数目太少，或两个类间的距离太近。</p>
-<p>对类别数的“分裂”：当聚类结果中的某一类的类内方差太大，将该类进行分裂。</p>
-<p>ISODATA算法应用于卫星图像聚类。</p>
-<p><strong>Mini-Batch K-Means</strong>（适合大数据量）</p>
-<p>mini-batch kmeans算法是针对大数据量而设计的一个优化算法，当数据量大于１万的时候，就要考虑使用mini-batch kmeans了。</p>
-<p>顾名思义，mini-batch(分批处理)的方法对数据点之间的距离进行计算。</p>
-<p><img src="/2020/06/12/kmeans/2020-05-12 11-08-48屏幕截图.png" alt="2020-05-12 11-08-48屏幕截图"></p>
-<p>计算过程不必使用所有样本数据，而是从不同类别的样本数据中抽取一部分出来代表各自类型进行计算。由于样本量少，所以相应的运行时间会减小。</p>
-<p>mini-batch是聚类精度和运行效率之间的一个折中，当使用所有样本进行聚类时，聚类精度会达到最高，当使用随机样本进行聚类时，效率最高，但是精度较差，mini-batch在两者之间取得了一个很好的折中，当batch值选择好的情况下，min-batch kmeans的聚类精度不会很差。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>-</th>
-<th style="text-align:center">-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Canopy+kmeans</td>
-<td style="text-align:center">粗聚类选择大致的Ｋ值范围</td>
-</tr>
-<tr>
-<td>kmeans++</td>
-<td style="text-align:center">优化了初始质心的选择问题，初始质心距离越远越好</td>
-</tr>
-<tr>
-<td>二分kmeans</td>
-<td style="text-align:center">解决聚类小类容易归入大类的问题</td>
-</tr>
-<tr>
-<td>ISODATA</td>
-<td style="text-align:center">动态聚类</td>
-</tr>
-<tr>
-<td>k-medoids</td>
-<td style="text-align:center">解决对异常值敏感问题</td>
-</tr>
-<tr>
-<td>mini-batch kmeans</td>
-<td style="text-align:center">解决大数据量样本效率低下问题，分批进行聚类，损失小部分精度换取计算速度</td>
-</tr>
-<tr>
-<td>kernel kmeans</td>
-<td style="text-align:center">解决线性低维现行不可分的问题</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>各类算法都各有优劣，要明确使用的场景。</p>
+p_{add-\alpha} (w_{i+1} =m|w_{i-k:i})=\frac{\#(w_{i-k:i+1})+\alpha}{\#(w_{i-k:i})+\alpha|V|}</script><p>但是传统的语言模型有很多问题：</p>
+<p>​    最大的缺点是假设太强了，真实情况只能部分符合该假设，比如“喝水”，“吃饭”等等（k=1）。其它情况下则不符合，比如：“Tom喝了好几杯水，因为他太渴了。”，这里的“渴”明显与“喝水”这一动作相关，但是由于词序靠后，因此不能被模型很好的分辨出来。</p>
+<p>​    另外，对于k的选择是含糊的，k=1好还是k=2好，k到底怎么选？这需要具体情况具体分析，并没有一个一劳永逸的方法。小的K值对于corpus训练是可以接受的，但是大的k值会导致内存不够用，对于一个含有V个单词的词典，可能的kgrams有$|V|^{k}$种，k每增加一都会导致指数级的增长（尽管有些kgram的组合在现实不会出现或者不符合语法）。</p>
+<p>但是从历史的发展来看，应用这个假设诞生的模型，在某些场景下，还是可以得到不错的效果。</p>
+<h4 id="业界目前比较火的构造方法是采用神经网络"><a href="#业界目前比较火的构造方法是采用神经网络" class="headerlink" title="业界目前比较火的构造方法是采用神经网络"></a>业界目前比较火的构造方法是采用神经网络</h4><p>​    神经网络天生具有高效的学习能力，03年bengio提出使用神经网络构造语言模型，取得了不错的效果。</p>
+<p>​    后来业界提出了使用RNN网络来对时间序列建模之后，将神经网络在NLP领域的运用推上了顶峰。</p>
+<p>​    再后来出现了GRU和LSTM（复兴）等等。</p>
+<p>神经网络的优点：</p>
+<p>​    非线性神经网络模型解决了传统模型的缺点，主要是k值的限制。在神经网络中，k值增加是线性的，而非指数的。所谓的线性是指用于参数数量成线性关系。通俗来讲就是，为了能够使用更多的前缀内容，我可以通过增加参数来达到这个目的。也避免了手动设置”bakkoff order”(这个概念理解的不是很好，)</p>
+<p>​    其实神经网络不止这一个优点，神经网络代替传统模型的几个方面：</p>
+<p>​    上述是一个方面。二是，神经网络不要手动的combine特征，模型会帮我们自动提取出有用的特征，这也是表示学习的一大特点。三是，神经网络解决了上下文的问题，传统的模型假设限制了模型利用下文的信息，而双向神经网络即可以利用上文信息，也可以利用下文信息。这使得模型预测更加符合实际情况。第四点是，门控神经网络的诞生解决了模型对单词出现位置（时间序列）的依赖问题，更容易挖掘关联信息。</p>
+<p>​    这些技术总体来说都是逐步放宽模型的假设，使得模型更贴近现实。</p>
+<p>神经网络的限制：</p>
+<p>​    神经网络对于预测context中的某个词的出现概率成本相对传统模型比较高。但是泛化效果不错，但是某种场景下，这种泛化效果会带来不好的影响，书中给出了一个例子，比如预测“red house”的出现概率，传统模型可能会给一个比较低的概率，因为不常见。但是神经网络可能观察到了“black house,blue house”等等，因为基于它的泛化能力反而会给出一个比较高的概率，这是不希望看到的。因为在显示中，红房子确实不多见，但是白房子，黑色城堡可能比较多一点。</p>
+<p>​    语言模型从传统过渡到神经网络经历了一个漫长的过程，而且并不是传统的一定就是不好的，在某些场景下，传统语言模型反而比神经网络表现地更好。</p>
+<p>​    有没有更好地建模方法？不知道。神经网络说到底是基于统计概率的，不具备良好的可解释性。而基于规则的方法虽然具备良好的可解释性，但是效果却不尽人意。有没有能够兼顾两者的模型可能还需要一个数年的探索。</p>
 
       
     </div>
@@ -621,7 +511,7 @@ SAD = \sum_{m=1}^k\sum_{p_i \in C_i}dist(p_i,o_i)=
       
         <div class="post-tags">
           
-            <a href="/tags/ML/" rel="tag"><i class="fa fa-tag"></i>ML</a>
+            <a href="/tags/NLP/" rel="tag"><i class="fa fa-tag"></i>NLP</a>
           
         </div>
       
@@ -634,8 +524,8 @@ SAD = \sum_{m=1}^k\sum_{p_i \in C_i}dist(p_i,o_i)=
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/12/%E9%AB%98%E6%96%AF%E8%BF%87%E7%A8%8B/" rel="next" title="高斯过程">
-                <i class="fa fa-chevron-left"></i> 高斯过程
+              <a href="/2020/06/15/tensorflow2.0%E4%BB%A5%E4%B8%8Acpu%E7%89%88%E6%9C%AC%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95/" rel="next" title="tensorflow2.0以上cpu版本安装方法">
+                <i class="fa fa-chevron-left"></i> tensorflow2.0以上cpu版本安装方法
               </a>
             
           </div>
@@ -643,10 +533,6 @@ SAD = \sum_{m=1}^k\sum_{p_i \in C_i}dist(p_i,o_i)=
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/06/12/DBSCAN/" rel="prev" title="密度聚类(DBSCAN)">
-                密度聚类(DBSCAN) <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -815,7 +701,7 @@ SAD = \sum_{m=1}^k\sum_{p_i \in C_i}dist(p_i,o_i)=
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#kmeans算法数学原理"><span class="nav-number">1.</span> <span class="nav-text">kmeans算法数学原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#效果衡量指标"><span class="nav-number">2.</span> <span class="nav-text">效果衡量指标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优化"><span class="nav-number">3.</span> <span class="nav-text">优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#当我们在讨论语言模型的时候，我们讨论的是什么？"><span class="nav-number">1.</span> <span class="nav-text">当我们在讨论语言模型的时候，我们讨论的是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么语言模型很重要？"><span class="nav-number">2.</span> <span class="nav-text">为什么语言模型很重要？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何解决？"><span class="nav-number">3.</span> <span class="nav-text">如何解决？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#传统的方法是采用马尔科夫假设。"><span class="nav-number">3.1.</span> <span class="nav-text">传统的方法是采用马尔科夫假设。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#业界目前比较火的构造方法是采用神经网络"><span class="nav-number">3.2.</span> <span class="nav-text">业界目前比较火的构造方法是采用神经网络</span></a></li></ol></li></ol></div>
             
 
           </div>

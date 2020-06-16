@@ -127,7 +127,7 @@
 
 <meta name="description" content="Incremental Implementation Q_{n+1} &#x3D; Q_n + \frac{1}{N(A)}[R_n - Q_n]注意step_size $N(A)$，它随着时间步的累计而线性增长，但是通常，最近的奖赏相比过去很久的奖赏更有说服力，因此，我们希望给最近发生的奖赏一个稍大的权重。解决办法是将$N(A)$设置为固定值。  \begin{align*} Q_{n+1}&amp; &#x3D; Q_n">
 <meta property="og:type" content="article">
-<meta property="og:title" content="决策树">
+<meta property="og:title" content="强化学习一些笔记">
 <meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/12/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/index.html">
 <meta property="og:site_name" content="Qingfengbangzuo">
 <meta property="og:description" content="Incremental Implementation Q_{n+1} &#x3D; Q_n + \frac{1}{N(A)}[R_n - Q_n]注意step_size $N(A)$，它随着时间步的累计而线性增长，但是通常，最近的奖赏相比过去很久的奖赏更有说服力，因此，我们希望给最近发生的奖赏一个稍大的权重。解决办法是将$N(A)$设置为固定值。  \begin{align*} Q_{n+1}&amp; &#x3D; Q_n">
@@ -135,7 +135,7 @@
 <meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/12/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/Users/Administrator/AppData/Roaming/Typora/typora-user-images/1566115969815.png">
 <meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/12/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/Users/Administrator/AppData/Roaming/Typora/typora-user-images/1566120139376.png">
 <meta property="article:published_time" content="2020-06-11T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-06-12T11:08:33.372Z">
+<meta property="article:modified_time" content="2020-06-16T11:28:09.483Z">
 <meta property="article:author" content="qingfengbangzuo">
 <meta property="article:tag" content="RL">
 <meta name="twitter:card" content="summary">
@@ -175,7 +175,7 @@
 
 
 
-  <title>决策树 | Qingfengbangzuo</title>
+  <title>强化学习一些笔记 | Qingfengbangzuo</title>
   
 
 
@@ -331,7 +331,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">决策树</h1>
+          <h1 class="post-title" itemprop="name headline">强化学习一些笔记</h1>
         
 
         <div class="post-meta">
@@ -585,8 +585,8 @@ G_t - V(S_t) = R_{t+1} + \gamma G_{t+1} - V（S_t）-\gamma V(S_{t+1})\\
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/12/%E9%99%8D%E7%BB%B4%E7%AE%97%E6%B3%95%E4%B8%8E%E5%BA%A6%E9%87%8F%E5%AD%A6%E4%B9%A0/" rel="next" title="降维算法与度量学习">
-                <i class="fa fa-chevron-left"></i> 降维算法与度量学习
+              <a href="/2020/06/12/xgboost,lightgbm%E5%92%8Ccatboost/" rel="next" title="基于GBDT的算法">
+                <i class="fa fa-chevron-left"></i> 基于GBDT的算法
               </a>
             
           </div>
@@ -595,8 +595,8 @@ G_t - V(S_t) = R_{t+1} + \gamma G_{t+1} - V（S_t）-\gamma V(S_{t+1})\\
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/06/12/xgboost,lightgbm%E5%92%8Ccatboost/" rel="prev" title="基于GBDT的算法">
-                基于GBDT的算法 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/06/12/EM%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/" rel="prev" title="EM算法的理解">
+                EM算法的理解 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -674,7 +674,7 @@ G_t - V(S_t) = R_{t+1} + \gamma G_{t+1} - V（S_t）-\gamma V(S_{t+1})\\
               
                 <a href="/archives%7C%7Carchive">
               
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -685,7 +685,7 @@ G_t - V(S_t) = R_{t+1} + \gamma G_{t+1} - V（S_t）-\gamma V(S_{t+1})\\
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -696,7 +696,7 @@ G_t - V(S_t) = R_{t+1} + \gamma G_{t+1} - V（S_t）-\gamma V(S_{t+1})\\
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -800,7 +800,7 @@ G_t - V(S_t) = R_{t+1} + \gamma G_{t+1} - V（S_t）-\gamma V(S_{t+1})\\
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">24.3k</span>
+    <span title="Site words total count">27.2k</span>
   
 </div>
 
