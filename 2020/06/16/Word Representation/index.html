@@ -125,17 +125,19 @@
 
 
 
-<meta name="description" content="当我们在讨论语言模型的时候，我们讨论的是什么？​      从字面意思上理解，语言模型（language model）无非是对语言的一种建模。那么对语言建模的目的是什么？为什么要对语言进行建模呢？ ​    回答这个不难，因为无论是机器翻译还是语音识别，所有的NLP领域都绕不开一个问题，那就是“到底什么是人话？”。一段文本，一段音频，我们将其称之为“信号”，是否符合人类语言特征，是否能够让人看得懂">
+<meta name="description" content="Word Representation？​        传统的基于概率统计的语言模型，Unigram,Bigram,N-gram没有涉及到word representation,因为他们是基于统计训练的，因此在输入端可以不做textual feature 到input feature的转换。 ​        但对于神经网络，训练过程需要有明确的数学形式的输入，而不是文本，这就引发了一个新的问题">
 <meta property="og:type" content="article">
-<meta property="og:title" content="语言模型">
-<meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/16/%E4%BB%80%E4%B9%88%E6%98%AF%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:title" content="Word Representation">
+<meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/16/Word%20Representation/index.html">
 <meta property="og:site_name" content="Qingfengbangzuo">
-<meta property="og:description" content="当我们在讨论语言模型的时候，我们讨论的是什么？​      从字面意思上理解，语言模型（language model）无非是对语言的一种建模。那么对语言建模的目的是什么？为什么要对语言进行建模呢？ ​    回答这个不难，因为无论是机器翻译还是语音识别，所有的NLP领域都绕不开一个问题，那就是“到底什么是人话？”。一段文本，一段音频，我们将其称之为“信号”，是否符合人类语言特征，是否能够让人看得懂">
+<meta property="og:description" content="Word Representation？​        传统的基于概率统计的语言模型，Unigram,Bigram,N-gram没有涉及到word representation,因为他们是基于统计训练的，因此在输入端可以不做textual feature 到input feature的转换。 ​        但对于神经网络，训练过程需要有明确的数学形式的输入，而不是文本，这就引发了一个新的问题">
+<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/16/Word%20Representation/distributed_representation.PNG">
 <meta property="article:published_time" content="2020-06-15T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-06-16T11:28:37.972Z">
+<meta property="article:modified_time" content="2020-06-22T12:53:57.555Z">
 <meta property="article:author" content="qingfengbangzuo">
 <meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://qingfengbangzuo.github.io/2020/06/16/Word%20Representation/distributed_representation.PNG">
 
 
 
@@ -165,13 +167,13 @@
 
 
 
-  <link rel="canonical" href="https://qingfengbangzuo.github.io/2020/06/16/什么是语言模型/"/>
+  <link rel="canonical" href="https://qingfengbangzuo.github.io/2020/06/16/Word Representation/"/>
 
 
 
 
 
-  <title>语言模型 | Qingfengbangzuo</title>
+  <title>Word Representation | Qingfengbangzuo</title>
   
 
 
@@ -310,7 +312,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://qingfengbangzuo.github.io/2020/06/16/%E4%BB%80%E4%B9%88%E6%98%AF%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/">
+    <link itemprop="mainEntityOfPage" href="https://qingfengbangzuo.github.io/2020/06/16/Word%20Representation/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="qingfengbangzuo">
@@ -327,7 +329,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">语言模型</h1>
+          <h1 class="post-title" itemprop="name headline">Word Representation</h1>
         
 
         <div class="post-meta">
@@ -393,7 +395,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2.2k
+                  3.2k
                 </span>
               
 
@@ -409,7 +411,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  8
+                  12
                 </span>
               
             </div>
@@ -430,64 +432,76 @@
       
 
       
-        <h3 id="当我们在讨论语言模型的时候，我们讨论的是什么？"><a href="#当我们在讨论语言模型的时候，我们讨论的是什么？" class="headerlink" title="当我们在讨论语言模型的时候，我们讨论的是什么？"></a>当我们在讨论语言模型的时候，我们讨论的是什么？</h3><p>​      从字面意思上理解，语言模型（language model）无非是对语言的一种建模。那么对语言建模的目的是什么？为什么要对语言进行建模呢？</p>
-<p>​    回答这个不难，因为无论是机器翻译还是语音识别，所有的NLP领域都绕不开一个问题，那就是“到底什么是人话？”。一段文本，一段音频，我们将其称之为“信号”，是否符合人类语言特征，是否能够让人看得懂，听得懂？这个是所有NLP任务的基本问题，能够很好地回答了这个问题，才能够继续做下一步。</p>
-<h3 id="为什么语言模型很重要？"><a href="#为什么语言模型很重要？" class="headerlink" title="为什么语言模型很重要？"></a>为什么语言模型很重要？</h3><p>有一个概念是这样讲的：</p>
-<p> Noisy Channel Model:</p>
-<p>机器翻译，语音识别，拼写纠错，OCR，密码破解等NLP任务都有一个相似之处，那就是问题的形式都是给定一段信号，然后预测在给定信号下的正确的输出。形式化描述：</p>
+        <h3 id="Word-Representation？"><a href="#Word-Representation？" class="headerlink" title="Word Representation？"></a>Word Representation？</h3><p>​        传统的基于概率统计的语言模型，Unigram,Bigram,N-gram没有涉及到word representation,因为他们是基于统计训练的，因此在输入端可以不做textual feature 到input feature的转换。</p>
+<p>​        但对于神经网络，训练过程需要有明确的数学形式的输入，而不是文本，这就引发了一个新的问题，如何实现textual feature 到neural feature的转换？</p>
+<p><strong>One-hot和Eembedding</strong></p>
+<p>一种是One-hot表示方法，一种是Embedding表示方法.</p>
+<p>​        One-hot表示是一种稀疏表示，是将整个词典做为 一个向量，对应位置上的单词为1，其余为0。Embedding是运用分布式假设，将词向量在高维空间嵌入(映射)到低维空间。使其在每个维度上的表示都不至于为0。（即由所有嵌入后的维度共同表出，相比One-hot信息由单一维度表出变为了信息分布在了各个维度上）</p>
+<p>分布式假设：在相似的语境中的目标词，具有相似性，具有相似性的单词，word representation形式相似度应该较高。</p>
+<p><strong>Unigram：</strong></p>
+<p>​        传统的Word representation方法是One-hot,目前流行的表示方法是词嵌入。当然这个只是对单词（最小意义单位）而言。</p>
+<p><strong>N-gram:</strong></p>
+<p>​        我们将N-gram（n&gt;=2）引入，可以发现，输入变为了多个单词（上下文+目标词）。解决方法是combination，combination的方法其实有很多，比较常见的有两种，一种是直接相加，一种是直接叠加。前者的代表是CBOW和WCBOW.</p>
 <script type="math/tex; mode=display">
-P(text|source) \propto P(source|text)P(text)</script><p>分母上的$P(source)$被省略了，因为对于给定的source，$P(source)$是固定的，我们只讨论在给定source情况下的text正确性的问题。</p>
-<p>例如：</p>
-<p>​    机器翻译： 假设英文翻译成中文。</p>
+CBOW(w_1,w_2,w_3,...w_k) = \frac{1}{k}\sum_{i}v(w_i)\\
+WCBOW(w_1,w_2,w_3,...w_k) = \frac{1}{\sum_{i=1}^ka_i}\sum_{i}a_iv(w_i)</script><p>两种叠加方式对两种word representation方法都是适用的。</p>
+<p>​        当使用One-hot表示方法时，一个句子的表示可以由该句子中所有单词的One-hot表示方法相加，即One-hot的CBOW版本。</p>
+<p>比方说：“I like sweat candy.”</p>
+<p>以上句子的表示方法为：$V(S) = O(“I”)+O(“like”)+O(“sweat”)+O(“candy”)$</p>
+<p>O(w)是单词的One-hot表示。</p>
+<p>​        但是这样的表示方法不能够很好地衡量句子之间的相似性，因为它忽略了单词位置（词序）的影响。</p>
+<p>另一种combination方法是叠加法。</p>
+<p>​        当采用window-based时，即考虑窗口内的目标单词的前后文。输入变为了2c个单词。那么叠加法的方法就是将目标词前后各c个单词叠加在一起。</p>
+<p>比方说$\mathbf{(w-2;w-1;w+1;w+2)}$.也可以$\mathbf{(w_{-2}+w_{-1});(w_{+1}+w_{+2})}$.这种在输入到神经网络的时候一般通过一个投射层将特征叠加起来。</p>
+<h3 id="One-hot为什么失败？"><a href="#One-hot为什么失败？" class="headerlink" title="One-hot为什么失败？"></a>One-hot为什么失败？</h3><p>One-hot表示方法在与词嵌入表示方法竞争时失败了。至于原因是多方面的：</p>
+<p>问题1：One-hot表示方法虽然简单，但不够优雅。它的维度是整个字典的长度，因此限制了输入的维度也必须是字典的长度。但是字典的长度一般在10的5次方到10的6次方左右，这也意味输入向量的维度在10的5次到6次方左右，会引入大量的稀疏性，尽管计算机对稀疏矩阵的运算比较快，显然这种表示方法不够好。</p>
+<p>问题2：One-hot是一种硬编码，它只在对应的位置上有信息，而在其他位置上没有信息，这就造成当计算两个词向量之间相似性的时候，会出现问题。因为彼此都是正交的。</p>
+<p>问题3：One-hot抛弃了位置信息，当输入需要引入前后文的时候，One-hot的做法是词向量直接相加或者叠加，相加的后果是对句子中出现的词进行了统计，可以表达一部分频率上的相似性，但是无法表达语义上的相似性。叠加的后果是进一步引入了稀疏性。</p>
+<p>分布式表示方法没有上述的种种缺陷，因此更容易被业界接受。</p>
+<h3 id="Embedding算法"><a href="#Embedding算法" class="headerlink" title="Embedding算法"></a>Embedding算法</h3><p><strong>关于如何实现词嵌入有两个流派：</strong></p>
+<h4 id="Distributional-Hypothesis"><a href="#Distributional-Hypothesis" class="headerlink" title="Distributional Hypothesis"></a>Distributional Hypothesis</h4><p>​        NLP community 认为出现在相同语境中的单词具有相同的意思。（这个被称为<strong>Distributional Hypothesis。</strong>）基于此，可以根据单词在不同语境中的分布作为词向量来表示单词。这样出现在相同语境中的单词就会有相似的表示了。具体的操作如下：</p>
+<p>​        假设存在一个词典集合和一个”语境集合“，这两个集合都是可索引的，$w_i$表示第i个单词，$c_j$表示第j种语境。（这里的词典集合和语境集合可以从一个大的语料库中得到，可以想象两个集合都会比较大。)存在一个矩阵实体$M_{[i,j]}]$，它的每一行代表字典集合中的一个单词，每一列代表一个语境集合中的语境，每一个元素$f(i,j)$代表单词$w_i$和语境$c_j$的association，这种association一般是通过统计$\mathbf{$}(w_i,c_j)$在语料库中的出现频次，或者标准化以后的形式$\frac{\mathbf{$}(w_i,c_j)}{|D|}$.|D|表示语料库的大小，即：</p>
 <script type="math/tex; mode=display">
-obj =argmax_{中文} P(中文|英文)</script><p>根据上面的NCM模型，可以有：</p>
+f(i,j) =\frac{$(w_i,c_j)}{|D|}</script><p>​        但是这种表示存在一个问题，就是对于更常出现的word-context具有更高的权重（频次），比如：假设语境为目标词的前一个单词，那么”the cat”和”a cat”就要比”cute cat”和”small cat”的权重高的多，尽管后面的事件携带了更多的信息。也就是说对于出现不是那么频繁但是更有用的word-context，这种表示方法会比加的不公平。为了克服这种缺陷，提出了Pointwise Mutual Information(PMI)：</p>
 <script type="math/tex; mode=display">
-obj = argmax P(英文|中文)P(中文)</script><p>​    模型$P(英文|中文)$负责中英文间的映射，这个最简单的情况下可以由一个字典完成，模型$P(中文)$就是语言模型， 用来控制输出符合语言特征。</p>
-<p>​    比方说，对于“The brown fox skip over the lazy dog.”映射模型可以完成单词间的逐一映射，但是如何组合才符合中文的说法习性，就需要语言模型来控制。</p>
-<h3 id="如何解决？"><a href="#如何解决？" class="headerlink" title="如何解决？"></a>如何解决？</h3><p>​    然而要解决这个问题并不简单，原因是多方面的：</p>
-<ul>
-<li><p>1、语言天生的歧义和多变性。多变性是指一种含义可以有很多种方式来说，也可以指一种说法可以有很多种含义。</p>
-</li>
-<li><p>2、语言的规则不好定义。(ill-defined).很难有一套规则把某种语言给定义好，所谓的定义好就是指语言的表达模式完全遵从某种规则。对于中文来讲，尽管我们有标准的语法，但是在现实中一句话可能是语法的各种组合，或者我们讲话写作不用按照标准的语法也可以表达意思。</p>
-</li>
-<li><p>3、语义是无穷尽的，不同的单词可以组成不同的句子，不同的句子又可以表达不同的意思，这个组合没有上限。更何况人类的语言库一直在更新。因此，训练样本无法穷尽所有的情况。</p>
-</li>
-<li><p>4、解析语义是一个组合问题。单词-&gt;句子-&gt;文章/新闻/事件。复杂度骤增。</p>
-</li>
-<li>5、最后一个没有理解到位，NLP问题具有sparseness(稀疏性)?</li>
-</ul>
-<p>业界对语言模型的一个定义是：</p>
-<p>Assigning a probability to sentences or sequence of words in a language.</p>
-<p>不仅要能够给一句话的出现概率，还要能够给出，给定语境下的目标单词的条件概率。</p>
-<p>上述两个问题等价于一个问题。根据条件概率公式：</p>
+PMI(x,y) = log\frac{P(x,y)}{P(x),p(y)}</script><p>在word-contex场景下，PMI测量的是他们共同出现的频率除以他们各自单独出现的频率。</p>
 <script type="math/tex; mode=display">
-p(w_{1:n}) = p(w_1)p(w_2|w_1)p(w_3|w_{1:2})...p(w_n|w_{1:n-1})\\
-p(w_{1:n-1}) = p(w_1)p(w_2|w_1)p(w_3|w_{1:2})...p(w_{n-1}|w_{1:n-2})\\
-p(w_n|w_{1:n-1}) = \frac{p(w_{1:n})}{p(w_{1:n-1})}</script><p>假设我们知道每个句子的概率，那我们也可以知道给定序列下每个词的出现概率。</p>
-<h4 id="传统的方法是采用马尔科夫假设。"><a href="#传统的方法是采用马尔科夫假设。" class="headerlink" title="传统的方法是采用马尔科夫假设。"></a>传统的方法是采用马尔科夫假设。</h4><p>我们对后面一个问题应用马尔科夫假设，准确地说是kth order markov-assumption。</p>
-<p>即目标单词的出现概率仅与之前出现的前k个单词有关。</p>
+f(w,c) = PMI(w,c) = log\frac{$(w,c)·|D|}{$(w)·$(c)}</script><p>​        PMI和TF-IDF的思想相似，采用PMI可以避免给出现频次大的word-context更多的权重，给出现频次小的word-context的更小的权重。但是引入PMI表示仍然有些问题，对于没有出现在语料库中的word-context对，在计算PMI是会出现log(0)的现象。</p>
+<p>因此对PMI加以改进，提出PPMI(positive PMI):</p>
 <script type="math/tex; mode=display">
-P(w_{i+1}|w_{1:i}) \approx P(w_{i+1}|w_{i-k:i})</script><p>根据上面的公式：</p>
+PPMI(w,c) = max(PMI(w,c),0)</script><p>将低频出现的word-context给忽略掉（赋值为0）。</p>
+<p> PMI在实际运行中表现良好，但是也存在一个比较明显的缺点：</p>
+<p><strong>那就是容易对rare event赋予比较高的权重，尤其是当两个事件发生的频次都很低，又恰好发生在了一起的时候。</strong></p>
+<p>​        采用Distributional Hypothesis假设的一个问题是，字典集合和语境集合都很大，他们都是从一个大的语料库中得到的，因此造成实体矩阵M很大。并且由于很多word-context对不会出现在语料库中，这又会造成矩阵很稀疏。解决方法是对实体矩阵进行降维。可以采用经典的降维方法比如SVD.这样，通过降维后的实体矩阵维度会变得比较容易让人接受，同时每个词向量又可以被表出。通过SVD降维后的词向量维度大约在50&lt;d&lt;300之间。</p>
+<p>​        到此为止，经典的采用Distributional Hypothesis假设的方法介绍完毕。由于向量的表示是基于统计，准确地说是基于word-context数量的表示，因此也被成为count-based method.</p>
+<p>问题：语境集合如何构造？是选取目标的前一个词还是前n个词，还是用目标词的上下文？</p>
+<h4 id="Distributed-Representation"><a href="#Distributed-Representation" class="headerlink" title="Distributed Representation"></a>Distributed Representation</h4><p>​        相对于NLP派推崇的Distributional Hypothesis，神经网络派则比较推崇Distributed Representations。那么什么是Distributed representation?和Distributional Hypothesis的不同是什么？</p>
+<p>​        在分布式表示（Distributed representation）中，一个单词的意思被多个维度共同表出。每个维度没有具体的含义，即不具可解释性（对比count-based可见，每个维度对应一个确定的语境）。分布式表示（Distributed）的本质是给定一个meaning（word）,它可以被多个维度的combination捕捉（表示），或者给定一个维度，它捕捉了meaning的一个aspect。</p>
+<p>​        打个比方：”国王”。“国王”的属性有哪些呢？首先国王是个人，而且一般是个男人，“男人”可以作为“国王”的一个属性。其次，“国王”一般是个成年人，因此“成年人”也可以作为“国王”的一个属性，再来，从词性的角度来讲，“国王”是一个名词，因此“名词”也可以作为“国王”的一个属性。这么表示出来“国王”可以由[“男人”，“成年人”，‘名词“]来表示，每个属性都是一个维度，每个维度对应一个数值，用数值表示出来就是”国王“的词向量。</p>
+<p>​        但是对于分布式表示来说，每个维度不具有可解释性，即给定一个分布式表示的词向量，每个维度所表示的含义无法获知。但是这个并不影响我们使用它们，即使不知道它们每个维度的所代表的的含义，一旦给出两个词向量表示，我们仍然可以用标准的相似度计算方法来计算。</p>
+<p>​        分布式表示的另一个特点是需要训练。先让我们来看一下词嵌入在神经网络中的形式。</p>
 <script type="math/tex; mode=display">
-P_{MLE} (w_{i+1} = m|w_{i-k:i}) = \frac{\#(w_{i-k:i+1})}{\#(w_{i-k:i})}</script><p>至此，我们就得到了一个baseline模型。</p>
-<p>但是这个baseline模型有一个缺点，就是对于没有观察到的句子，这个概率是无穷大。因此，又有人在这个基础上做了平滑。</p>
+\hat{y} = P(w_i|w_{1:k}) = LM(w_{1:k}) = softmax(hW^2+b^2)\\h = g(xW^1+b^1)\\x = [v(w_1);v(w_2);...;v(w_k)]\\v(w) = \mathbf{E}_{[w]}\\w_i \in V ,\mathbf{E}\in R^{(|V|,d_w)},W^1 \in R^{k·d_w,d_{hid}},b^1 \in R^{d_{hid}},W^2 \in R^{d_{hid},V},b^2 \in R^{|V|}</script><p>​        在这个模型中一共有两套参数，一个是$\mathbf{E}$,另外一个是$\mathbf{[W^1,W^2]}$.其中$\mathbf{E}$是词嵌入矩阵，因此我们可以通过训练模型来得到词嵌入矩阵。可以看到$\mathbf{W^2}$的列和$\mathbf{E}$的行都是一种distributed representation表示。训练过程保证了词嵌入矩阵的值足够好，因为对于一个有着k-gram的输入，他们产生了正确的预测概率（对于指定的预测目标）。通过网络的训练过程，我们可以得到最终的词嵌入矩阵。这是大多数distributed representation的生成方式。</p>
+<p>语言模型有两个功能需求，给定一个语境，推测目标词的分布。另一种：</p>
+<p>the need to condition on contexts that can be combined using the chain-rule of probability to produce sentence level probability estimates  </p>
+<p>这个我怕翻译不准，个人理解是给定一个词向量，利用链式法则去预测句子的生成概率。如下图所示（摘自word2vec论文）：</p>
+<p><img src="/2020/06/16/Word%20Representation/distributed_representation.PNG" alt="distributed_representation"></p>
+<p>以上是distributed representation的一个框架，具体的训练方法有几种。</p>
+<p><strong>Collobert and Weston</strong></p>
+<p>这两个人做了两点创新：</p>
+<p>​        一个是改变了传统的使用k-gram的假设，引入了word-window，将使用前k个gram改为了使用目标词的上下文（这个贡献是他们俩人做的）。使用$P(w_3|w_1,w_2,w_4,w_5)$代替了$P(w_5|w_1,w_2,w_3,w_4)$。</p>
+<p>​        另一个是改变了输出的形式，传统的softmax方案（语言模型的输出）是输出字典中每个单词作为目标词的概率。而如果只是注重representation的生成，那么可以适当对输出进行更改，不是输出每个目标词的概率分布，而是输出一个分数（score）。</p>
+<p>​        具体的实现方式如下：对于一个目标单词w, $c_{i:k}$为它的上下文的序列。$V_w(w)$为词嵌入函数，$V_c(c)$为context嵌入函数。这两个函数将目标词和context映射到一个相同的维度$d_{emb}$.Collorbert 和Weston对模型输入一个$（w,c_{1:k}）$对，然后将这个word-context对结合成一个输入$\mathbf{x}$作为神经网络的输入，通过单隐含层，输出一个word-context的分数s。</p>
 <script type="math/tex; mode=display">
-p_{add-\alpha} (w_{i+1} =m|w_{i-k:i})=\frac{\#(w_{i-k:i+1})+\alpha}{\#(w_{i-k:i})+\alpha|V|}</script><p>但是传统的语言模型有很多问题：</p>
-<p>​    最大的缺点是假设太强了，真实情况只能部分符合该假设，比如“喝水”，“吃饭”等等（k=1）。其它情况下则不符合，比如：“Tom喝了好几杯水，因为他太渴了。”，这里的“渴”明显与“喝水”这一动作相关，但是由于词序靠后，因此不能被模型很好的分辨出来。</p>
-<p>​    另外，对于k的选择是含糊的，k=1好还是k=2好，k到底怎么选？这需要具体情况具体分析，并没有一个一劳永逸的方法。小的K值对于corpus训练是可以接受的，但是大的k值会导致内存不够用，对于一个含有V个单词的词典，可能的kgrams有$|V|^{k}$种，k每增加一都会导致指数级的增长（尽管有些kgram的组合在现实不会出现或者不符合语法）。</p>
-<p>但是从历史的发展来看，应用这个假设诞生的模型，在某些场景下，还是可以得到不错的效果。</p>
-<h4 id="业界目前比较火的构造方法是采用神经网络"><a href="#业界目前比较火的构造方法是采用神经网络" class="headerlink" title="业界目前比较火的构造方法是采用神经网络"></a>业界目前比较火的构造方法是采用神经网络</h4><p>​    神经网络天生具有高效的学习能力，03年bengio提出使用神经网络构造语言模型，取得了不错的效果。</p>
-<p>​    后来业界提出了使用RNN网络来对时间序列建模之后，将神经网络在NLP领域的运用推上了顶峰。</p>
-<p>​    再后来出现了GRU和LSTM（复兴）等等。</p>
-<p>神经网络的优点：</p>
-<p>​    非线性神经网络模型解决了传统模型的缺点，主要是k值的限制。在神经网络中，k值增加是线性的，而非指数的。所谓的线性是指用于参数数量成线性关系。通俗来讲就是，为了能够使用更多的前缀内容，我可以通过增加参数来达到这个目的。也避免了手动设置”bakkoff order”(这个概念理解的不是很好，)</p>
-<p>​    其实神经网络不止这一个优点，神经网络代替传统模型的几个方面：</p>
-<p>​    上述是一个方面。二是，神经网络不要手动的combine特征，模型会帮我们自动提取出有用的特征，这也是表示学习的一大特点。三是，神经网络解决了上下文的问题，传统的模型假设限制了模型利用下文的信息，而双向神经网络即可以利用上文信息，也可以利用下文信息。这使得模型预测更加符合实际情况。第四点是，门控神经网络的诞生解决了模型对单词出现位置（时间序列）的依赖问题，更容易挖掘关联信息。</p>
-<p>​    这些技术总体来说都是逐步放宽模型的假设，使得模型更贴近现实。</p>
-<p>神经网络的限制：</p>
-<p>​    神经网络对于预测context中的某个词的出现概率成本相对传统模型比较高。但是泛化效果不错，但是某种场景下，这种泛化效果会带来不好的影响，书中给出了一个例子，比如预测“red house”的出现概率，传统模型可能会给一个比较低的概率，因为不常见。但是神经网络可能观察到了“black house,blue house”等等，因为基于它的泛化能力反而会给出一个比较高的概率，这是不希望看到的。因为在显示中，红房子确实不多见，但是白房子，黑色城堡可能比较多一点。</p>
-<p>​    语言模型从传统过渡到神经网络经历了一个漫长的过程，而且并不是传统的一定就是不好的，在某些场景下，传统语言模型反而比神经网络表现地更好。</p>
-<p>​    有没有更好地建模方法？不知道。神经网络说到底是基于统计概率的，不具备良好的可解释性。而基于规则的方法虽然具备良好的可解释性，但是效果却不尽人意。有没有能够兼顾两者的模型可能还需要一个数年的探索。</p>
+S(w,c_{1:k}) = g(\mathbf{xU})·\mathbf{v}\\
+\mathbf{x} = [V_c(c_1);....;V_c(c_k);V_w(w)]\\
+\mathbf{U} \in R^{(k+1)d_{emb},d_h}, \mathbf{v}\in R^{d_h}.</script><p>损失函数为：</p>
+<script type="math/tex; mode=display">
+L(w,c,w') = max(0,1-(s(w,c_{1:k})-s(w',c_{1:k})))</script><p>​        w’是一个从字典中随机抽出来的单词。训练过程轮循地遍历word-context对，并且对于每一word-context对，随机采样一个单词w’,使用w’计算损失L(w,c,w’)，并且更新$\mathbf{U,v}$和词向量对去最小化损失。这就是随机负采样的思想。</p>
+<p><strong>word2vec</strong></p>
+<p><strong>NCE</strong></p>
+<p><strong>Glove</strong></p>
+<p>等等。每个都够写一章了。</p>
 
       
     </div>
@@ -524,8 +538,8 @@ p_{add-\alpha} (w_{i+1} =m|w_{i-k:i})=\frac{\#(w_{i-k:i+1})+\alpha}{\#(w_{i-k:i}
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/16/Unigram,Bigram,Ngram/" rel="next" title="Unigram,Bigram,Ngram">
-                <i class="fa fa-chevron-left"></i> Unigram,Bigram,Ngram
+              <a href="/2020/06/16/GloVe/" rel="next" title="Word GloVe">
+                <i class="fa fa-chevron-left"></i> Word GloVe
               </a>
             
           </div>
@@ -533,6 +547,10 @@ p_{add-\alpha} (w_{i+1} =m|w_{i-k:i})=\frac{\#(w_{i-k:i+1})+\alpha}{\#(w_{i-k:i}
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/16/Unigram,Bigram,Ngram/" rel="prev" title="Unigram,Bigram,Ngram">
+                Unigram,Bigram,Ngram <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -701,7 +719,7 @@ p_{add-\alpha} (w_{i+1} =m|w_{i-k:i})=\frac{\#(w_{i-k:i+1})+\alpha}{\#(w_{i-k:i}
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#当我们在讨论语言模型的时候，我们讨论的是什么？"><span class="nav-number">1.</span> <span class="nav-text">当我们在讨论语言模型的时候，我们讨论的是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么语言模型很重要？"><span class="nav-number">2.</span> <span class="nav-text">为什么语言模型很重要？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何解决？"><span class="nav-number">3.</span> <span class="nav-text">如何解决？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#传统的方法是采用马尔科夫假设。"><span class="nav-number">3.1.</span> <span class="nav-text">传统的方法是采用马尔科夫假设。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#业界目前比较火的构造方法是采用神经网络"><span class="nav-number">3.2.</span> <span class="nav-text">业界目前比较火的构造方法是采用神经网络</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Word-Representation？"><span class="nav-number">1.</span> <span class="nav-text">Word Representation？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#One-hot为什么失败？"><span class="nav-number">2.</span> <span class="nav-text">One-hot为什么失败？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Embedding算法"><span class="nav-number">3.</span> <span class="nav-text">Embedding算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Distributional-Hypothesis"><span class="nav-number">3.1.</span> <span class="nav-text">Distributional Hypothesis</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Distributed-Representation"><span class="nav-number">3.2.</span> <span class="nav-text">Distributed Representation</span></a></li></ol></li></ol></div>
             
 
           </div>

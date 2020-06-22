@@ -131,15 +131,11 @@
 <meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/12/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/index.html">
 <meta property="og:site_name" content="Qingfengbangzuo">
 <meta property="og:description" content="Incremental Implementation Q_{n+1} &#x3D; Q_n + \frac{1}{N(A)}[R_n - Q_n]注意step_size $N(A)$，它随着时间步的累计而线性增长，但是通常，最近的奖赏相比过去很久的奖赏更有说服力，因此，我们希望给最近发生的奖赏一个稍大的权重。解决办法是将$N(A)$设置为固定值。  \begin{align*} Q_{n+1}&amp; &#x3D; Q_n">
-<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/12/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/Users/Administrator/AppData/Roaming/Typora/typora-user-images/1565959163116.png">
-<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/12/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/Users/Administrator/AppData/Roaming/Typora/typora-user-images/1566115969815.png">
-<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/12/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/Users/Administrator/AppData/Roaming/Typora/typora-user-images/1566120139376.png">
 <meta property="article:published_time" content="2020-06-11T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-06-16T11:28:09.483Z">
+<meta property="article:modified_time" content="2020-06-22T12:16:44.189Z">
 <meta property="article:author" content="qingfengbangzuo">
 <meta property="article:tag" content="RL">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://qingfengbangzuo.github.io/2020/06/12/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/Users/Administrator/AppData/Roaming/Typora/typora-user-images/1565959163116.png">
 
 
 
@@ -493,7 +489,6 @@ V_{k+1}(s) = max_a E[R_{t+1}+\gamma V_k(S_{t+1})|S_t = s,A_t =a]\\
 <p>下面的内容介绍了去除这两个假设的方法。</p>
 <p>去掉假设2是相当对容易的，有两种思路，一种是在evaluation中保证足够多的迭代次数。另一种是引入Value Iteration的思想，不需要得到准确的$v_\pi$值，换成蒙特卡罗采样也就是，在策略$\pi$下，不需要大量采样，只需要一次采样，即一个episode（蒙特卡洛的采样数量对应了DP的更新迭代次数，因为DP下，更新次数越多，越接近$V_\pi$，但在蒙特卡罗策略下采样次数决定了靠近$V_\pi$的距离）。这样也就是变向的将evaluation和improvement交替进行，即下面Monte carlo ES所示。</p>
 <h3 id="Monte-carlo-ES"><a href="#Monte-carlo-ES" class="headerlink" title="Monte carlo ES"></a>Monte carlo ES</h3><p>这个算法的特殊之处在于它将evaluation过程和improvement过程交替进行，这样依然会收敛于最优策略，但是似乎还未被证明。</p>
-<p><img src="/2020/06/12/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/Users\Administrator\AppData\Roaming\Typora\typora-user-images\1565959163116.png" alt="1565959163116"></p>
 <p>可以使用Incremental Implementation来替代上述中维护return列表的做法。</p>
 <p>而解决假设1的也有两种方案，即on-policy和off-policy。</p>
 <p>终于找到了on-policy和off-policy的区别。这两种方法被用来解决Exploration Staring问题。</p>
@@ -528,8 +523,7 @@ V(s) = \frac{\sum_{t\in J(s)}p_{t:T-1}G_t}{\sum_{t\in J(s)}p_{t:T-1}}</script><p
 <p>对于weighted 采样，需要做一点改变</p>
 <script type="math/tex; mode=display">
 V_{n+1} = V_n + \frac{W_n}{C_n}[G_n -V_n]\\
-C_{n+1} = C_n + W_{n+1}</script><p><img src="/2020/06/12/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/Users\Administrator\AppData\Roaming\Typora\typora-user-images\1566115969815.png" alt="1566115969815"></p>
-<p>这个是”每访”下的算法，注意算法中的C和Q是两个列表，也就是说C和Q各维持了一个存放不同（S_t,A_t）的列表，每一轮episode来临时，都会更新列表中相应的状态动作对值，对于“初访”情形，需要设置一个条件来访问：</p>
+C_{n+1} = C_n + W_{n+1}</script><p>这个是”每访”下的算法，注意算法中的C和Q是两个列表，也就是说C和Q各维持了一个存放不同（S_t,A_t）的列表，每一轮episode来临时，都会更新列表中相应的状态动作对值，对于“初访”情形，需要设置一个条件来访问：</p>
 <p>‘’’’’’——————————————————————————————</p>
 <p>​    $G\larr\gamma G+R_{t+1}$</p>
 <p>​        unless the Pair ($S_t,A_t$) appear in $S_0,A_0,S_1,A_1,…S_{t-1},A_{t-1}$</p>
@@ -537,7 +531,6 @@ C_{n+1} = C_n + W_{n+1}</script><p><img src="/2020/06/12/%E5%BC%BA%E5%8C%96%E5%A
 <p>​            $Q(S_t,A_t)\larr Q(S_t,A_t)+ \frac{W}{C(S_t,A_t)}[G-Q(S_t,A_t)]$</p>
 <p>​    $W \larr W\frac{\pi(A_t|S_t)}{b(A_t|S_t)}$</p>
 <p>‘’’————————————————————————————————</p>
-<p><img src="/2020/06/12/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/Users\Administrator\AppData\Roaming\Typora\typora-user-images\1566120139376.png" alt="1566120139376"></p>
 <p>最后一行，由于使用的是greedy策略，所以$\pi(a|s)= 1或0$,注意倒数第二句，如果$A_t \neq\pi(S_t)$程序就会退出，此时$\pi(A_t|S_t) = 0 $.</p>
 <p><strong>当episode中大部分动作是non-greedy，尤其靠前部分是Non-greedy的时候，这个算法收敛将变得十分缓慢。</strong></p>
 <p>出现这样的现象是直观的，因为这个算法倒数第二行设置了退出条件，由于算法是从尾部遍历到头部，所以当尾部出现了non-greedy的动作，那么就会退出内循环，开始下一个episode，这样就会造成该non-greedy动作之前的所有episode报废。</p>
@@ -585,8 +578,8 @@ G_t - V(S_t) = R_{t+1} + \gamma G_{t+1} - V（S_t）-\gamma V(S_{t+1})\\
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/12/xgboost,lightgbm%E5%92%8Ccatboost/" rel="next" title="基于GBDT的算法">
-                <i class="fa fa-chevron-left"></i> 基于GBDT的算法
+              <a href="/2020/06/12/%E5%86%B3%E7%AD%96%E6%A0%91/" rel="next" title="决策树">
+                <i class="fa fa-chevron-left"></i> 决策树
               </a>
             
           </div>
@@ -595,8 +588,8 @@ G_t - V(S_t) = R_{t+1} + \gamma G_{t+1} - V（S_t）-\gamma V(S_{t+1})\\
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/06/12/EM%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/" rel="prev" title="EM算法的理解">
-                EM算法的理解 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/06/12/xgboost,lightgbm%E5%92%8Ccatboost/" rel="prev" title="基于GBDT的算法">
+                基于GBDT的算法 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -674,7 +667,7 @@ G_t - V(S_t) = R_{t+1} + \gamma G_{t+1} - V（S_t）-\gamma V(S_{t+1})\\
               
                 <a href="/archives%7C%7Carchive">
               
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -800,7 +793,7 @@ G_t - V(S_t) = R_{t+1} + \gamma G_{t+1} - V（S_t）-\gamma V(S_{t+1})\\
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">27.2k</span>
+    <span title="Site words total count">33.7k</span>
   
 </div>
 

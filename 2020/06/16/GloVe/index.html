@@ -125,17 +125,19 @@
 
 
 
-<meta name="description" content="当我们在讨论语言模型的时候，我们讨论的是什么？​      从字面意思上理解，语言模型（language model）无非是对语言的一种建模。那么对语言建模的目的是什么？为什么要对语言进行建模呢？ ​    回答这个不难，因为无论是机器翻译还是语音识别，所有的NLP领域都绕不开一个问题，那就是“到底什么是人话？”。一段文本，一段音频，我们将其称之为“信号”，是否符合人类语言特征，是否能够让人看得懂">
+<meta name="description" content="GloVe: Global Vectors for Word Representation​        这篇文章基于论文《GloVe: Global Vectors for Word Representation  》进行总结学习，如有疑惑，以原文为主。 什么是Matrix Factorization 和Local Context Window？以及各自的不足？​        关于如何表示词">
 <meta property="og:type" content="article">
-<meta property="og:title" content="语言模型">
-<meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/16/%E4%BB%80%E4%B9%88%E6%98%AF%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:title" content="Word GloVe">
+<meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/16/GloVe/index.html">
 <meta property="og:site_name" content="Qingfengbangzuo">
-<meta property="og:description" content="当我们在讨论语言模型的时候，我们讨论的是什么？​      从字面意思上理解，语言模型（language model）无非是对语言的一种建模。那么对语言建模的目的是什么？为什么要对语言进行建模呢？ ​    回答这个不难，因为无论是机器翻译还是语音识别，所有的NLP领域都绕不开一个问题，那就是“到底什么是人话？”。一段文本，一段音频，我们将其称之为“信号”，是否符合人类语言特征，是否能够让人看得懂">
+<meta property="og:description" content="GloVe: Global Vectors for Word Representation​        这篇文章基于论文《GloVe: Global Vectors for Word Representation  》进行总结学习，如有疑惑，以原文为主。 什么是Matrix Factorization 和Local Context Window？以及各自的不足？​        关于如何表示词">
+<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/16/GloVe/glove.jpg">
 <meta property="article:published_time" content="2020-06-15T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-06-16T11:28:37.972Z">
+<meta property="article:modified_time" content="2020-06-22T12:56:07.254Z">
 <meta property="article:author" content="qingfengbangzuo">
 <meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://qingfengbangzuo.github.io/2020/06/16/GloVe/glove.jpg">
 
 
 
@@ -165,13 +167,13 @@
 
 
 
-  <link rel="canonical" href="https://qingfengbangzuo.github.io/2020/06/16/什么是语言模型/"/>
+  <link rel="canonical" href="https://qingfengbangzuo.github.io/2020/06/16/GloVe/"/>
 
 
 
 
 
-  <title>语言模型 | Qingfengbangzuo</title>
+  <title>Word GloVe | Qingfengbangzuo</title>
   
 
 
@@ -310,7 +312,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://qingfengbangzuo.github.io/2020/06/16/%E4%BB%80%E4%B9%88%E6%98%AF%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/">
+    <link itemprop="mainEntityOfPage" href="https://qingfengbangzuo.github.io/2020/06/16/GloVe/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="qingfengbangzuo">
@@ -327,7 +329,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">语言模型</h1>
+          <h1 class="post-title" itemprop="name headline">Word GloVe</h1>
         
 
         <div class="post-meta">
@@ -393,7 +395,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2.2k
+                  1.7k
                 </span>
               
 
@@ -409,7 +411,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  8
+                  6
                 </span>
               
             </div>
@@ -430,64 +432,89 @@
       
 
       
-        <h3 id="当我们在讨论语言模型的时候，我们讨论的是什么？"><a href="#当我们在讨论语言模型的时候，我们讨论的是什么？" class="headerlink" title="当我们在讨论语言模型的时候，我们讨论的是什么？"></a>当我们在讨论语言模型的时候，我们讨论的是什么？</h3><p>​      从字面意思上理解，语言模型（language model）无非是对语言的一种建模。那么对语言建模的目的是什么？为什么要对语言进行建模呢？</p>
-<p>​    回答这个不难，因为无论是机器翻译还是语音识别，所有的NLP领域都绕不开一个问题，那就是“到底什么是人话？”。一段文本，一段音频，我们将其称之为“信号”，是否符合人类语言特征，是否能够让人看得懂，听得懂？这个是所有NLP任务的基本问题，能够很好地回答了这个问题，才能够继续做下一步。</p>
-<h3 id="为什么语言模型很重要？"><a href="#为什么语言模型很重要？" class="headerlink" title="为什么语言模型很重要？"></a>为什么语言模型很重要？</h3><p>有一个概念是这样讲的：</p>
-<p> Noisy Channel Model:</p>
-<p>机器翻译，语音识别，拼写纠错，OCR，密码破解等NLP任务都有一个相似之处，那就是问题的形式都是给定一段信号，然后预测在给定信号下的正确的输出。形式化描述：</p>
-<script type="math/tex; mode=display">
-P(text|source) \propto P(source|text)P(text)</script><p>分母上的$P(source)$被省略了，因为对于给定的source，$P(source)$是固定的，我们只讨论在给定source情况下的text正确性的问题。</p>
-<p>例如：</p>
-<p>​    机器翻译： 假设英文翻译成中文。</p>
-<script type="math/tex; mode=display">
-obj =argmax_{中文} P(中文|英文)</script><p>根据上面的NCM模型，可以有：</p>
-<script type="math/tex; mode=display">
-obj = argmax P(英文|中文)P(中文)</script><p>​    模型$P(英文|中文)$负责中英文间的映射，这个最简单的情况下可以由一个字典完成，模型$P(中文)$就是语言模型， 用来控制输出符合语言特征。</p>
-<p>​    比方说，对于“The brown fox skip over the lazy dog.”映射模型可以完成单词间的逐一映射，但是如何组合才符合中文的说法习性，就需要语言模型来控制。</p>
-<h3 id="如何解决？"><a href="#如何解决？" class="headerlink" title="如何解决？"></a>如何解决？</h3><p>​    然而要解决这个问题并不简单，原因是多方面的：</p>
+        <h2 id="GloVe-Global-Vectors-for-Word-Representation"><a href="#GloVe-Global-Vectors-for-Word-Representation" class="headerlink" title="GloVe: Global Vectors for Word Representation"></a>GloVe: Global Vectors for Word Representation</h2><p>​        这篇文章基于论文《GloVe: Global Vectors for Word Representation  》进行总结学习，如有疑惑，以原文为主。</p>
+<h3 id="什么是Matrix-Factorization-和Local-Context-Window？以及各自的不足？"><a href="#什么是Matrix-Factorization-和Local-Context-Window？以及各自的不足？" class="headerlink" title="什么是Matrix Factorization 和Local Context Window？以及各自的不足？"></a>什么是Matrix Factorization 和Local Context Window？以及各自的不足？</h3><p>​        关于如何表示词向量有两种流派：一种是利用Distributional Hypothesis，另一种被称为“Distributed Representation”。两种流派在另一篇文章<a href="词嵌入算法.md">《词嵌入算法》</a>中被讨论过。</p>
+<p>​        关于如何挖掘语言信息也有两种方向，一种是基于统计概率的，依据的假设是“不同phrase的分布不同”，方法是统计不同目标对的出现频率，借助统计意义表达信息。另一种是在频率统计的基础上加入了语境信息，是一种较为高级的挖掘方向，依据的假设是“不同语境携带了不同的信息”，方法是利用目标词的语境作为输入信息的一部分。这两种方向都有各自的依据，都能得到部分预料信息。        </p>
+<p>​        Matrix Factorization的意思是Matrix指的是”共现矩阵“，关于共现矩阵，有几种形式，一种是”term-term”，矩阵的行列对应相应的words,矩阵的值为word-pair共同出现的次数。一种是“term-document”,矩阵的行代表words，列对应不同的document(我更愿意理解为context)，矩阵值对应word-document共同出现的次数。前者的代表是HAL(Hyperspace Analogue to Language)。后者的代表是LSA(Latent Semantic Analysis)。</p>
+<p>​        利用共现矩阵统计的”全局信息“（global）来存储语料中的信息，然后对共现矩阵进行降维。降维的原因是共现矩阵是一个巨大的稀疏矩阵，处理起来不是很友好。这一步叫做“Factorization”。这种表示方法称为“distributional representation”，本质是利用了语料库的统计信息。</p>
+<p>​        由于只用到了统计信息，因此该中表示方法存在的缺陷是明显的：</p>
 <ul>
-<li><p>1、语言天生的歧义和多变性。多变性是指一种含义可以有很多种方式来说，也可以指一种说法可以有很多种含义。</p>
-</li>
-<li><p>2、语言的规则不好定义。(ill-defined).很难有一套规则把某种语言给定义好，所谓的定义好就是指语言的表达模式完全遵从某种规则。对于中文来讲，尽管我们有标准的语法，但是在现实中一句话可能是语法的各种组合，或者我们讲话写作不用按照标准的语法也可以表达意思。</p>
-</li>
-<li><p>3、语义是无穷尽的，不同的单词可以组成不同的句子，不同的句子又可以表达不同的意思，这个组合没有上限。更何况人类的语言库一直在更新。因此，训练样本无法穷尽所有的情况。</p>
-</li>
-<li><p>4、解析语义是一个组合问题。单词-&gt;句子-&gt;文章/新闻/事件。复杂度骤增。</p>
-</li>
-<li>5、最后一个没有理解到位，NLP问题具有sparseness(稀疏性)?</li>
+<li>无法表达词向量之间的关系(相似性)</li>
+<li>共现矩阵随着语料库的扩增而扩增，而扩增的程度是指数的。</li>
+<li>有很强的稀疏性，不符合语言的特性。</li>
+<li>复杂度是O($|V|^2$)</li>
 </ul>
-<p>业界对语言模型的一个定义是：</p>
-<p>Assigning a probability to sentences or sequence of words in a language.</p>
-<p>不仅要能够给一句话的出现概率，还要能够给出，给定语境下的目标单词的条件概率。</p>
-<p>上述两个问题等价于一个问题。根据条件概率公式：</p>
+<p>​        Local Context Window的典型代表是word2vec，是指利用滑动窗口遍历语料库，经过神经网络训练得到一种词向量表示方法，窗口的大小对于训练结果有影响。这种方法的缺点是</p>
+<ul>
+<li>没有利用语料库的统计信息、</li>
+</ul>
+<p>​        两种表示方法的共同点是最终的得到词向量的维度都不具备可解释性，虽然共现矩阵的每个维度都有意义，但是经过SVD之后，每个维度的含义也都变得混乱了。</p>
+<p>​        GloVe的想法是既然从这两种角度都可以挖掘到词向量的部分信息，但是显然都挖掘到的信息都是不完整的，那么将这两种方式结合起来或许可以挖掘到更强的word representation.</p>
+<h3 id="构建共现矩阵"><a href="#构建共现矩阵" class="headerlink" title="构建共现矩阵"></a>构建共现矩阵</h3><p>​        根据语料库（corpus）构建一个共现矩阵（Co-ocurrence Matrix）XX（什么是<a href="http://www.fanyeong.com/2017/10/10/word2vec/" target="_blank" rel="noopener">共现矩阵</a>？），<strong>矩阵中的每一个元素XijXij代表单词ii和上下文单词jj在特定大小的上下文窗口（context window）内共同出现的次数。</strong>一般而言，这个次数的最小单位是1，但是GloVe不这么认为：它根据两个单词在上下文窗口的距离dd，提出了一个衰减函数（decreasing weighting）：decay=1/ddecay=1/d用于计算权重，也就是说<strong>距离越远的两个单词所占总计数（total count）的权重越小</strong>。</p>
+<blockquote>
+<p>In all cases we use a decreasing weighting function, so that word pairs that are d words apart contribute 1/d to the total count.</p>
+</blockquote>
+<p>摘自：<a href="http://www.fanyeong.com/2018/02/19/glove-in-detail/" target="_blank" rel="noopener">http://www.fanyeong.com/2018/02/19/glove-in-detail/</a></p>
+<h3 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h3><p>定义notation:</p>
+<p>$X_{i,j}:$ 单词j出现在语境i下的频次。</p>
+<p>$X_i=\sum_kX_{i,k} :$ 所有在语境i下出现的目标单词的总个数。</p>
+<p>$P_{i,j} = P(j|i) = \frac{X_{i,j}}{X_i}:$单词j出现在语境i中的概率。</p>
+<p> 作者定义了一个等式：</p>
 <script type="math/tex; mode=display">
-p(w_{1:n}) = p(w_1)p(w_2|w_1)p(w_3|w_{1:2})...p(w_n|w_{1:n-1})\\
-p(w_{1:n-1}) = p(w_1)p(w_2|w_1)p(w_3|w_{1:2})...p(w_{n-1}|w_{1:n-2})\\
-p(w_n|w_{1:n-1}) = \frac{p(w_{1:n})}{p(w_{1:n-1})}</script><p>假设我们知道每个句子的概率，那我们也可以知道给定序列下每个词的出现概率。</p>
-<h4 id="传统的方法是采用马尔科夫假设。"><a href="#传统的方法是采用马尔科夫假设。" class="headerlink" title="传统的方法是采用马尔科夫假设。"></a>传统的方法是采用马尔科夫假设。</h4><p>我们对后面一个问题应用马尔科夫假设，准确地说是kth order markov-assumption。</p>
-<p>即目标单词的出现概率仅与之前出现的前k个单词有关。</p>
+F(w_i,w_j,w_k) = \frac{P_{i,k}}{P_{j,k}}</script><p>​        首先谈一下对这个等式的理解。我想作者的目的是希望通过一个函数将词向量和共现矩阵里的统计信息建立联系。因为从某种角度来说，soft-max也是通过某种方法将词向量与概率联系起来，两者具有相似的思想。或者说，作者认为一个比较好的向量表示应该能够反映其在预料库中的统计信息。</p>
+<p>​        如果上式能够成立，那么要做的有两件事，一件是找到一个映射函数F,另一件是训练词向量的表示方式，等式右边的值可以通过共现矩阵得到，因此可以作为一个标签。</p>
+<p>​        首先是确定函数F。下面的解释是借鉴了网上的一篇博客<a href="（十五）通俗易懂理解——Glove算法原理 - 梦里寻梦的文章 - 知乎 https://zhuanlan.zhihu.com/p/42073620">GloVe</a>：</p>
+<p>​        1、$\frac{P_{i,k}}{P_{j,k}}$反映了词向量$(w_i,w_j,w_k)$之间的相似关系，如果单独考虑两个词向量之间的相似关系，那么可以用$|w_i-w_j|$，因此F的形式可以是：$F(w_i-w_j,w_k) = \frac{P_{i,k}}{P_{j,k}}$.</p>
+<p>​        2、$\frac{P_{i,k}}{P_{j,k}}$是一个标量，而自变量是两个同维度的向量，因此可以将自变量进行内积，将自变量转为标量$F((w_i-w_j)^Tw_k) = \frac{P_{i,k}}{P_{j,k}}$,再做一步变换：$F(w_i^Tw_k-w_j^Tw_k) = \frac{P_{i,k}}{P_{j,k}}$.</p>
+<p>​        3、到此为止，等式作为是差右边是商，可以将F取exp变换将差和商联系起来。</p>
 <script type="math/tex; mode=display">
-P(w_{i+1}|w_{1:i}) \approx P(w_{i+1}|w_{i-k:i})</script><p>根据上面的公式：</p>
+exp(w_i^Tw_k-w_j^Tw_k) = \frac{exp(w_i^Tw_k)}{exp(w_j^Tw_k)} = \frac{P_{i,k}}{P_{j,k}}</script><p>​        4、现在只要让分子和分母分别相等就可以了</p>
 <script type="math/tex; mode=display">
-P_{MLE} (w_{i+1} = m|w_{i-k:i}) = \frac{\#(w_{i-k:i+1})}{\#(w_{i-k:i})}</script><p>至此，我们就得到了一个baseline模型。</p>
-<p>但是这个baseline模型有一个缺点，就是对于没有观察到的句子，这个概率是无穷大。因此，又有人在这个基础上做了平滑。</p>
+exp(w_i^Tw_k) = P_{i,k}\\
+w_i^Tw_k = log(P_{i,k}) = log(X_{i,k})-log(X_i)\\
+w_j^Tw_k = P_{j,k} = log(X_{j,k})-log({X_i})</script><p>​        5、作为向量，交换$w_i$和$w_k$的顺序值是不变得，但是等式右边显然不适用这个性质，因此将模型引入两个偏置项：</p>
 <script type="math/tex; mode=display">
-p_{add-\alpha} (w_{i+1} =m|w_{i-k:i})=\frac{\#(w_{i-k:i+1})+\alpha}{\#(w_{i-k:i})+\alpha|V|}</script><p>但是传统的语言模型有很多问题：</p>
-<p>​    最大的缺点是假设太强了，真实情况只能部分符合该假设，比如“喝水”，“吃饭”等等（k=1）。其它情况下则不符合，比如：“Tom喝了好几杯水，因为他太渴了。”，这里的“渴”明显与“喝水”这一动作相关，但是由于词序靠后，因此不能被模型很好的分辨出来。</p>
-<p>​    另外，对于k的选择是含糊的，k=1好还是k=2好，k到底怎么选？这需要具体情况具体分析，并没有一个一劳永逸的方法。小的K值对于corpus训练是可以接受的，但是大的k值会导致内存不够用，对于一个含有V个单词的词典，可能的kgrams有$|V|^{k}$种，k每增加一都会导致指数级的增长（尽管有些kgram的组合在现实不会出现或者不符合语法）。</p>
-<p>但是从历史的发展来看，应用这个假设诞生的模型，在某些场景下，还是可以得到不错的效果。</p>
-<h4 id="业界目前比较火的构造方法是采用神经网络"><a href="#业界目前比较火的构造方法是采用神经网络" class="headerlink" title="业界目前比较火的构造方法是采用神经网络"></a>业界目前比较火的构造方法是采用神经网络</h4><p>​    神经网络天生具有高效的学习能力，03年bengio提出使用神经网络构造语言模型，取得了不错的效果。</p>
-<p>​    后来业界提出了使用RNN网络来对时间序列建模之后，将神经网络在NLP领域的运用推上了顶峰。</p>
-<p>​    再后来出现了GRU和LSTM（复兴）等等。</p>
-<p>神经网络的优点：</p>
-<p>​    非线性神经网络模型解决了传统模型的缺点，主要是k值的限制。在神经网络中，k值增加是线性的，而非指数的。所谓的线性是指用于参数数量成线性关系。通俗来讲就是，为了能够使用更多的前缀内容，我可以通过增加参数来达到这个目的。也避免了手动设置”bakkoff order”(这个概念理解的不是很好，)</p>
-<p>​    其实神经网络不止这一个优点，神经网络代替传统模型的几个方面：</p>
-<p>​    上述是一个方面。二是，神经网络不要手动的combine特征，模型会帮我们自动提取出有用的特征，这也是表示学习的一大特点。三是，神经网络解决了上下文的问题，传统的模型假设限制了模型利用下文的信息，而双向神经网络即可以利用上文信息，也可以利用下文信息。这使得模型预测更加符合实际情况。第四点是，门控神经网络的诞生解决了模型对单词出现位置（时间序列）的依赖问题，更容易挖掘关联信息。</p>
-<p>​    这些技术总体来说都是逐步放宽模型的假设，使得模型更贴近现实。</p>
-<p>神经网络的限制：</p>
-<p>​    神经网络对于预测context中的某个词的出现概率成本相对传统模型比较高。但是泛化效果不错，但是某种场景下，这种泛化效果会带来不好的影响，书中给出了一个例子，比如预测“red house”的出现概率，传统模型可能会给一个比较低的概率，因为不常见。但是神经网络可能观察到了“black house,blue house”等等，因为基于它的泛化能力反而会给出一个比较高的概率，这是不希望看到的。因为在显示中，红房子确实不多见，但是白房子，黑色城堡可能比较多一点。</p>
-<p>​    语言模型从传统过渡到神经网络经历了一个漫长的过程，而且并不是传统的一定就是不好的，在某些场景下，传统语言模型反而比神经网络表现地更好。</p>
-<p>​    有没有更好地建模方法？不知道。神经网络说到底是基于统计概率的，不具备良好的可解释性。而基于规则的方法虽然具备良好的可解释性，但是效果却不尽人意。有没有能够兼顾两者的模型可能还需要一个数年的探索。</p>
+log(X_{i,k}) = w_i^Tw_k+b_i+b_k</script><p>这里是$log(X_i)$消失了？   其实是将$log(X_i)$放到了偏置项$b_i$内。</p>
+<p>​        6、上面的等式在实际中只能近似，因此就有了代价函数(cost function):</p>
+<script type="math/tex; mode=display">
+J = \sum_{ik}(w_i^Tw_k +b_i+b_k-logX_{ik})^2</script><p>​        7、最后为了提高高频词对损失函数的贡献程度，可以根据两个词共同出现的次数设计一个权重想来对代价函数每一项进行加权：</p>
+<script type="math/tex; mode=display">
+J = \sum_{ik}f(X_{ik})(w_i^Tx_k+b_i+b_k-log(X_{i,k}))^2</script><p>​        8、权重函数f(x)</p>
+<script type="math/tex; mode=display">
+\begin{align}
+f(x) = \{ 
+\begin{array}{ll}
+
+(\frac{x}{x_{max}})^\alpha, if\quad x<x_{max}\\
+1, \quad otherwise
+\end{array}
+
+\end{align}</script><p>这里$\alpha$和word2vec一样取$\frac{3}{4}$</p>
+<h3 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h3><p>​        虽然很多人声称GloVe是一种无监督（unsupervised learing）的学习方式（因为它确实不需要人工标注label），但其实它还是有label的，这个label就是公式2中的log(Xij)log⁡(Xij)，而公式2中的向量ww和~ww~就是要不断更新/学习的参数，所以本质上它的训练方式跟监督学习的训练方法没什么不一样，都是基于梯度下降的。具体地，这篇论文里的实验是这么做的：<strong>采用了AdaGrad的梯度下降算法，对矩阵XX中的所有非零元素进行随机采样，学习曲率（learning rate）设为0.05，在vector size小于300的情况下迭代了50次，其他大小的vectors上迭代了100次，直至收敛。</strong>最终学习得到的是两个vector是ww和~ww~，因为XX是对称的（symmetric），所以从原理上讲ww和~ww~是也是对称的，他们唯一的区别是初始化的值不一样，而导致最终的值不一样。所以这两者其实是等价的，都可以当成最终的结果来使用。<strong>但是为了提高鲁棒性，我们最终会选择两者之和w+~ww+w~作为最终的vector（两者的初始化不同相当于加了不同的随机噪声，所以能提高鲁棒性）。</strong>在训练了400亿个token组成的语料后，得到的实验结果如下图所示：</p>
+<p><img src="/2020/06/16/GloVe/glove.jpg" alt="glove"></p>
+<p>这个图一共采用了三个指标：语义准确度，语法准确度以及总体准确度。那么我们不难发现Vector Dimension在300时能达到最佳，而context Windows size大致在6到10之间。</p>
+<p>摘自：<a href="http://www.fanyeong.com/2018/02/19/glove-in-detail/" target="_blank" rel="noopener">http://www.fanyeong.com/2018/02/19/glove-in-detail/</a></p>
+<h3 id="网上关于GloVe的一个问题："><a href="#网上关于GloVe的一个问题：" class="headerlink" title="网上关于GloVe的一个问题："></a>网上关于GloVe的一个问题：</h3><p> <a href="https://www.zhihu.com/question/292482891/answer/492247284" target="_blank" rel="noopener">https://www.zhihu.com/question/292482891/answer/492247284</a></p>
+<p>GloVe的损失函数：</p>
+<script type="math/tex; mode=display">
+loss = \sum_{w_i,w_j}(<v_i,\hat{v_j}>+b_i+\hat{b_j}-logX_{i,j})^2</script><p>在glove模型中，对目标词向量和上下文向量做了区分，并且最后将两组向量求和，得到词向量。模型中最大的问题在于参数$b_i,b_j$也是可训练的参数，这会带来一些问题：</p>
+<script type="math/tex; mode=display">
+\sum_{w_i,w_j}(<v_i,\hat{v_j}>+b_i+b_j-logX_{i,j})^2 \\=\sum_{w_i,w_j}[<v_i+c,\hat{v_j}+c>+(b_i-<v_i,c>-\frac{|c|^2}{2})\\+(\hat{b_j}-<\hat{v_j},c>-\frac{|c|^2}{2})-logX_{i,j}]^2</script><p>就是说这个方程的解不止一个，对与一个解向量加上任意一个常数向量后，它还是这个损失函数的解，原因是偏置因子$b_i$和$\hat{b_j}$的存在。</p>
+<p>有人在评论里提出使用正则化来解决这个问题。</p>
+<p>也有人说对一次更新都使用标注化，把词向量的模限制在1.</p>
+<h3 id="GloVe和其他模型-的联系"><a href="#GloVe和其他模型-的联系" class="headerlink" title="GloVe和其他模型 的联系"></a>GloVe和其他模型 的联系</h3><p>作者在论文中指出，soft-max模型也可以转换成Glove的形式。</p>
+<script type="math/tex; mode=display">
+soft-max : Q_{ij} = \frac{exp(w_i^Tw_j)}{\sum_{k=1}^Vexp(w_i^Tw_k)}</script><p>那么损失函数可以写成：</p>
+<script type="math/tex; mode=display">
+J = -\sum_{i\in corpus,j\in context(i)} logQ_{ij}</script><p>由于根据经验，高频词对于损失的贡献程度更大，因此：</p>
+<script type="math/tex; mode=display">
+J = -\sum_{i=1}^V\sum_{j=1}^V X_{i,j} logQ_{i,j}</script><p>注意，这里将j的取值范围定义为了整个语料库，并且加上了权重$X_{ij}$，也就是说对于没有出现过的词对$X_{ij}$，这一项被置为了0。作者在原文说这样近似更有效率。</p>
+<p>根据定义</p>
+<script type="math/tex; mode=display">
+X_i = \sum_{k}X_{ik}\\
+P_{ij} = X_{ij}/X_i</script><script type="math/tex; mode=display">
+J = -\sum_{i=1}^VX_i\sum_{j=1}^VP_{ij}logQ_{ij} = \sum_{i=1}^VX_iH(P_i,Q_i)</script><p>这里的$H(P_i,Q_i)$是交叉熵。这个损失也就变为了某种形式的交叉熵损失。</p>
+<p>交叉熵是 一种概率分布之间的距离衡量方式，但是它有一个不好的性质就是会对poorly events 分配不小的权重，因此为了解决这个问题，需要Q采用合适的标准化手段。</p>
 
       
     </div>
@@ -524,8 +551,8 @@ p_{add-\alpha} (w_{i+1} =m|w_{i-k:i})=\frac{\#(w_{i-k:i+1})+\alpha}{\#(w_{i-k:i}
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/16/Unigram,Bigram,Ngram/" rel="next" title="Unigram,Bigram,Ngram">
-                <i class="fa fa-chevron-left"></i> Unigram,Bigram,Ngram
+              <a href="/2020/06/15/tensorflow2.0%E4%BB%A5%E4%B8%8Acpu%E7%89%88%E6%9C%AC%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95/" rel="next" title="tensorflow2.0以上cpu版本安装方法">
+                <i class="fa fa-chevron-left"></i> tensorflow2.0以上cpu版本安装方法
               </a>
             
           </div>
@@ -533,6 +560,10 @@ p_{add-\alpha} (w_{i+1} =m|w_{i-k:i})=\frac{\#(w_{i-k:i+1})+\alpha}{\#(w_{i-k:i}
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/16/Word%20Representation/" rel="prev" title="Word Representation">
+                Word Representation <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -701,7 +732,7 @@ p_{add-\alpha} (w_{i+1} =m|w_{i-k:i})=\frac{\#(w_{i-k:i+1})+\alpha}{\#(w_{i-k:i}
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#当我们在讨论语言模型的时候，我们讨论的是什么？"><span class="nav-number">1.</span> <span class="nav-text">当我们在讨论语言模型的时候，我们讨论的是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么语言模型很重要？"><span class="nav-number">2.</span> <span class="nav-text">为什么语言模型很重要？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何解决？"><span class="nav-number">3.</span> <span class="nav-text">如何解决？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#传统的方法是采用马尔科夫假设。"><span class="nav-number">3.1.</span> <span class="nav-text">传统的方法是采用马尔科夫假设。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#业界目前比较火的构造方法是采用神经网络"><span class="nav-number">3.2.</span> <span class="nav-text">业界目前比较火的构造方法是采用神经网络</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GloVe-Global-Vectors-for-Word-Representation"><span class="nav-number">1.</span> <span class="nav-text">GloVe: Global Vectors for Word Representation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是Matrix-Factorization-和Local-Context-Window？以及各自的不足？"><span class="nav-number">1.1.</span> <span class="nav-text">什么是Matrix Factorization 和Local Context Window？以及各自的不足？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构建共现矩阵"><span class="nav-number">1.2.</span> <span class="nav-text">构建共现矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模型"><span class="nav-number">1.3.</span> <span class="nav-text">模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#训练"><span class="nav-number">1.4.</span> <span class="nav-text">训练</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网上关于GloVe的一个问题："><span class="nav-number">1.5.</span> <span class="nav-text">网上关于GloVe的一个问题：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GloVe和其他模型-的联系"><span class="nav-number">1.6.</span> <span class="nav-text">GloVe和其他模型 的联系</span></a></li></ol></li></ol></div>
             
 
           </div>
