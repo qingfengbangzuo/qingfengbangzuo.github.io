@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="NLP," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Qingfengbangzuo" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Word Representation？​        传统的基于概率统计的语言模型，Unigram,Bigram,N-gram没有涉及到word representation,因为他们是基于统计训练的，因此在输入端可以不做textual feature 到input feature的转换。 ​        但对于神经网络，训练过程需要有明确的数学形式的输入，而不是文本，这就引发了一个新的问题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Word Representation">
+<meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/16/NLP/%E7%89%B9%E5%BE%81%E8%A1%A8%E7%A4%BA/Word%20Representation/index.html">
+<meta property="og:site_name" content="Qingfengbangzuo">
+<meta property="og:description" content="Word Representation？​        传统的基于概率统计的语言模型，Unigram,Bigram,N-gram没有涉及到word representation,因为他们是基于统计训练的，因此在输入端可以不做textual feature 到input feature的转换。 ​        但对于神经网络，训练过程需要有明确的数学形式的输入，而不是文本，这就引发了一个新的问题">
+<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/16/NLP/%E7%89%B9%E5%BE%81%E8%A1%A8%E7%A4%BA/Word%20Representation/distributed_representation.PNG">
+<meta property="article:published_time" content="2020-06-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-06-22T12:53:57.555Z">
+<meta property="article:author" content="qingfengbangzuo">
+<meta property="article:tag" content="NLP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://qingfengbangzuo.github.io/2020/06/16/NLP/%E7%89%B9%E5%BE%81%E8%A1%A8%E7%A4%BA/Word%20Representation/distributed_representation.PNG">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":20,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://qingfengbangzuo.github.io/2020/06/16/NLP/特征表示/Word Representation/"/>
+
+
+
+
+
+  <title>Word Representation | Qingfengbangzuo</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://your-url" target="_blank" rel="noopener" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+    
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Qingfengbangzuo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">私人博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://qingfengbangzuo.github.io/2020/06/16/NLP/%E7%89%B9%E5%BE%81%E8%A1%A8%E7%A4%BA/Word%20Representation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="qingfengbangzuo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Qingfengbangzuo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Word Representation</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-16T00:00:00+08:00">
+                2020-06-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3.2k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  12
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="Word-Representation？"><a href="#Word-Representation？" class="headerlink" title="Word Representation？"></a>Word Representation？</h3><p>​        传统的基于概率统计的语言模型，Unigram,Bigram,N-gram没有涉及到word representation,因为他们是基于统计训练的，因此在输入端可以不做textual feature 到input feature的转换。</p>
+<p>​        但对于神经网络，训练过程需要有明确的数学形式的输入，而不是文本，这就引发了一个新的问题，如何实现textual feature 到neural feature的转换？</p>
+<p><strong>One-hot和Eembedding</strong></p>
+<p>一种是One-hot表示方法，一种是Embedding表示方法.</p>
+<p>​        One-hot表示是一种稀疏表示，是将整个词典做为 一个向量，对应位置上的单词为1，其余为0。Embedding是运用分布式假设，将词向量在高维空间嵌入(映射)到低维空间。使其在每个维度上的表示都不至于为0。（即由所有嵌入后的维度共同表出，相比One-hot信息由单一维度表出变为了信息分布在了各个维度上）</p>
+<p>分布式假设：在相似的语境中的目标词，具有相似性，具有相似性的单词，word representation形式相似度应该较高。</p>
+<p><strong>Unigram：</strong></p>
+<p>​        传统的Word representation方法是One-hot,目前流行的表示方法是词嵌入。当然这个只是对单词（最小意义单位）而言。</p>
+<p><strong>N-gram:</strong></p>
+<p>​        我们将N-gram（n&gt;=2）引入，可以发现，输入变为了多个单词（上下文+目标词）。解决方法是combination，combination的方法其实有很多，比较常见的有两种，一种是直接相加，一种是直接叠加。前者的代表是CBOW和WCBOW.</p>
+<script type="math/tex; mode=display">
+CBOW(w_1,w_2,w_3,...w_k) = \frac{1}{k}\sum_{i}v(w_i)\\
+WCBOW(w_1,w_2,w_3,...w_k) = \frac{1}{\sum_{i=1}^ka_i}\sum_{i}a_iv(w_i)</script><p>两种叠加方式对两种word representation方法都是适用的。</p>
+<p>​        当使用One-hot表示方法时，一个句子的表示可以由该句子中所有单词的One-hot表示方法相加，即One-hot的CBOW版本。</p>
+<p>比方说：“I like sweat candy.”</p>
+<p>以上句子的表示方法为：$V(S) = O(“I”)+O(“like”)+O(“sweat”)+O(“candy”)$</p>
+<p>O(w)是单词的One-hot表示。</p>
+<p>​        但是这样的表示方法不能够很好地衡量句子之间的相似性，因为它忽略了单词位置（词序）的影响。</p>
+<p>另一种combination方法是叠加法。</p>
+<p>​        当采用window-based时，即考虑窗口内的目标单词的前后文。输入变为了2c个单词。那么叠加法的方法就是将目标词前后各c个单词叠加在一起。</p>
+<p>比方说$\mathbf{(w-2;w-1;w+1;w+2)}$.也可以$\mathbf{(w_{-2}+w_{-1});(w_{+1}+w_{+2})}$.这种在输入到神经网络的时候一般通过一个投射层将特征叠加起来。</p>
+<h3 id="One-hot为什么失败？"><a href="#One-hot为什么失败？" class="headerlink" title="One-hot为什么失败？"></a>One-hot为什么失败？</h3><p>One-hot表示方法在与词嵌入表示方法竞争时失败了。至于原因是多方面的：</p>
+<p>问题1：One-hot表示方法虽然简单，但不够优雅。它的维度是整个字典的长度，因此限制了输入的维度也必须是字典的长度。但是字典的长度一般在10的5次方到10的6次方左右，这也意味输入向量的维度在10的5次到6次方左右，会引入大量的稀疏性，尽管计算机对稀疏矩阵的运算比较快，显然这种表示方法不够好。</p>
+<p>问题2：One-hot是一种硬编码，它只在对应的位置上有信息，而在其他位置上没有信息，这就造成当计算两个词向量之间相似性的时候，会出现问题。因为彼此都是正交的。</p>
+<p>问题3：One-hot抛弃了位置信息，当输入需要引入前后文的时候，One-hot的做法是词向量直接相加或者叠加，相加的后果是对句子中出现的词进行了统计，可以表达一部分频率上的相似性，但是无法表达语义上的相似性。叠加的后果是进一步引入了稀疏性。</p>
+<p>分布式表示方法没有上述的种种缺陷，因此更容易被业界接受。</p>
+<h3 id="Embedding算法"><a href="#Embedding算法" class="headerlink" title="Embedding算法"></a>Embedding算法</h3><p><strong>关于如何实现词嵌入有两个流派：</strong></p>
+<h4 id="Distributional-Hypothesis"><a href="#Distributional-Hypothesis" class="headerlink" title="Distributional Hypothesis"></a>Distributional Hypothesis</h4><p>​        NLP community 认为出现在相同语境中的单词具有相同的意思。（这个被称为<strong>Distributional Hypothesis。</strong>）基于此，可以根据单词在不同语境中的分布作为词向量来表示单词。这样出现在相同语境中的单词就会有相似的表示了。具体的操作如下：</p>
+<p>​        假设存在一个词典集合和一个”语境集合“，这两个集合都是可索引的，$w_i$表示第i个单词，$c_j$表示第j种语境。（这里的词典集合和语境集合可以从一个大的语料库中得到，可以想象两个集合都会比较大。)存在一个矩阵实体$M_{[i,j]}]$，它的每一行代表字典集合中的一个单词，每一列代表一个语境集合中的语境，每一个元素$f(i,j)$代表单词$w_i$和语境$c_j$的association，这种association一般是通过统计$\mathbf{$}(w_i,c_j)$在语料库中的出现频次，或者标准化以后的形式$\frac{\mathbf{$}(w_i,c_j)}{|D|}$.|D|表示语料库的大小，即：</p>
+<script type="math/tex; mode=display">
+f(i,j) =\frac{$(w_i,c_j)}{|D|}</script><p>​        但是这种表示存在一个问题，就是对于更常出现的word-context具有更高的权重（频次），比如：假设语境为目标词的前一个单词，那么”the cat”和”a cat”就要比”cute cat”和”small cat”的权重高的多，尽管后面的事件携带了更多的信息。也就是说对于出现不是那么频繁但是更有用的word-context，这种表示方法会比加的不公平。为了克服这种缺陷，提出了Pointwise Mutual Information(PMI)：</p>
+<script type="math/tex; mode=display">
+PMI(x,y) = log\frac{P(x,y)}{P(x),p(y)}</script><p>在word-contex场景下，PMI测量的是他们共同出现的频率除以他们各自单独出现的频率。</p>
+<script type="math/tex; mode=display">
+f(w,c) = PMI(w,c) = log\frac{$(w,c)·|D|}{$(w)·$(c)}</script><p>​        PMI和TF-IDF的思想相似，采用PMI可以避免给出现频次大的word-context更多的权重，给出现频次小的word-context的更小的权重。但是引入PMI表示仍然有些问题，对于没有出现在语料库中的word-context对，在计算PMI是会出现log(0)的现象。</p>
+<p>因此对PMI加以改进，提出PPMI(positive PMI):</p>
+<script type="math/tex; mode=display">
+PPMI(w,c) = max(PMI(w,c),0)</script><p>将低频出现的word-context给忽略掉（赋值为0）。</p>
+<p> PMI在实际运行中表现良好，但是也存在一个比较明显的缺点：</p>
+<p><strong>那就是容易对rare event赋予比较高的权重，尤其是当两个事件发生的频次都很低，又恰好发生在了一起的时候。</strong></p>
+<p>​        采用Distributional Hypothesis假设的一个问题是，字典集合和语境集合都很大，他们都是从一个大的语料库中得到的，因此造成实体矩阵M很大。并且由于很多word-context对不会出现在语料库中，这又会造成矩阵很稀疏。解决方法是对实体矩阵进行降维。可以采用经典的降维方法比如SVD.这样，通过降维后的实体矩阵维度会变得比较容易让人接受，同时每个词向量又可以被表出。通过SVD降维后的词向量维度大约在50&lt;d&lt;300之间。</p>
+<p>​        到此为止，经典的采用Distributional Hypothesis假设的方法介绍完毕。由于向量的表示是基于统计，准确地说是基于word-context数量的表示，因此也被成为count-based method.</p>
+<p>问题：语境集合如何构造？是选取目标的前一个词还是前n个词，还是用目标词的上下文？</p>
+<h4 id="Distributed-Representation"><a href="#Distributed-Representation" class="headerlink" title="Distributed Representation"></a>Distributed Representation</h4><p>​        相对于NLP派推崇的Distributional Hypothesis，神经网络派则比较推崇Distributed Representations。那么什么是Distributed representation?和Distributional Hypothesis的不同是什么？</p>
+<p>​        在分布式表示（Distributed representation）中，一个单词的意思被多个维度共同表出。每个维度没有具体的含义，即不具可解释性（对比count-based可见，每个维度对应一个确定的语境）。分布式表示（Distributed）的本质是给定一个meaning（word）,它可以被多个维度的combination捕捉（表示），或者给定一个维度，它捕捉了meaning的一个aspect。</p>
+<p>​        打个比方：”国王”。“国王”的属性有哪些呢？首先国王是个人，而且一般是个男人，“男人”可以作为“国王”的一个属性。其次，“国王”一般是个成年人，因此“成年人”也可以作为“国王”的一个属性，再来，从词性的角度来讲，“国王”是一个名词，因此“名词”也可以作为“国王”的一个属性。这么表示出来“国王”可以由[“男人”，“成年人”，‘名词“]来表示，每个属性都是一个维度，每个维度对应一个数值，用数值表示出来就是”国王“的词向量。</p>
+<p>​        但是对于分布式表示来说，每个维度不具有可解释性，即给定一个分布式表示的词向量，每个维度所表示的含义无法获知。但是这个并不影响我们使用它们，即使不知道它们每个维度的所代表的的含义，一旦给出两个词向量表示，我们仍然可以用标准的相似度计算方法来计算。</p>
+<p>​        分布式表示的另一个特点是需要训练。先让我们来看一下词嵌入在神经网络中的形式。</p>
+<script type="math/tex; mode=display">
+\hat{y} = P(w_i|w_{1:k}) = LM(w_{1:k}) = softmax(hW^2+b^2)\\h = g(xW^1+b^1)\\x = [v(w_1);v(w_2);...;v(w_k)]\\v(w) = \mathbf{E}_{[w]}\\w_i \in V ,\mathbf{E}\in R^{(|V|,d_w)},W^1 \in R^{k·d_w,d_{hid}},b^1 \in R^{d_{hid}},W^2 \in R^{d_{hid},V},b^2 \in R^{|V|}</script><p>​        在这个模型中一共有两套参数，一个是$\mathbf{E}$,另外一个是$\mathbf{[W^1,W^2]}$.其中$\mathbf{E}$是词嵌入矩阵，因此我们可以通过训练模型来得到词嵌入矩阵。可以看到$\mathbf{W^2}$的列和$\mathbf{E}$的行都是一种distributed representation表示。训练过程保证了词嵌入矩阵的值足够好，因为对于一个有着k-gram的输入，他们产生了正确的预测概率（对于指定的预测目标）。通过网络的训练过程，我们可以得到最终的词嵌入矩阵。这是大多数distributed representation的生成方式。</p>
+<p>语言模型有两个功能需求，给定一个语境，推测目标词的分布。另一种：</p>
+<p>the need to condition on contexts that can be combined using the chain-rule of probability to produce sentence level probability estimates  </p>
+<p>这个我怕翻译不准，个人理解是给定一个词向量，利用链式法则去预测句子的生成概率。如下图所示（摘自word2vec论文）：</p>
+<p><img src="/2020/06/16/NLP/%E7%89%B9%E5%BE%81%E8%A1%A8%E7%A4%BA/Word%20Representation/distributed_representation.PNG" alt="distributed_representation"></p>
+<p>以上是distributed representation的一个框架，具体的训练方法有几种。</p>
+<p><strong>Collobert and Weston</strong></p>
+<p>这两个人做了两点创新：</p>
+<p>​        一个是改变了传统的使用k-gram的假设，引入了word-window，将使用前k个gram改为了使用目标词的上下文（这个贡献是他们俩人做的）。使用$P(w_3|w_1,w_2,w_4,w_5)$代替了$P(w_5|w_1,w_2,w_3,w_4)$。</p>
+<p>​        另一个是改变了输出的形式，传统的softmax方案（语言模型的输出）是输出字典中每个单词作为目标词的概率。而如果只是注重representation的生成，那么可以适当对输出进行更改，不是输出每个目标词的概率分布，而是输出一个分数（score）。</p>
+<p>​        具体的实现方式如下：对于一个目标单词w, $c_{i:k}$为它的上下文的序列。$V_w(w)$为词嵌入函数，$V_c(c)$为context嵌入函数。这两个函数将目标词和context映射到一个相同的维度$d_{emb}$.Collorbert 和Weston对模型输入一个$（w,c_{1:k}）$对，然后将这个word-context对结合成一个输入$\mathbf{x}$作为神经网络的输入，通过单隐含层，输出一个word-context的分数s。</p>
+<script type="math/tex; mode=display">
+S(w,c_{1:k}) = g(\mathbf{xU})·\mathbf{v}\\
+\mathbf{x} = [V_c(c_1);....;V_c(c_k);V_w(w)]\\
+\mathbf{U} \in R^{(k+1)d_{emb},d_h}, \mathbf{v}\in R^{d_h}.</script><p>损失函数为：</p>
+<script type="math/tex; mode=display">
+L(w,c,w') = max(0,1-(s(w,c_{1:k})-s(w',c_{1:k})))</script><p>​        w’是一个从字典中随机抽出来的单词。训练过程轮循地遍历word-context对，并且对于每一word-context对，随机采样一个单词w’,使用w’计算损失L(w,c,w’)，并且更新$\mathbf{U,v}$和词向量对去最小化损失。这就是随机负采样的思想。</p>
+<p><strong>word2vec</strong></p>
+<p><strong>NCE</strong></p>
+<p><strong>Glove</strong></p>
+<p>等等。每个都够写一章了。</p>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NLP/" rel="tag"><i class="fa fa-tag"></i>NLP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/15/%E5%85%B6%E4%BB%96/tensorflow2.0%E4%BB%A5%E4%B8%8Acpu%E7%89%88%E6%9C%AC%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95/" rel="next" title="tensorflow2.0以上cpu版本安装方法">
+                <i class="fa fa-chevron-left"></i> tensorflow2.0以上cpu版本安装方法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/16/NLP/k-gram/Unigram,Bigram,Ngram/" rel="prev" title="Unigram,Bigram,Ngram">
+                Unigram,Bigram,Ngram <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">qingfengbangzuo</p>
+              <p class="site-description motion-element" itemprop="description">世界上只有一种英雄主义，那就是看清生活的真相之后依然热爱生活。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7Carchive">
+              
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/qingfengbangzuo" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="cqupt_lixz@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                推荐阅读
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://ife.baidu.com/" title="百度前端技术学院" target="_blank">百度前端技术学院</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Word-Representation？"><span class="nav-number">1.</span> <span class="nav-text">Word Representation？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#One-hot为什么失败？"><span class="nav-number">2.</span> <span class="nav-text">One-hot为什么失败？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Embedding算法"><span class="nav-number">3.</span> <span class="nav-text">Embedding算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Distributional-Hypothesis"><span class="nav-number">3.1.</span> <span class="nav-text">Distributional Hypothesis</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Distributed-Representation"><span class="nav-number">3.2.</span> <span class="nav-text">Distributed Representation</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">qingfengbangzuo</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">40.1k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  
+
+
+
+  
+  
+
+
+
+  
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="https://github.com/jjandxa/canvas_sphere"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="https://github.com/zproo/canvas-ribbon"></script>
+  
+
+  
+  
+    <script id="ribbon" type="text/javascript" size="300" alpha="0.6"  zIndex="-1" src="https://github.com/ethantw/Han"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+  <script src="/live2d-widget/autoload.js"></script>
+  
+</body>
+</html>

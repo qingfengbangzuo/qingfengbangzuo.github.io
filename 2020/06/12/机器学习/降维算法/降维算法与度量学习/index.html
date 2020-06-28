@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ML," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Qingfengbangzuo" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="KNN（K-nestest Neighbor）KNN算法的思想十分简单，给定一个测试样本，基于某种距离度量找出训练集中与其最靠近的K个训练样本，然后基于这K个“邻居”的信息来进行预测。通常，在类任务中使用投票法，即选择这K个邻居的出现最多的类别标记作为预测结果。在回归任务中，选择平均法，即选择这个K个样本中出现的实值输出标记的平均值作为预测结果。还可以基于距离远近进行加权平均或投票处理，距离越近">
+<meta property="og:type" content="article">
+<meta property="og:title" content="降维算法与度量学习">
+<meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%99%8D%E7%BB%B4%E7%AE%97%E6%B3%95/%E9%99%8D%E7%BB%B4%E7%AE%97%E6%B3%95%E4%B8%8E%E5%BA%A6%E9%87%8F%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Qingfengbangzuo">
+<meta property="og:description" content="KNN（K-nestest Neighbor）KNN算法的思想十分简单，给定一个测试样本，基于某种距离度量找出训练集中与其最靠近的K个训练样本，然后基于这K个“邻居”的信息来进行预测。通常，在类任务中使用投票法，即选择这K个邻居的出现最多的类别标记作为预测结果。在回归任务中，选择平均法，即选择这个K个样本中出现的实值输出标记的平均值作为预测结果。还可以基于距离远近进行加权平均或投票处理，距离越近">
+<meta property="article:published_time" content="2020-06-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-06-12T11:03:59.955Z">
+<meta property="article:author" content="qingfengbangzuo">
+<meta property="article:tag" content="ML">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":20,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://qingfengbangzuo.github.io/2020/06/12/机器学习/降维算法/降维算法与度量学习/"/>
+
+
+
+
+
+  <title>降维算法与度量学习 | Qingfengbangzuo</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://your-url" target="_blank" rel="noopener" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+    
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Qingfengbangzuo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">私人博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://qingfengbangzuo.github.io/2020/06/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%99%8D%E7%BB%B4%E7%AE%97%E6%B3%95/%E9%99%8D%E7%BB%B4%E7%AE%97%E6%B3%95%E4%B8%8E%E5%BA%A6%E9%87%8F%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="qingfengbangzuo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Qingfengbangzuo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">降维算法与度量学习</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-12T00:00:00+08:00">
+                2020-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Machine Learning</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/%E9%99%8D%E7%BB%B4%E7%AE%97%E6%B3%95/" itemprop="url" rel="index">
+                    <span itemprop="name">降维算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  6.3k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  23
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li><h3 id="KNN（K-nestest-Neighbor）"><a href="#KNN（K-nestest-Neighbor）" class="headerlink" title="KNN（K-nestest Neighbor）"></a>KNN（K-nestest Neighbor）</h3><p>KNN算法的思想十分简单，给定一个测试样本，基于某种距离度量找出训练集中与其最靠近的K个训练样本，然后基于这K个“邻居”的信息来进行预测。通常，在类任务中使用投票法，即选择这K个邻居的出现最多的类别标记作为预测结果。在回归任务中，选择平均法，即选择这个K个样本中出现的实值输出标记的平均值作为预测结果。还可以基于距离远近进行加权平均或投票处理，距离越近权重越大。</p>
+</li>
+</ul>
+<p>  KNN学习有两个关键点，一个是K值的选择，另一个是距离的计算方式。</p>
+<p>  不同的K值包含了不同的邻居，K值是一个距离，表示的是在这个距离内，有多少相邻样本，相邻样本的多少决定了该预测样本的预测结果，例如，K=1内有3个样本，一个正例，两个反例，那么预测样本的结果走向将偏向于反例，而K=1.5内有5个样本，3个正例，2个反例那么预测结果的走向又会被矫正过来，所以K值的选择是决定预测值走向的一个比较重要的参数。</p>
+<p>  “如果选择较小的K值，就相当于用较小的邻域中的训练实例进行预测，”学习“的近似误差会减小，只有与输入实例较近的训练实例才会对预测的结果起作用，但缺点是学习的估计误差会增大，预测结果对邻近点非常敏感，如果邻近点的实例恰巧是噪声，预测就会出错，换句话说，k值的减小就意味这整体模型变得复杂，容易发生过拟合。“</p>
+<p>  ”如果选择较大的K值，就相当于用较大邻域中的训练实例进行预测额，其有点是可以减小学习的估计误差，但缺点是学习的近似误差会增大，这时与输入实例较远的训练实例也会对预测器作用，使预测发生错误，K值的增大就意味着整体的模型变得简单。“</p>
+<p>  一般选择用交叉验证来确定k的取值。</p>
+<p>  不同的测距方式侧重的方面不同，但总体上都是反映数据间的相似程度，常见的测距方式有欧氏距离，曼哈顿距离等。</p>
+<p>  西瓜书上给出了一个简单的 证明，结果显示KNN算法的错误率较贝叶斯最优分类器的结果有：</p>
+<script type="math/tex; mode=display">
+  \begin{align}
+  P(err) &= 1- \sum_{\varepsilon\in Y}P(c|x)P(c|z)\\
+   &=1-\sum_{\varepsilon\in Y}P^2(c|x)\\
+   &\leq 1-P^2(c^*|x)\\
+   &=(1+P(c^*|x))(1-P(c^*|x))\\
+   &\leq 2(1-P(c^*|x))
+  \end{align}</script><p>  KNN三要素：距离度量，K值选择和分类决策规则。常用的距离度量是欧式距离以及更一般的$L_p$距离。K值越小模型越复杂，K值越大模型越简单。K值的选择反应了对近似误差与估计误差之间的权衡，通常由交叉验证选择最优的K，常用的分类决策规则是多数表决，对应于经验风险最小化（误分率最小等同于经验风险最小）。</p>
+<h5 id="Kd树"><a href="#Kd树" class="headerlink" title="Kd树"></a>Kd树</h5><p>​    kd树是二叉树，是对K维数据空间的一个划分。构造kd树相当与不断的用垂直于坐标轴的超平面将k为空间切分，构成一系列的K维超巨型区域，kd树的每个节点对应一个k维超矩形区域。</p>
+<p>​    <strong>构造kd树：</strong></p>
+<p>输入：k维空间数据集$T={x_1,x_2,…,x_N}$</p>
+<p>​        其中$x_i=(x_i^{(1)},x_i^{(2)},…x_i^{(k)})^T,i=1,2,…,N$</p>
+<p>输出：kd树</p>
+<p>开始：构造根节点，根节点对应于包含T的k维空间的超矩形区域。</p>
+<p>​    选择$x^{(i)}$为坐标轴，以T中所有实例的$x^{(i)}$坐标的中位数为切分点，将根节点对应的超矩形区域切分为两个子区域，切分由通过切分点并与坐标轴$x^{(i)}$垂直的超平面实现。由根节点生成深度为1的左、右子节点，左子节点对应坐标$x^{(1)}$小于切分点的子区域，右子节点对应于坐标$x^{(1)}$大于切分点的子区域。将落在切分超平面上的实例点保存在根节点。</p>
+<p>重复：对深度为j的节点，选择$x^{(l)}$为切分的坐标轴，$l=j(mod k)+1$,以该节点的区域中所有实例的$x^{(l)}$坐标的中位数为切分点，将该节点对应的超矩形区域切分为两个子区域，切分由通过切分点并与坐标轴$x^{(l)}$垂直的超平面实现。</p>
+<p>​    由该节点生成深度为j+1的左、右子节点，左子节点对应坐标$x^{(l)}$小于切分点的子区域，右子节点对应的坐标$x^{(l)}$大于切分点的子区域。降落在切分超平面上的实例点保存在该节点。</p>
+<p>​    知道两个子区域没有实例存在时停止，从而形成kd树的区域划分。</p>
+<p><strong>搜索kd树</strong></p>
+<p>输入：已构造的kd树，目标点x</p>
+<p>输出：x的最近邻</p>
+<p>（1）在kd树中找出包含目标点x的叶节点：从根节点出发，递归地向下访问kd树，若目标点x当前维的坐标小于切分点的坐标，则移动到左子节点，否则移动到右子节点，直到子节点为叶子节点为止。</p>
+<p>（2）以此叶节点为“当前最近点”。</p>
+<p>（3）递归地向上回退，在每个节点进行以下操作：</p>
+<p>(a)如果该节点保存的实例点比当前最近点距离目标点近，则以该十里店为“当前最近点”。</p>
+<p>(b)当前最近点一定存在于该节点一个子节点对应的区域，检查该子节点的父节点的另一个节点对应的区域是否有更近的点，具体地，检查另一子节点对应的区域是否与以目标点为球心，以目标点与“当前最近点”间的距离为半径的超球体相交。</p>
+<p>​    如果相交，可能在另一个子节点对应的区域内存在距目标点更近的点，移动到另一个子节点，接着，递归地进行最近邻搜索。</p>
+<p>​    如果不相交，向上回退。</p>
+<p>（4）当会退到根节点时，搜索结束，最后的当前最近点，即为x的最近邻点。</p>
+<p>kd树搜索的平均计算复杂度是$O(logN)$,这里N是训练实例数，kd数更适用于训练实例数远大于空间维数时的k近邻搜索，当空间维数接近训练实例数时，它的效率会迅速下降，几乎接近线性扫描。</p>
+<ul>
+<li><h3 id="维数灾难（curse-of-dimensionality）"><a href="#维数灾难（curse-of-dimensionality）" class="headerlink" title="维数灾难（curse of dimensionality）"></a>维数灾难（curse of dimensionality）</h3><p>如果需要达到密采样的效果，那么随着样本维度的上升，所需要的数据会越来越多，有一个计算公式：</p>
+<script type="math/tex; mode=display">
+(\frac{1}{\delta})^n = samples\\  
+例如：\quad
+(10^3)^{20} =10^{60}</script><p>高维情况下，数据样本稀疏，距离计算困难，这被称为“维数灾难”。</p>
+</li>
+<li><h3 id="降维算法"><a href="#降维算法" class="headerlink" title="降维算法"></a>降维算法</h3><p>为什么要降维？</p>
+<ul>
+<li><p>随着数据维度不断降低，数据存储所需的空间也会随之减少。</p>
+</li>
+<li><p>低维数据有助于减少计算/训练用时。</p>
+</li>
+<li><p>一些算法在高维度数据上容易表现不佳，降维可提高算法可用性。</p>
+</li>
+<li><p>降维可以用删除冗余特征解决多重共线性问题。比如我们有两个变量：“一段时间内在跑步机上的耗时”和“卡路里消耗量”。这两个变量高度相关，在跑步机上花的时间越长，燃烧的卡路里自然就越多。因此，同时存储这两个数据意义不大，只需一个就够了。</p>
+</li>
+<li><p>降维有助于数据可视化。如前所述，如果数据维度很高，可视化会变得相当困难，而绘制二维三维数据的图表非常简单。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>  数据维度降低有两种方法：</p>
+<ul>
+<li>仅保留原始数据汇总最相关的变量（特征选择）</li>
+<li><p>寻找一组较小的变量，其中每个变量都会输入变量的组合，包含与输入变量基本相同的信息（降维）</p>
+<h4 id="多维缩放（MDS）"><a href="#多维缩放（MDS）" class="headerlink" title="多维缩放（MDS）"></a>多维缩放（MDS）</h4></li>
+</ul>
+<hr>
+<p>  输入：距离矩阵$D\in \mathbb{R}^{m*m}$,其元素$dist_ji$为样本$x_i$到$x_j$的距离；</p>
+<p>  ​            低维空间维数$d^,$.</p>
+<p>  过程：</p>
+<p>  ​    1： 根据下式计算$dist_{i·}^2,dist_{·j}^2,dist_{··}^2$；</p>
+<p>  ​    2：根据式子计算矩阵B</p>
+<p>  ​    3：对矩阵B做特征值分解；</p>
+<p>  ​    4：取$\tilde{\Lambda}$为$d^{,}$个最大特征值所构成的对角矩阵，$\tilde{V}$为相应的特征向量矩阵。</p>
+<p>  输出：矩阵$\tilde{V} \tilde{\Lambda}^{\frac{1}{2}} \in \mathbb{R}^{m*d^，}$,每一行是一个样本的低维坐标。</p>
+<script type="math/tex; mode=display">
+\begin{align}
+dist_{i·}^2 &= \frac{1}{m}\sum_{j=1}^mdist_{ij}^2\\
+dist_{·j}^2 &= \frac{1}{m}\sum_{i=1}^mdist_{ij}^2\\
+dist_{··}^2 &= \frac{1}{m^2}\sum_{i=1}^m\sum_{j=1}^mdist_{ij}^2\\
+b_{ij}&= -\frac{1}{2}(dist_{ij}^2-dist_{i·}^2-dist_{·j}^2+dist_{··}^2) \\
+B &= V \Lambda V^T  \\
+\end{align}</script><h4 id="主成分分析（PCA）"><a href="#主成分分析（PCA）" class="headerlink" title="主成分分析（PCA）"></a>主成分分析（PCA）</h4><p>经过线性变换，高维空间中的数据样本可以映射为低维数据，$X = {x_1,x_2,x_3…x_m}\in \mathbb{R}^{d*m}$,变换之后得到$d’ \leq d$维空间样本</p>
+<script type="math/tex; mode=display">
+X=W^TX</script><p>$W \in \mathbb{R}^{d<em>d’}$是变换矩阵，$Z \in \mathbb{R}^{d‘</em>m}$是样本在新空间中的表达。</p>
+<p>更一般的，如果W是一组基正交基向量，那么数据X就完全被降到了一个以W各属性为轴的低维线性空间。若要求低维子空间对样本具有最大可分性，则将得到一种极为常用的线性降维方法。</p>
+<hr>
+<p>输入：样本集D = {x_1,x_2,x_3,…x_m};</p>
+<p>​    低空间维数$d’$</p>
+<p>过程：</p>
+<p>1：对所有的样本进行预处理（zero means   and unit variance）；</p>
+<p>2：计算样本的协方差矩阵$XX^T$;</p>
+<p>3：对协方差矩阵$XX^T$做特征值解；</p>
+<p>4：去除最大的$d’$个特征值多对应的特征向量$w_1,w_2,…w_{d’}$</p>
+<p>输出 ：投影矩阵$W* = (w_1,w_2,…w_{d’})$</p>
+<hr>
+<p>算法的结果是输出是一个投影矩阵，若要得到降维之后的数据需要进行投影计算：$X’=W^TX$</p>
+<p>。</p>
+<p>降维算法有多种理解和推导方式，西瓜书上提到了两种角度去推导PCA，一种是从重构角度，即样本点到这个超平面的距离最远，另一种是从数据间隔角度，即样本点在这个超平面上的投影尽可能分开。</p>
+<p>​    </p>
+<p>降维后的空间的维数d’通常是由用户事先指定，或者通过在d’值同步的低维空间中对k邻近分类器（或其他开销较小的学习器）进行交叉验证来选取较好的d’值。对PCA，还可从重构的角度设置一个重构阈值，例如t = 95%,然后选取使下式成立的最小d’值：</p>
+<script type="math/tex; mode=display">
+\frac{\sum_{i=1}^d' \lambda_i}{\sum_{i=1}^d \lambda_i}\geq t</script><p>PCA降维的的效果是d-d’维的数据被过滤掉了，舍弃掉这部分信息是必要的，一方面舍弃掉这部分信息后能够使得样本的采样密度变大，另一方面最小特征值对应的特征销量往往与噪声有关。</p>
+<h3 id="核化线性降维（KPCA）"><a href="#核化线性降维（KPCA）" class="headerlink" title="核化线性降维（KPCA）"></a>核化线性降维（KPCA）</h3><p>​         核化线性降维是在PCA的预处理阶段使用核化将数据映射到高维可分空间，然后再采用线性映射。</p>
+<p>​        假定$z_i$是由原始属性空间中的样本点$x_i$通过映射$\phi$产生，即$z_i=\phi(x_i),i=1,2,3…,m.$若$\phi$能被显示地        表达出来，则通过它将样本映射至高维特征空间，再在特征空间中实施PCA即可，</p>
+<script type="math/tex; mode=display">
+(\sum_{i=1}^m\phi(x_i)\phi(x_i)^T)w_j = \lambda_jw_j\\</script><script type="math/tex; mode=display">
+\begin{align}
+(\sum_{i=1}^mz_iz_i^T)w_j&=\lambda_jw_j\\
+w_j=\frac{1}{\lambda_j}(\sum_{i=1}^mz_iz_i^T)w_j &=\sum_{i=1}^mz_i\frac{z_i^T w_j}{\lambda_j}\\
+&=\sum_{i=1}^mz_ia_i^j
+\end{align}</script><p>​        可以得到：</p>
+<script type="math/tex; mode=display">
+w_j = \sum_{i=1}^m\phi(x_i)a_i^j</script><p>​        引入核函数</p>
+<script type="math/tex; mode=display">
+k(x_i,x_j)=\phi(x_i)^T\phi(x_j)</script><p>​        将（19）he (18)带入（14）化简后得：</p>
+<script type="math/tex; mode=display">
+K \mathbf{\alpha}^j = \lambda_j\alpha^j</script><p>其中K为核矩阵，$(K)_ij=k(x_i,x_j),\alpha ^j= (\alpha_1^j;\alpha_2^j;…;\alpha_m^j)$.显然，上式是特征值分解问题，取K的d’个最大特征值对应的特征向量即可。</p>
+<p>对新样本x，其投影后的第j（1,2……,d’）维坐标为</p>
+<script type="math/tex; mode=display">
+z_j=w_j^T\phi(x)=\sum_{i=1}^m\alpha_i^j\phi(x_i)^T\phi(x)\\
+=\sum_{i=1}^m\alpha_i^jk(x_i,x)</script><h3 id="独立成分分析（ICA）"><a href="#独立成分分析（ICA）" class="headerlink" title="独立成分分析（ICA）"></a>独立成分分析（ICA）</h3><hr>
+<h4 id="线性无关和独立"><a href="#线性无关和独立" class="headerlink" title="线性无关和独立"></a>线性无关和独立</h4><p>这两个概念在定义上的区别是明显的，假设存在变量X,Y</p>
+<p>独立：$F(X,Y)=F(X)F(Y)$</p>
+<p>不相关：$Cov(X,Y)=E(XY)-E(X)E(Y)=0$</p>
+<p>这里要明确一点，我们这里定义的相关性仅仅是指线性的，有很多的相关不是线性的，比如：$Cov(X,X^2)=0$这两个变量虽然是线性无关的，但是它们仍然是相关的，这种相关是平方相关，即非线性相关。所以它们仍然不能称之为独立。</p>
+<p>这也就是说为什么独立是比不相关更大的一个概念。在期望存在的情况下（某些分布期望不存在），两个变量相互独立，那么它们一定线性无关，但是如果它们是线性无关，却不一定相互独立。因为还存在非线性相关的可能。</p>
+<hr>
+<ol>
+<li>主成分分析假设源信号间彼此非相关，独立成分分析假设源信号间彼此独立。</li>
+<li>主成分分析认为主元之间彼此正交，样本呈高斯分布；独立成分分析则不要求样本呈高斯分布。</li>
+</ol>
+<p>在利用最大化信息熵的方法进行独立成分分析的时候，需要为源信号假定一个概率密度分布函数g’，进而找出使得g(Y)=g(Wx)的<strong>信息熵</strong>最大的变换W，即有Y=s。  </p>
+<p><strong>不管是PCA还是ICA，都不需要你对源信号的分布做具体的假设；</strong>如果观察到的信号为高斯，那么源信号也为高斯，此时PCA和ICA等价</p>
+<p>ICA认为一个信号可以被分解成若干个统计独立的分量的线性组合，而后者携带更多的信息。我们可以证明，只要源信号非高斯，那么这种分解是唯一的。若源信号为高斯的话，那么显然可能有无穷多这样的分解。</p>
+<p>先谈谈个人对这个的理解，首先有中心极限定理可知，n个独立变量的线性组合会收敛于一个高斯分布。所以对于一个非高斯随机变量，ICA认为可以将它分解为若干独立变量的线性组合，且这个分解唯一。</p>
+<p>这个算法的根本是根据这样一个定理。</p>
+<p>定理（Pierre Comon, 1994）假设随机信号z服从模型z=Bs, 其中s的分量相互独立，且其中至多可以有一个为高斯；B为满秩方阵。那么若z的分量相互独立当且仅当B=PD，其中P为排列矩阵(permutation matrix)，D为对角矩阵。</p>
+<p>看了别人的解释，大致归纳如下，对观测到的变量x（样本），对该变量做线性变换<strong>z=Qx</strong>,若z的分量线性无关，那么z的分量$z_i$一定对应这某个信号源$s_i$乘以一个系数。也就是说可以通过某种方式将观测变量（也就是样本）分解为若干源信号$s_i$的线性组合。下面把别人的一个解释附上：</p>
+<p>具备相同的统计特征的可能来自两个不同的系统，这意味着只观察x我们不可能知道它来自哪个一个，从而我们就不可能推断出源信号s的强度（方差）。为了在技术上消除这种不确定性，人们干脆约定源信号s的方差为1,。有了这个约定，再通过数据预处理的方法，我们可以把原混合矩阵A化为了一个自由度更高的正交矩阵。</p>
+<script type="math/tex; mode=display">
+z = C^{-1/2}As = (AA^T)^{-1/2}As</script><p>取$D=(AA^T)^{-1/2}A$ ,则它可以看做一个新的混合矩阵，容易看出这是一个正交矩阵，它仅有$n(n-1)/2$个自由度，而混合矩阵一般有$n^2$个自由度。 </p>
+<p>ICA需要满足的一些条件;</p>
+<p>1) 大多数ICA的算法需要进行“数据预处理”（data preprocessing）：</p>
+<p>先用PCA得到y，再把y的各个分量标准化（即让各分量除以自身的标准差）得到z。预处理后得到的z满足下面性质：</p>
+<ul>
+<li>z的各个分量不相关；</li>
+<li>z的各个分量的方差都为1。</li>
+</ul>
+<p>-</p>
+<p>这个人总结了PCA和ICA的差异：</p>
+<hr>
+<h2 id="与PCA区别"><a href="#与PCA区别" class="headerlink" title="与PCA区别"></a>与PCA区别</h2><ul>
+<li>PCA是一种数据降维的方法，但是只对符合高斯分布的样本点比较有效</li>
+<li>ICA认为观测信号是若干个统计独立的分量的线性组合，ICA要做的是一个解混过程。而PCA是一个信息提取的过程，将原始数据降维，现已成为ICA将数据标准化的预处理步骤。</li>
+</ul>
+<p>1） 可以感性上对比下ICA和PCA的区别， </p>
+<p>　一方面，PCA是将原始数据降维并提取出不相关的属性，而ICA是将原始数据降维并提取出相互独立的属性。 　另一方面，PCA目的是找到这样一组分量表示，使得重构误差最小，即最能代表原事物的特征。ICA的目的是找到这样一组分量表示，使得每个分量最大化独立，能够发现一些隐藏因素。由此可见，ICA的条件比PCA更强些。</p>
+<p>2）　ICA要求找到最大独立的方向，各个成分是独立的；PCA要求找到最大方差的方向，各个成分是正交的。 </p>
+<p>3）　总的来说，ICA认为观测信号是若干个统计独立的分量的线性组合，ICA要做的是一个解混过程。而PCA是一个信息提取的过程，将原始数据降维，现已成为ICA将数据标准化的预处理步骤。</p>
+<h3 id="等度量映射（Isometric-Mappig-Isomap）"><a href="#等度量映射（Isometric-Mappig-Isomap）" class="headerlink" title="等度量映射（Isometric Mappig , Isomap）"></a>等度量映射（Isometric Mappig , Isomap）</h3><p>​    该算法利用流形在局部上与欧式空间同胚这个性质，对每个点基于欧式距离找出其近邻点，然后就能建立一个近邻连接图，图中紧邻点之间存在连接，而非近邻点之间不存在连接，于是，计算两点之间测地线距离的问题，就 转变为了计算近邻连接图上两点之间的最短路径问题，，基于近邻距离逼近能够获得低维流形上测地线距离的近似。</p>
+<p>​    在近邻连接图上计算两点间的最短路径，可采用著名的Dijkstra算法或Floyd算法，在得到任意两点的距离之后，就可通过MDS方法来获得样本点在低维空间中的坐标，</p>
+<hr>
+<p>输入： 样本集$D={x_1,x_2,…x_m}$;</p>
+<p>​         近邻参数k;</p>
+<p>​         低维空间维数d’</p>
+<p>过程：</p>
+<p>​    1. for i = 1,2,…,m do</p>
+<p>​        确定$x_i$的k近邻</p>
+<p>​        $x_i$与k近邻点之间的距离设置为欧式距离，与其他点的距离设置为无穷大，</p>
+<p>​    end for</p>
+<p>​    2. 调用最短路劲该算法计算任意连样本之间的距离$dist(x_i,x_j);$</p>
+<p>​    3. 将$dis(x_i,x_j)$作为MDS的算法的输入；</p>
+<p>​    4. return MDS算法的输出。</p>
+<p>输出：样本集D在低维空间的投影$Z = {z_1,z_2,…z_m}$</p>
+<hr>
+<p>Isomap仅是得到了训练样本在低维空间的坐标，对于新样本，如何将其映射到低维空间？</p>
+<p>这个问题的常用结局放啊，是将训练样本的高维空间坐标作为输入，低维空间坐标作为输出，训练一个回归学习器来对新样本的低维空间坐标进行预测，这显然仅是一个权宜之计。</p>
+<p>对近邻图的构建通常有两种法法，一种是指定近邻点的个数，例如欧式距离最近的k个点为近邻点，这样得到的近邻图称为k紧邻图，另一种是指定阈值$\epsilon$，距离$\epsilon$的点被认为是近邻点。范围过大过小都会有不足。</p>
+<h3 id="局部线性嵌入（Locally-Linear-Embedding，LLE）"><a href="#局部线性嵌入（Locally-Linear-Embedding，LLE）" class="headerlink" title="局部线性嵌入（Locally Linear Embedding，LLE）"></a>局部线性嵌入（Locally Linear Embedding，LLE）</h3><p>局部线性嵌入试图保持邻域内样本之间的线性关系，假定样本点$x_i$的坐标能够通过它的邻域样本$x_j,x_k,x_l$的坐标通过线性组合而重构出来，即</p>
+<script type="math/tex; mode=display">
+x_i = w_{ij}x_j+w_{ik}x_k+w_{il}x_l</script><p>LLE希望上式的关系在低维空间中得以保持。</p>
+<p>LLE先为每个样本$x_i$找到其近邻下标集合$Q_i$,然后计算出基于$Q_i$中的样本点对$x_i$进行线性 重构的系数$w_i$；</p>
+<script type="math/tex; mode=display">
+min_{w_1,w_2,...w_m}\sum_{i=1}^m||x_i-\sum_{j \in Q_i}w_{ij}x_j||_2^2\\
+s.t. \sum _{j \in Q_i}w_{ij}=1</script><p>上式通过经验误差最小化训练的到一组参数$w_{ij}$，使得$x_i$可以通过局部的其他样本点线性表出。</p>
+<p>令$C_{ij}=(x_i-x_j)^T(x_i-x_k)$,$w_{ij}$有闭式解：</p>
+<script type="math/tex; mode=display">
+w_{ij}=\frac{\sum_{k \in Q_i}C_{jk}^{-1}}{\sum_{l,s \in Q_i}C_{ls}^{-1}}</script><p>LLE在低维空间中爆出$w_i$不变，于是$x_i$对应的低维空间坐标可通过下式求解：</p>
+<script type="math/tex; mode=display">
+min_{z_1,z_2,...z_m}\sum_{i=1}^m||z_i-\sum_{j\in Q_i}w_{ij}z_j||_2^2</script><p>上面两个式子同形，只是求解的变量不一样，令$Z=(z_1,z_2,z_3,…,z_m)\in \mathbb{R}^{d’*m},(w)_{ij}=w_{ij}$,</p>
+<script type="math/tex; mode=display">
+M=(I-W)^T(I-W)</script><p>则式（25）可重写为：</p>
+<script type="math/tex; mode=display">
+min_Z tr(ZMZ^T),\\
+s.t. \quad ZZ^T =I</script><p>上式可通过特征值求解，M最小的d’个特征值对应的特征向量组成的矩阵记为$Z^T$</p>
+<h3 id="线性映射和非线性映射的区别？分别在哪些场景下使用？"><a href="#线性映射和非线性映射的区别？分别在哪些场景下使用？" class="headerlink" title="线性映射和非线性映射的区别？分别在哪些场景下使用？"></a>线性映射和非线性映射的区别？分别在哪些场景下使用？</h3><p> 线性映射是通过一个线性映射矩阵，将高维向量映射为低维向量，之所以称它们为线性映射，是因为它们符合这样一种矩阵乘法：</p>
+<script type="math/tex; mode=display">
+X^{(i)'}=W^TX^{(i)}</script><p>这是一种典型的线性变换。而更有意思的是，对于映射矩阵W，有下面结论：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+(\sum_{i=1}^mz_iz_i^T)w_j&=\lambda_jw_j\\
+w_j=\frac{1}{\lambda_j}(\sum_{i=1}^mz_iz_i^T)w_j &=\sum_{i=1}^mz_i\frac{z_i^T w_j}{\lambda_j}\\
+&=\sum_{i=1}^mz_ia_i^j
+\end{align}</script><p>$a_i^j$是样本点$z_i$在低维空间的轴$w_j$上的映射距离除以协方差矩阵在$w_j$的特征值，可见，$w_j$是样本点$z_i$的线性组合。</p>
+<p>非线性映射，没有上述性质，映射过程是非线性的，即低维数据无法通过映射矩阵和原样本点相乘得到。这也就意味着需要曲线救国，另辟蹊径来达到降维的效果。比如将低维样本核化到高维空间再进行PCA，或者使用其他流派，比如isometric mapping，umap等等。</p>
+<h3 id="什么是线性数据，什么是非线性数据？"><a href="#什么是线性数据，什么是非线性数据？" class="headerlink" title="什么是线性数据，什么是非线性数据？"></a>什么是线性数据，什么是非线性数据？</h3><p>个人理解，线性数据和非线性数据指的是数据本身在空间中的分布类型，如果数据本身称线性分布，那么该数据就是线性数据，可以通过PCA处理，如果数据本身在空间中是以非线性分布存在，那么使用非线性降维方式更佳。</p>
+<p>还有一种解释是从距离度量的角度来分析，“低维流型嵌入到高维空间后，直接在高维空间中计算直线距离具有误导性，因为高维空间中的直线距离在的低维嵌入流型上是不可达的。想象从三维空间观察蚂蚁从一点爬到另一点，它无法脱离曲面行走。”这样的数据测量无法直接使用欧式距离。</p>
+<h2 id="连续和离散的理解"><a href="#连续和离散的理解" class="headerlink" title="连续和离散的理解"></a>连续和离散的理解</h2><p>就概率角度来讲，离散的的意义是随机变量只能取有限的几个点，连续的意义是，随机变量可以取到定义域内任意一个点。对离散变量来说P（x） = $\phi$,对连续变量，P(x$\leq$X) = $\phi$.  因此对连续变量谈论某点的取值是无意义的，因为它永远为0.</p>
+<p>概率密度函数是针对连续型随机变量来讲的，它是分布函数的导数，它解释了变量的特性。</p>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ML/" rel="tag"><i class="fa fa-tag"></i>ML</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B/%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B%E5%92%8C%E7%94%9F%E6%88%90%E3%80%81%E5%88%A4%E5%88%AB%E6%A8%A1%E5%9E%8B/" rel="next" title="生成模型与判别模型">
+                <i class="fa fa-chevron-left"></i> 生成模型与判别模型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A0%91%E7%B1%BB%E6%A8%A1%E5%9E%8B/%E5%86%B3%E7%AD%96%E6%A0%91/" rel="prev" title="决策树">
+                决策树 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">qingfengbangzuo</p>
+              <p class="site-description motion-element" itemprop="description">世界上只有一种英雄主义，那就是看清生活的真相之后依然热爱生活。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7Carchive">
+              
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/qingfengbangzuo" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="cqupt_lixz@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                推荐阅读
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://ife.baidu.com/" title="百度前端技术学院" target="_blank">百度前端技术学院</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#KNN（K-nestest-Neighbor）"><span class="nav-number">1.</span> <span class="nav-text">KNN（K-nestest Neighbor）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Kd树"><span class="nav-number">1.0.1.</span> <span class="nav-text">Kd树</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#维数灾难（curse-of-dimensionality）"><span class="nav-number">2.</span> <span class="nav-text">维数灾难（curse of dimensionality）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#降维算法"><span class="nav-number">3.</span> <span class="nav-text">降维算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#多维缩放（MDS）"><span class="nav-number">3.1.</span> <span class="nav-text">多维缩放（MDS）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#主成分分析（PCA）"><span class="nav-number">3.2.</span> <span class="nav-text">主成分分析（PCA）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#核化线性降维（KPCA）"><span class="nav-number">4.</span> <span class="nav-text">核化线性降维（KPCA）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#独立成分分析（ICA）"><span class="nav-number">5.</span> <span class="nav-text">独立成分分析（ICA）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#线性无关和独立"><span class="nav-number">5.1.</span> <span class="nav-text">线性无关和独立</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#与PCA区别"><span class="nav-number"></span> <span class="nav-text">与PCA区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#等度量映射（Isometric-Mappig-Isomap）"><span class="nav-number">1.</span> <span class="nav-text">等度量映射（Isometric Mappig , Isomap）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#局部线性嵌入（Locally-Linear-Embedding，LLE）"><span class="nav-number">2.</span> <span class="nav-text">局部线性嵌入（Locally Linear Embedding，LLE）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线性映射和非线性映射的区别？分别在哪些场景下使用？"><span class="nav-number">3.</span> <span class="nav-text">线性映射和非线性映射的区别？分别在哪些场景下使用？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是线性数据，什么是非线性数据？"><span class="nav-number">4.</span> <span class="nav-text">什么是线性数据，什么是非线性数据？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#连续和离散的理解"><span class="nav-number"></span> <span class="nav-text">连续和离散的理解</span></a></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">qingfengbangzuo</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">40.1k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  
+
+
+
+  
+  
+
+
+
+  
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="https://github.com/jjandxa/canvas_sphere"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="https://github.com/zproo/canvas-ribbon"></script>
+  
+
+  
+  
+    <script id="ribbon" type="text/javascript" size="300" alpha="0.6"  zIndex="-1" src="https://github.com/ethantw/Han"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+  <script src="/live2d-widget/autoload.js"></script>
+  
+</body>
+</html>
