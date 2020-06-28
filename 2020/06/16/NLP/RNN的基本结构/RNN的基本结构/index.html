@@ -131,7 +131,7 @@
 <meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/16/NLP/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/index.html">
 <meta property="og:site_name" content="Qingfengbangzuo">
 <meta property="og:description" content="RNN的基本结构 上图是RNN的基本单元和基本结构。 可以看出RNN（Recurrent Neuron Network）是递归神经网络的一种。不过，RNN还有一种表示形式如下，这种形式和上述形式是等价的，是按时间步长展开的表示。   循环神经网络or递归神经网络引用博客：https:&#x2F;&#x2F;blog.csdn.net&#x2F;zhangjiali12011&#x2F;article&#x2F;details&#x2F;90045978 很">
-<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/16/NLP/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84.png">
+<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/16/NLP/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%841.png">
 <meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/16/NLP/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%842.PNG">
 <meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/16/NLP/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/transducer.PNG">
 <meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/16/NLP/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/BIRNN.PNG">
@@ -143,11 +143,11 @@
 <meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/16/NLP/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/variant2.PNG">
 <meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/16/NLP/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/GRU.PNG">
 <meta property="article:published_time" content="2020-06-15T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-06-28T07:36:42.607Z">
+<meta property="article:modified_time" content="2020-06-28T07:50:42.548Z">
 <meta property="article:author" content="qingfengbangzuo">
 <meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://qingfengbangzuo.github.io/2020/06/16/NLP/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84.png">
+<meta name="twitter:image" content="https://qingfengbangzuo.github.io/2020/06/16/NLP/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%841.png">
 
 
 
@@ -442,7 +442,7 @@
       
 
       
-        <h3 id="RNN的基本结构"><a href="#RNN的基本结构" class="headerlink" title="RNN的基本结构"></a>RNN的基本结构</h3><p><img src="/2020/06/16/NLP/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN的基本结构.png" alt="image-20200628084703909"></p>
+        <h3 id="RNN的基本结构"><a href="#RNN的基本结构" class="headerlink" title="RNN的基本结构"></a>RNN的基本结构</h3><p><img src="/2020/06/16/NLP/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN的基本结构1.png" alt="RNN的基本结构"></p>
 <p>上图是RNN的基本单元和基本结构。</p>
 <p>可以看出RNN（Recurrent Neuron Network）是递归神经网络的一种。不过，RNN还有一种表示形式如下，这种形式和上述形式是等价的，是按时间步长展开的表示。</p>
 <p><img src="/2020/06/16/NLP/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN基本结构2.PNG" alt="RNN基本结构2"></p>
