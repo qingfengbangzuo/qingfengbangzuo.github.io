@@ -128,16 +128,16 @@
 <meta name="description" content="GloVe: Global Vectors for Word Representation​        这篇文章基于论文《GloVe: Global Vectors for Word Representation  》进行总结学习，如有疑惑，以原文为主。 什么是Matrix Factorization 和Local Context Window？以及各自的不足？​        关于如何表示词">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Word GloVe">
-<meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/16/GloVe/index.html">
+<meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/16/NLP/Glove/GloVe/index.html">
 <meta property="og:site_name" content="Qingfengbangzuo">
 <meta property="og:description" content="GloVe: Global Vectors for Word Representation​        这篇文章基于论文《GloVe: Global Vectors for Word Representation  》进行总结学习，如有疑惑，以原文为主。 什么是Matrix Factorization 和Local Context Window？以及各自的不足？​        关于如何表示词">
-<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/16/GloVe/glove.jpg">
+<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/16/NLP/Glove/GloVe/glove.jpg">
 <meta property="article:published_time" content="2020-06-15T16:00:00.000Z">
 <meta property="article:modified_time" content="2020-06-22T12:56:07.254Z">
 <meta property="article:author" content="qingfengbangzuo">
 <meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://qingfengbangzuo.github.io/2020/06/16/GloVe/glove.jpg">
+<meta name="twitter:image" content="https://qingfengbangzuo.github.io/2020/06/16/NLP/Glove/GloVe/glove.jpg">
 
 
 
@@ -167,7 +167,7 @@
 
 
 
-  <link rel="canonical" href="https://qingfengbangzuo.github.io/2020/06/16/GloVe/"/>
+  <link rel="canonical" href="https://qingfengbangzuo.github.io/2020/06/16/NLP/Glove/GloVe/"/>
 
 
 
@@ -312,7 +312,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://qingfengbangzuo.github.io/2020/06/16/GloVe/">
+    <link itemprop="mainEntityOfPage" href="https://qingfengbangzuo.github.io/2020/06/16/NLP/Glove/GloVe/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="qingfengbangzuo">
@@ -491,7 +491,7 @@ f(x) = \{
 
 \end{align}</script><p>这里$\alpha$和word2vec一样取$\frac{3}{4}$</p>
 <h3 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h3><p>​        虽然很多人声称GloVe是一种无监督（unsupervised learing）的学习方式（因为它确实不需要人工标注label），但其实它还是有label的，这个label就是公式2中的log(Xij)log⁡(Xij)，而公式2中的向量ww和~ww~就是要不断更新/学习的参数，所以本质上它的训练方式跟监督学习的训练方法没什么不一样，都是基于梯度下降的。具体地，这篇论文里的实验是这么做的：<strong>采用了AdaGrad的梯度下降算法，对矩阵XX中的所有非零元素进行随机采样，学习曲率（learning rate）设为0.05，在vector size小于300的情况下迭代了50次，其他大小的vectors上迭代了100次，直至收敛。</strong>最终学习得到的是两个vector是ww和~ww~，因为XX是对称的（symmetric），所以从原理上讲ww和~ww~是也是对称的，他们唯一的区别是初始化的值不一样，而导致最终的值不一样。所以这两者其实是等价的，都可以当成最终的结果来使用。<strong>但是为了提高鲁棒性，我们最终会选择两者之和w+~ww+w~作为最终的vector（两者的初始化不同相当于加了不同的随机噪声，所以能提高鲁棒性）。</strong>在训练了400亿个token组成的语料后，得到的实验结果如下图所示：</p>
-<p><img src="/2020/06/16/GloVe/glove.jpg" alt="glove"></p>
+<p><img src="/2020/06/16/NLP/Glove/GloVe/glove.jpg" alt="glove"></p>
 <p>这个图一共采用了三个指标：语义准确度，语法准确度以及总体准确度。那么我们不难发现Vector Dimension在300时能达到最佳，而context Windows size大致在6到10之间。</p>
 <p>摘自：<a href="http://www.fanyeong.com/2018/02/19/glove-in-detail/" target="_blank" rel="noopener">http://www.fanyeong.com/2018/02/19/glove-in-detail/</a></p>
 <h3 id="网上关于GloVe的一个问题："><a href="#网上关于GloVe的一个问题：" class="headerlink" title="网上关于GloVe的一个问题："></a>网上关于GloVe的一个问题：</h3><p> <a href="https://www.zhihu.com/question/292482891/answer/492247284" target="_blank" rel="noopener">https://www.zhihu.com/question/292482891/answer/492247284</a></p>
@@ -551,8 +551,8 @@ J = -\sum_{i=1}^VX_i\sum_{j=1}^VP_{ij}logQ_{ij} = \sum_{i=1}^VX_iH(P_i,Q_i)</scr
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/15/tensorflow2.0%E4%BB%A5%E4%B8%8Acpu%E7%89%88%E6%9C%AC%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95/" rel="next" title="tensorflow2.0以上cpu版本安装方法">
-                <i class="fa fa-chevron-left"></i> tensorflow2.0以上cpu版本安装方法
+              <a href="/2020/06/16/NLP/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/" rel="next" title="RNN的基本结构">
+                <i class="fa fa-chevron-left"></i> RNN的基本结构
               </a>
             
           </div>
@@ -640,7 +640,7 @@ J = -\sum_{i=1}^VX_i\sum_{j=1}^VP_{ij}logQ_{ij} = \sum_{i=1}^VX_iH(P_i,Q_i)</scr
               
                 <a href="/archives%7C%7Carchive">
               
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -766,7 +766,7 @@ J = -\sum_{i=1}^VX_i\sum_{j=1}^VP_{ij}logQ_{ij} = \sum_{i=1}^VX_iH(P_i,Q_i)</scr
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">33.7k</span>
+    <span title="Site words total count">40.1k</span>
   
 </div>
 

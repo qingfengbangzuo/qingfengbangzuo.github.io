@@ -125,17 +125,21 @@
 
 
 
-<meta name="description" content="Unigram, Bigram和N-gram​        这三种模型都是基于kth order markov-assumption下k分别取1,2,n时的情况，是传统模型中最基本的模型。下面主要分析一下这三种模型的不足，同时也是传统模型的不足。 Unigram核心：将每个单词视为独立的个体. 那么：  P(w_1,w_2,w_3,...,w_n) &#x3D; p(w_1)p(w_2)p(w_3)...">
+<meta name="description" content="内容： 1、介绍了为什么需要引进CNN，CNN解决了那些问题。 2、介绍了CNN在NLP中的基本结构。 3、介绍了层次卷积的基本结构 为什么需要CNN？传统的词嵌入算法word2vec、Glove等等训练得到的向量都是基于“词”的。虽然它在训练的过程中使用到了上下文的语义信息或者统计方面的信息，但是依然面临着一些问题。、 问题1：比如，在包含主观情感的句子中，形容词往往拥有比其他词性的单词包含更多">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Unigram,Bigram,Ngram">
-<meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/16/Unigram,Bigram,Ngram/index.html">
+<meta property="og:title" content="从词嵌入到CNN">
+<meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/20/NLP/%E4%BB%8E%E8%AF%8D%E5%B5%8C%E5%85%A5%E5%88%B0CNN/%E4%BB%8E%E8%AF%8D%E5%B5%8C%E5%85%A5%E5%88%B0CNN/index.html">
 <meta property="og:site_name" content="Qingfengbangzuo">
-<meta property="og:description" content="Unigram, Bigram和N-gram​        这三种模型都是基于kth order markov-assumption下k分别取1,2,n时的情况，是传统模型中最基本的模型。下面主要分析一下这三种模型的不足，同时也是传统模型的不足。 Unigram核心：将每个单词视为独立的个体. 那么：  P(w_1,w_2,w_3,...,w_n) &#x3D; p(w_1)p(w_2)p(w_3)...">
-<meta property="article:published_time" content="2020-06-15T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-06-22T12:52:15.571Z">
+<meta property="og:description" content="内容： 1、介绍了为什么需要引进CNN，CNN解决了那些问题。 2、介绍了CNN在NLP中的基本结构。 3、介绍了层次卷积的基本结构 为什么需要CNN？传统的词嵌入算法word2vec、Glove等等训练得到的向量都是基于“词”的。虽然它在训练的过程中使用到了上下文的语义信息或者统计方面的信息，但是依然面临着一些问题。、 问题1：比如，在包含主观情感的句子中，形容词往往拥有比其他词性的单词包含更多">
+<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/20/NLP/%E4%BB%8E%E8%AF%8D%E5%B5%8C%E5%85%A5%E5%88%B0CNN/%E4%BB%8E%E8%AF%8D%E5%B5%8C%E5%85%A5%E5%88%B0CNN/image-20200626143733720.png">
+<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/20/NLP/%E4%BB%8E%E8%AF%8D%E5%B5%8C%E5%85%A5%E5%88%B0CNN/%E4%BB%8E%E8%AF%8D%E5%B5%8C%E5%85%A5%E5%88%B0CNN/k-max.PNG">
+<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/20/NLP/%E4%BB%8E%E8%AF%8D%E5%B5%8C%E5%85%A5%E5%88%B0CNN/%E4%BB%8E%E8%AF%8D%E5%B5%8C%E5%85%A5%E5%88%B0CNN/%E5%B1%82%E6%AC%A1%E5%8D%B7%E7%A7%AF.PNG">
+<meta property="article:published_time" content="2020-06-19T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-06-28T07:37:24.846Z">
 <meta property="article:author" content="qingfengbangzuo">
 <meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://qingfengbangzuo.github.io/2020/06/20/NLP/%E4%BB%8E%E8%AF%8D%E5%B5%8C%E5%85%A5%E5%88%B0CNN/%E4%BB%8E%E8%AF%8D%E5%B5%8C%E5%85%A5%E5%88%B0CNN/image-20200626143733720.png">
 
 
 
@@ -165,13 +169,13 @@
 
 
 
-  <link rel="canonical" href="https://qingfengbangzuo.github.io/2020/06/16/Unigram,Bigram,Ngram/"/>
+  <link rel="canonical" href="https://qingfengbangzuo.github.io/2020/06/20/NLP/从词嵌入到CNN/从词嵌入到CNN/"/>
 
 
 
 
 
-  <title>Unigram,Bigram,Ngram | Qingfengbangzuo</title>
+  <title>从词嵌入到CNN | Qingfengbangzuo</title>
   
 
 
@@ -310,7 +314,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://qingfengbangzuo.github.io/2020/06/16/Unigram,Bigram,Ngram/">
+    <link itemprop="mainEntityOfPage" href="https://qingfengbangzuo.github.io/2020/06/20/NLP/%E4%BB%8E%E8%AF%8D%E5%B5%8C%E5%85%A5%E5%88%B0CNN/%E4%BB%8E%E8%AF%8D%E5%B5%8C%E5%85%A5%E5%88%B0CNN/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="qingfengbangzuo">
@@ -327,7 +331,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Unigram,Bigram,Ngram</h1>
+          <h1 class="post-title" itemprop="name headline">从词嵌入到CNN</h1>
         
 
         <div class="post-meta">
@@ -339,8 +343,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-16T00:00:00+08:00">
-                2020-06-16
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-20T00:00:00+08:00">
+                2020-06-20
               </time>
             
 
@@ -393,7 +397,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.6k
+                  2.3k
                 </span>
               
 
@@ -409,7 +413,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  5
+                  8
                 </span>
               
             </div>
@@ -430,54 +434,54 @@
       
 
       
-        <h2 id="Unigram-Bigram和N-gram"><a href="#Unigram-Bigram和N-gram" class="headerlink" title="Unigram, Bigram和N-gram"></a>Unigram, Bigram和N-gram</h2><p>​        这三种模型都是基于kth order markov-assumption下k分别取1,2,n时的情况，是传统模型中最基本的模型。下面主要分析一下这三种模型的不足，同时也是传统模型的不足。</p>
-<h3 id="Unigram"><a href="#Unigram" class="headerlink" title="Unigram"></a>Unigram</h3><p>核心：将每个单词视为独立的个体.</p>
-<p>那么：</p>
+        <p>内容：</p>
+<p>1、介绍了为什么需要引进CNN，CNN解决了那些问题。</p>
+<p>2、介绍了CNN在NLP中的基本结构。</p>
+<p>3、介绍了层次卷积的基本结构</p>
+<h3 id="为什么需要CNN？"><a href="#为什么需要CNN？" class="headerlink" title="为什么需要CNN？"></a>为什么需要CNN？</h3><p>传统的词嵌入算法word2vec、Glove等等训练得到的向量都是基于“词”的。虽然它在训练的过程中使用到了上下文的语义信息或者统计方面的信息，但是依然面临着一些问题。、</p>
+<p><strong>问题1：</strong>比如，在包含主观情感的句子中，形容词往往拥有比其他词性的单词包含更多的信息。在主题分类任务中，特殊的名词、代词相比其他词性的词语往往包含跟多的信息。这就产生了新的需求，我们希望找到某种“方法”能够根据不同的任务对一些关键词进行区别对待，或者说我们希望挖掘出那些包含更多信息量的词。</p>
+<p><strong>问题2：</strong>在基于“词”的level上来训练任务往往会遇到一些问题，因为带有关键信息的可能不仅仅是单个词，而往往是一些词组（k-grams)，虽然CBOW考虑到了n-grams的信息，但是它的一个比较大的缺点是忽略了词序，从而造成一个比较大的问题：“it was not good, it was actually quite bad” and “it was not bad, it was actually quite good ”会给予一个相同的表示。但是这两句尽管很相似，但是在情感上完全是相反的。这意味着ngrams相比于bag-of-words可能包含了更多的信息。</p>
+<p>一个很自然的解决方法是，扩充Embedding矩阵，给kgrams和word相同的表示，效果就是嵌入矩阵中不仅包含单个词的表示向量，同样包含词组（kgrams）的表示向量。然后就可以使用传统的词嵌入训练方法来进行训练。不过这样做的缺点有这样几点：1、扩充后的词嵌入矩阵可能会发生维度爆炸，因为对于一个$10^5$到$10^6$的语料库来讲，扩充带来的后果是词嵌入矩阵维度的指数级增长，同时带来了更大的稀疏性。2、由于矩阵的扩充会导致存储的消耗变得巨大。3、对(k-grams)的伸缩性不好。4、不同享统计信息，对于词组”very good”和“quite good”，它们两个词在嵌入矩阵中是独立的两个”词“，尽管它们拥有一个相同的单词“good”，但是它们在训练过程中被视为是不相关的，因此给定其中一个无法推断另一个。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">the embedding of “quite good” and “very good” are completely independent of one another, so if the learner saw only one of them during training, it will not be able to deduce anything about the other based on its component words .</span><br></pre></td></tr></table></figure>
+<p>CNN被发现能够很好的缓解以上问题。无论是在CV领域还是NLP领域，CNN结构都可以被视为是一种特征抽取结构。Convolution  + Pooling 能够有效地从句子中抽出关键信息，这个关键信息是一个k-grams。因此CNN能够带来的几点好处是：1、不需要对词嵌入矩阵进行修改，从而避免了扩张带来的存储消耗。2、可以抽取k-grams信息，并且使得其中的统计信息可以被共享。3、伸缩性好，可以将k从1扩张到N（句子长度），只需要增加线性复杂度。4、输出维度可控，可以指定输出维度为任意大小。</p>
+<h3 id="CNN结构-使用1D卷积"><a href="#CNN结构-使用1D卷积" class="headerlink" title="CNN结构(使用1D卷积)"></a>CNN结构(使用1D卷积)</h3><p><img src="/2020/06/20/NLP/%E4%BB%8E%E8%AF%8D%E5%B5%8C%E5%85%A5%E5%88%B0CNN/%E4%BB%8E%E8%AF%8D%E5%B5%8C%E5%85%A5%E5%88%B0CNN/image-20200626143733720.png" alt="image-20200626143733720"></p>
+<p>如图所示是k=2，nfilter = 1时的CNN结构，可以看出卷积层就做了一件事儿，就是对一个大小为2的窗口滚动操作。这个操作如下：</p>
 <script type="math/tex; mode=display">
-P(w_1,w_2,w_3,...,w_n) = p(w_1)p(w_2)p(w_3)...p(w_n)</script><p>上面就是我们的模型，训练过程就是统计每个单词$p(w_i)$的出现概率。</p>
-<p>至于怎么得到每个单词的概率，就需要给定一个语料库，在语料库中计算每个单词的频率。</p>
-<p>预测过程：</p>
-<p>将需要预测的样本带到模型中，得到每个单词频率的乘积，即为句子出现的概率。</p>
-<p>可以看出这种方法虽然简单，但是假设太强，它的假设是每个单词之间相互独立，即一句话中的单词A出现的概率是完全随机的，因为单词之间都彼此独立。显然这不合理。</p>
-<h3 id="Bi-gram"><a href="#Bi-gram" class="headerlink" title="Bi-gram:"></a>Bi-gram:</h3><p>核心：每个单词的出现依赖前一个单词。</p>
-<p>模型表示:</p>
+\begin{align}
+&对于序列&W_{1:n} &= {w_1,w_2,w_3,...,w_n}\\
+&定义一个concatenation操作：&x_i &= C(w_i:w_{i+k-1}); \quad x_i\in R^{k·d_{emd}}\\
+&g是一个非线性函数(tanh) &p^k_i &= g(x_i^T·u)\quad p^k_i \in R \quad u\in R^{k·d_{emd}} 
+\end{align}</script><p>式中的i表示窗口的index。对于<script type="math/tex">nfilter = l</script>的情况，可以将参数矩阵$u$扩展成$U \quad Dim_U = (k·d_{emd},l)$.</p>
+<p>得到 结果为</p>
 <script type="math/tex; mode=display">
-P(w_1,w_2,w_3,...,w_n) = p(w_1)p(w_2|w_1)p(w_3|w_2)...p(w_{n-1}|w_n)</script><p>模型的训练过程就是统计如下概率：</p>
+P^k_i  = g(x_i^TU+b) \quad P^k_i \in R^{(1,l)}</script><p>假设sentence的长度为N，有</p>
 <script type="math/tex; mode=display">
-p(w_i|w_{i-1}) = \frac{p(w_i,w_{i-1})}{p(w_{i-1})} = \frac{$(w_{i-1},w_i)}{$w_{i-1}}</script><p>同样是在语料库中统计。</p>
-<p>预测过程：</p>
-<p>将需要预测的样本带到模型中，各个条件概率的的乘积，即为句子出现的概率。</p>
-<p>该模型虽然在Unigram的基础上放宽了部分假设，即假设下一个单词的出现与上一个单词有相关性。但是假设依然很强，因为没有考虑语义上的相关，比方说”the man”，这两个单词之间的相关性可能并不像他表现出来的那么强。其次，模型也没有考虑超过2个词距的单词对目标词的影响。这些都是限制模型表现地因素。</p>
-<h3 id="n-gram：假设n-3"><a href="#n-gram：假设n-3" class="headerlink" title="n-gram：假设n =3"></a>n-gram：假设n =3</h3><p>核心：每个目标词的出现都依赖于前N个出现的单词。</p>
-<p>模型表示：</p>
+P^k = g(X^TU+b) \quad P^k\in R^{(N-k+1,l)}</script><h4 id="padding"><a href="#padding" class="headerlink" title="padding"></a>padding</h4><p>由于卷积操作会使得维度下降（N个词的句子,有N-k+1个长度为k的窗口），padding是指对句子的前后进行插入一定数量的空白词，使得维度变化在一个可控的范围。上述操作没有进行padding，称为narrow convolution.还有一种称为wide convolution，就是在两边各插入k-1个词。这样得到的维度为N+k-1。</p>
+<p>padding还有一个作用是提高两边词的检测度。</p>
+<h4 id="pooling"><a href="#pooling" class="headerlink" title="pooling"></a>pooling</h4><p>对于一个窗口大小来讲，池化操作是指对filter过后的$(1,l)$维向量进行一个伸缩操作。常用的两种方法是max-pooling和average-pooling。顾名思义，max-pooling就是取$(1,l)$维向量中最大的那个，作为结果。average-pooling就是去$(1,l)$维向量的平均值作为结果。</p>
+<p>pooling操作背后的含义：网上有不少介绍pooling的作用的博客，这里就不展开了，浅谈自己的一些认识。</p>
+<p>要想了解pooling干了什么需要先知道卷积层做了什么，从效果上来看，卷积层无非是把句子中所有的n-grams特征都提取了出来。提取出来的这些特征经过一个concatenation操作和一个非线性函数映射，变为了一个值。这种操作类似于特征变换，将多个特征进行了一个非线性组合，然后得到了一个新的表示。这种思想应用到n-gram提取上显得再正常不过，也就是说我们可以将这个值看做是n-gram的一个表示，至于是哪方面的表示，这个是非线性变化的参数决定的，可能是词性可能是频率，也可能是其他。那么我们通过$l$个的filter得到了$l$个n-grams的不同表示，我们当然可以将这些表示作为一个向量直接扔进后面的训练过程，但是为了简化训练，我们总是希望根据这$l$个中总结出一个最好的表示来进行后续的训练，这样一来可以减少训练的复杂度，二来可以使得表示更加的鲁棒。那么常用的两种方法是max和average。这两种表示方法效果因人而异，不同任务表现出来的效果也不尽相同。</p>
+<p>还有一种取法是k-max取法。就是取max最大的前k个表示最为最终的表示，但是在取值的过程中需要注意各个对应值的相对位置不变。</p>
+<p><img src="/2020/06/20/NLP/%E4%BB%8E%E8%AF%8D%E5%B5%8C%E5%85%A5%E5%88%B0CNN/%E4%BB%8E%E8%AF%8D%E5%B5%8C%E5%85%A5%E5%88%B0CNN/k-max.PNG" alt="k-max"></p>
+<p>max-pooling的值为[9,8,5].2-max的值为[[9,6,3],[7,8,5]].</p>
+<h3 id="HIERARCHICAL-CONVOLUTIONS"><a href="#HIERARCHICAL-CONVOLUTIONS" class="headerlink" title="HIERARCHICAL CONVOLUTIONS"></a>HIERARCHICAL CONVOLUTIONS</h3><p>hierarchical convolutions是对CNN机构的一种扩展。目的和对图像进行多重卷积操作一样，都是为了能够提取更有效的表示。</p>
 <script type="math/tex; mode=display">
-P(w_1,w_2,w_3,...w_n) = P(w_1)P(w_2|w_1)P(w_3|w_1,w_2)P(w_4|w_2,w_3)...P(w_n|w_{n-1},w_{n-2})</script><p>模型训练过程就是统计如下概率：</p>
-<script type="math/tex; mode=display">
-P(w_i|w_{i-k:i}) = \frac{P(w_i,w_{i-k:i})}{P(w_{i-k:i})} = \frac{$(w_i,w_{i-k:i})}{$w_{i-k:i}}</script><p>预测过程：</p>
-<p>将需要预测的样本带到模型中，各个条件概率的的乘积，即为句子出现的概率。</p>
-<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>​        可以看出Bi-gram和N-gram模型都是在Unigram的基础上逐渐放宽假设的结果。下面主要讨论三种模型的共同的一些问题：</p>
-<p><strong>问题1</strong>：</p>
-<p>​        一个显著的问题就是对于语料库中没有出现，而预测样本中出现了的单词，模型会表现出糟糕的预测结果。即对于语料库中没有出现的单词，模型的预测结果会取0。这显然是不符合实际情况的。</p>
-<p>一个因此普遍的做法是对模型进行平滑处理。</p>
-<p>additive smoothing ：</p>
-<script type="math/tex; mode=display">
-P_{add-\alpha} (w_{i+1 }=m|w_{i-k:i}) = \frac{$(w_{i-k:i+1})+\alpha}{$(w_{i-k:i})+\alpha|V|}</script><p>$\alpha$取（0,1]之间的值。</p>
-<hr>
-<p>back-off smothing:</p>
-<script type="math/tex; mode=display">
-P_{int}(w_{i+1} = m|w_{i-k:i}) = \lambda_{w_{i-k:i}}\frac{$(w_{i-k:i+1})}{$(w_{i-k:i})}+(1-\lambda_{w_{i-k:i}})p(w_{i+1}=m|w_{i-(k-i):i})</script><p>​        该平滑原理是利用其backoff进行退步统计，就是说对于$P(w_{i+1}|w_{i-k:i})$如果语料库中没有出现$w_{i-k:i}$，那么就使用$w_{i-k:i-1}$来代替。</p>
-<p><strong>问题2：</strong></p>
-<p>​        没有利用到下文的信息。有些目标词是依赖下文的，对上文依赖反而不强，但是马尔科夫假设限制了这一点。这也是限制传统模型表现的一个重要因素。</p>
-<p><strong>问题3：</strong></p>
-<p>​        无法衡量序列之间的相似性。比方说“我今天喝了很多水。”与“我今天喝水快喝饱了。”这两个句子都是在说“喝了很多水”。但是模型却没有衡量这两个序列相似性的能力。</p>
-<p>​        一个解决方法是引入词向量。这个话题可以单独写一篇，关于如何衡量序列之间相似性。</p>
-<p><strong>问题4：</strong></p>
-<p>​        对于n的选择是一个trade-off问题。（当采用线性模型时，这个问题尤为严重。因为K每增加1，相应的假设空间就要增大$|V|^{k+1}$-$|V|^{k}$。这说明，参数也要增加这么多。）当然，这里是基于统计的方法来训练的，这样的训练方式对应于一个大的n，就可能会出现大量的0，因为要统计的序列越长，相当于统计n个词同时出现的频次，这个概率一般较小。相反n较小，最好是一个单词，在语料库中出现的频次会越大。</p>
-<p><strong>问题5：</strong></p>
-<p>​        对于统计的模型的一个天然的问题是缺乏泛化能力。比方说“我喝了杯水”和“我喝了一杯水”这两个序列的出现概率是不同的，而且很可能是很不相同的，因为单词$P(“一”|w_{i-k:i})$的概率可能很小也可能很大，总之一字之差，甚至意思上也没有变化，然而却可能得到相差很大的出现概率。</p>
-<p><strong>问题6：</strong></p>
-<p>​        对于有些文本，目标词的出现可能只依赖于它前面出现的第i-k个单词，像is,was等等。而对其他单词都没有依赖，这种情况下对它前面出现的连续n个单词建模可能是不如人意的。这种情况，传统模型也束手无策。</p>
-<p>​        总结来说，基于马尔科夫假设的传统模型本质上是基于概率统计的，甚至没有真正意义上的训练过程。这种基于统计的模型具有各种各样的缺点，直到神经网络的引入，部分问题才得到了相应地改善。</p>
+p_{1:m} = CONV^k_{U,b}(w_{1:n})\\
+p_i = g(C(w_{i:i+k-1})·U+b)\\
+m = n-k+1 \quad or \quad n+k-1\\
+--------------\\
+p^1_{1:m_1} = CONV^{k_1}_{U^1,b^1}(w_{1:n})\\
+p^2_{1:m_2} = CONV^{K_2}_{U^2,b^2}(p^1_{1:m_1})\\
+...\\
+p^r_{1:m_r} = CONV^{k_r}_{U^r,b^r}(p^{r-1}_{1:m_{r-1}})</script><p>效果 是$p_{1:m_r}^r$捕捉了一个递增的窗口。</p>
+<p><img src="/2020/06/20/NLP/%E4%BB%8E%E8%AF%8D%E5%B5%8C%E5%85%A5%E5%88%B0CNN/%E4%BB%8E%E8%AF%8D%E5%B5%8C%E5%85%A5%E5%88%B0CNN/层次卷积.PNG" alt="层次卷积"></p>
+<p>这个和CV中多层卷积目的一致，都是为了提取更有效的特征。我们假设窗口为k=2,经过第一层卷积提取出的特征表示的是2个相邻词的词组表示，再经过一层卷积之后，变为了三个相邻词的词组表示。</p>
+<p>当然，也可以直接初始化窗口大小为3使用一层卷积来获得类似的结果，但是从效果来看，多层卷积的效果总是要好过使用单层卷积。</p>
+<h4 id="Stride"><a href="#Stride" class="headerlink" title="Stride"></a>Stride</h4><p>步长是指在窗口滑动的过程中的滑动间隔，不做修改时默认为1，当然也可以为设为2。不过增加步长的效果是会得到一个更小的卷积层输出（行变少了）。</p>
+<h4 id="dilated-convolution"><a href="#dilated-convolution" class="headerlink" title="dilated convolution"></a>dilated convolution</h4><p>是指在层次卷积的基础上，每一层卷积层的步长都设为k-1.这样会使得窗口大小变为一个关于layer的指数增长的值。</p>
+<h4 id="Parameter-Tying"><a href="#Parameter-Tying" class="headerlink" title="Parameter Tying"></a>Parameter Tying</h4><p>指的是每一层卷积层都使用相同的参数集U，b。这样会造成更多的参数共享，并且不需要预先设定卷积层的大小，最终的结果是经过多次卷积之后，一个sequence就会收敛为一个向量表示。</p>
+<h4 id="skip-connection"><a href="#skip-connection" class="headerlink" title="skip-connection"></a>skip-connection</h4><p>指的是对于第i层卷积层，不止使用第i-1层卷积层得到的向量表示，还要使用第i-2层卷积层得到的表示。</p>
+<p>卷积层数是一个<strong>超参数</strong>。</p>
 
       
     </div>
@@ -514,8 +518,8 @@ P_{int}(w_{i+1} = m|w_{i-k:i}) = \lambda_{w_{i-k:i}}\frac{$(w_{i-k:i+1})}{$(w_{i
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/16/Word%20Representation/" rel="next" title="Word Representation">
-                <i class="fa fa-chevron-left"></i> Word Representation
+              <a href="/2020/06/16/%E4%BB%80%E4%B9%88%E6%98%AF%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/" rel="next" title="语言模型">
+                <i class="fa fa-chevron-left"></i> 语言模型
               </a>
             
           </div>
@@ -523,10 +527,6 @@ P_{int}(w_{i+1} = m|w_{i-k:i}) = \lambda_{w_{i-k:i}}\frac{$(w_{i-k:i+1})}{$(w_{i
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/06/16/%E4%BB%80%E4%B9%88%E6%98%AF%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/" rel="prev" title="语言模型">
-                语言模型 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -695,7 +695,7 @@ P_{int}(w_{i+1} = m|w_{i-k:i}) = \lambda_{w_{i-k:i}}\frac{$(w_{i-k:i+1})}{$(w_{i
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Unigram-Bigram和N-gram"><span class="nav-number">1.</span> <span class="nav-text">Unigram, Bigram和N-gram</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Unigram"><span class="nav-number">1.1.</span> <span class="nav-text">Unigram</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bi-gram"><span class="nav-number">1.2.</span> <span class="nav-text">Bi-gram:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#n-gram：假设n-3"><span class="nav-number">1.3.</span> <span class="nav-text">n-gram：假设n &#x3D;3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题"><span class="nav-number">1.4.</span> <span class="nav-text">问题</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么需要CNN？"><span class="nav-number">1.</span> <span class="nav-text">为什么需要CNN？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CNN结构-使用1D卷积"><span class="nav-number">2.</span> <span class="nav-text">CNN结构(使用1D卷积)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#padding"><span class="nav-number">2.1.</span> <span class="nav-text">padding</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pooling"><span class="nav-number">2.2.</span> <span class="nav-text">pooling</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HIERARCHICAL-CONVOLUTIONS"><span class="nav-number">3.</span> <span class="nav-text">HIERARCHICAL CONVOLUTIONS</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Stride"><span class="nav-number">3.1.</span> <span class="nav-text">Stride</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dilated-convolution"><span class="nav-number">3.2.</span> <span class="nav-text">dilated convolution</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Parameter-Tying"><span class="nav-number">3.3.</span> <span class="nav-text">Parameter Tying</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#skip-connection"><span class="nav-number">3.4.</span> <span class="nav-text">skip-connection</span></a></li></ol></li></ol></div>
             
 
           </div>
