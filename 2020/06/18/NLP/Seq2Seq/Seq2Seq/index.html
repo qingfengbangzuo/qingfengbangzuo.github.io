@@ -112,7 +112,7 @@
 
 
 
-  <meta name="keywords" content="ML," />
+  <meta name="keywords" content="NLP," />
 
 
 
@@ -125,17 +125,22 @@
 
 
 
-<meta name="description" content="周志华关于AdaBoost的讲座对理解AdaBoost的前世今生很有帮助。B站上可以搜到相关视屏。 AdaBoost 源于Kearns 和 Valiant的一个提问，强可学习 是否等价于  弱可学习 ？ 在概率近似正确（Probably Approximately correct ,PAC）的框架下，一个概念如果存在一个多项式的学习算法能够学习它，并且正确率很高，那么就称这个概念是强可学习的，若果">
+<meta name="description" content="序列生成模型一个序列生成模型一般要满足这样的假设： 当前值$t_i$的分布依赖于之前$1:t_{i-1}$个词。即$P(t_i|t_{1:i-1})$,在每一步中，得到当前值得分布，即得到$P(t_i&#x3D;k|t_{1:i-1})$的概率值，然后将当前值作为预测下一个值得已知条件。 RNN满足序列生成模型的形式：  当RNN作为transducer时，只需将时间步t时刻的输出连接到时间步t+1时的输入">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Adaboost">
-<meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E7%AE%97%E6%B3%95/Adaboost/AdaBoost/index.html">
+<meta property="og:title" content="Seq2Seq">
+<meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/18/NLP/Seq2Seq/Seq2Seq/index.html">
 <meta property="og:site_name" content="Qingfengbangzuo">
-<meta property="og:description" content="周志华关于AdaBoost的讲座对理解AdaBoost的前世今生很有帮助。B站上可以搜到相关视屏。 AdaBoost 源于Kearns 和 Valiant的一个提问，强可学习 是否等价于  弱可学习 ？ 在概率近似正确（Probably Approximately correct ,PAC）的框架下，一个概念如果存在一个多项式的学习算法能够学习它，并且正确率很高，那么就称这个概念是强可学习的，若果">
-<meta property="article:published_time" content="2020-06-11T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-06-12T10:54:27.471Z">
+<meta property="og:description" content="序列生成模型一个序列生成模型一般要满足这样的假设： 当前值$t_i$的分布依赖于之前$1:t_{i-1}$个词。即$P(t_i|t_{1:i-1})$,在每一步中，得到当前值得分布，即得到$P(t_i&#x3D;k|t_{1:i-1})$的概率值，然后将当前值作为预测下一个值得已知条件。 RNN满足序列生成模型的形式：  当RNN作为transducer时，只需将时间步t时刻的输出连接到时间步t+1时的输入">
+<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/18/NLP/Seq2Seq/Seq2Seq/RNN_seqgenerate.PNG">
+<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/18/NLP/Seq2Seq/Seq2Seq/%E6%9D%A1%E4%BB%B6%E7%94%9F%E6%88%90%E6%A1%86%E6%9E%B6.PNG">
+<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/18/NLP/Seq2Seq/Seq2Seq/encoder-decoder.PNG">
+<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/18/NLP/Seq2Seq/Seq2Seq/encoder-decoder_loss.PNG">
+<meta property="article:published_time" content="2020-06-17T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-06-29T09:30:00.473Z">
 <meta property="article:author" content="qingfengbangzuo">
-<meta property="article:tag" content="ML">
+<meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://qingfengbangzuo.github.io/2020/06/18/NLP/Seq2Seq/Seq2Seq/RNN_seqgenerate.PNG">
 
 
 
@@ -165,13 +170,13 @@
 
 
 
-  <link rel="canonical" href="https://qingfengbangzuo.github.io/2020/06/12/机器学习/集成算法/Adaboost/AdaBoost/"/>
+  <link rel="canonical" href="https://qingfengbangzuo.github.io/2020/06/18/NLP/Seq2Seq/Seq2Seq/"/>
 
 
 
 
 
-  <title>Adaboost | Qingfengbangzuo</title>
+  <title>Seq2Seq | Qingfengbangzuo</title>
   
 
 
@@ -310,7 +315,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://qingfengbangzuo.github.io/2020/06/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E7%AE%97%E6%B3%95/Adaboost/AdaBoost/">
+    <link itemprop="mainEntityOfPage" href="https://qingfengbangzuo.github.io/2020/06/18/NLP/Seq2Seq/Seq2Seq/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="qingfengbangzuo">
@@ -327,7 +332,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Adaboost</h1>
+          <h1 class="post-title" itemprop="name headline">Seq2Seq</h1>
         
 
         <div class="post-meta">
@@ -339,8 +344,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-12T00:00:00+08:00">
-                2020-06-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-18T00:00:00+08:00">
+                2020-06-18
               </time>
             
 
@@ -362,19 +367,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
-                    <span itemprop="name">Machine Learning</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Machine-Learning/%E9%9B%86%E6%88%90%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
-                    <span itemprop="name">集成模型</span>
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
                   </a>
                 </span>
 
@@ -404,7 +398,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.6k
+                  2.1k
                 </span>
               
 
@@ -420,7 +414,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  6
+                  8
                 </span>
               
             </div>
@@ -441,109 +435,62 @@
       
 
       
-        <p>周志华关于AdaBoost的讲座对理解AdaBoost的前世今生很有帮助。B站上可以搜到相关视屏。</p>
-<p>AdaBoost 源于Kearns 和 Valiant的一个提问，强可学习 是否等价于  弱可学习 ？</p>
-<p>在概率近似正确（Probably Approximately correct ,PAC）的框架下，一个概念如果存在一个多项式的学习算法能够学习它，并且正确率很高，那么就称这个概念是强可学习的，若果存在一个多项式的学习算法能够学习它，学习的正确率仅比随机猜测略好，那么就成这个概念是弱可学习的。</p>
-<p>Schapire证明强可学习与弱可学习是等价的，也即是说，在PAC学习的框架下，一个概念是强可学习的充分必要条件是这个概念是弱可学习的。这是一个非常有启发的证明，并且据周志华介绍，当时Schapire不仅给出了理论证明，也指出了具体的实现思路。因为，一般来讲，得到一个弱学习器的代价是相比较小的，由于上面理论的成立，我们可以根据某种方式，将弱学习提升称为强学习器，因为他们是等价的。</p>
-<p>在这个理论成立的前提下，Freund和Schapire于1995年提出AdaBoost.提升树由Friedman于2000年提出。</p>
-<h3 id="常见损失函数"><a href="#常见损失函数" class="headerlink" title="常见损失函数"></a>常见损失函数</h3><p>对于机器学习爱好者，一定要知道这几种损失函数是什么</p>
-<ol>
-<li><p>0-1损失函数</p>
+        <h2 id="序列生成模型"><a href="#序列生成模型" class="headerlink" title="序列生成模型"></a>序列生成模型</h2><p>一个序列生成模型一般要满足这样的假设：</p>
+<p>当前值$t_i$的分布依赖于之前$1:t_{i-1}$个词。即$P(t_i|t_{1:i-1})$,在每一步中，得到当前值得分布，即得到$P(t_i=k|t_{1:i-1})$的概率值，然后将当前值作为预测下一个值得已知条件。</p>
+<p>RNN满足序列生成模型的形式：</p>
+<p><img src="/2020/06/18/NLP/Seq2Seq/Seq2Seq/RNN_seqgenerate.PNG" alt="RNN_seqgenerate"></p>
+<p>当RNN作为transducer时，只需将时间步t时刻的输出连接到时间步t+1时的输入即可。在训练过程中，每轮训练开始都给予一个初始字符$<s>$,遇到结束字符$</s>$时结束。在时间步$t$时，输入有$s_{t-1}$和$y_{t-1}$，$s_{t-1}$是之前$t-1$个词的编码，$y_{t-1}$是上一个时间步的预测值，$P(y_t|s_{t-1},y_{t-1})$近似于使用前$t-1$个词作为条件，等同于假设$P(t_i|t_{1:t-1})$。$y_i$的结果一般为一个词分布，大小为字典长度，采用softmax来转换概率。$s_0$初始化为0，但是decoder模型中，该值被初始化为$s_0 = \delta({VC})$.</p>
+<p>注：当$y_{t-1}$被当做下一时刻的输入时，该值选用$y_{t-1}$分布中概率值最大的那个值。</p>
+<p><strong>teacher-forcing: </strong>是另外一种训练方法，这种训练方法和上述最大的不同在于每个时间步输入$y_{t-1}$不再是模型上一个时间步的预测结果，而是训练序列中上一个时间步对应的值，是标签。这样会导致一个现象，就是对于时间步t，它的输入$y_{t-1}$（真是的标签）在上一个时间步的预测概率很小，但是由于它是真实的标签，因此在下一时间步被作为输入。这种方式导致的后果就是，在测试集中，会出现不可预知的结果。</p>
+<h2 id="Conditioned-generation-framework"><a href="#Conditioned-generation-framework" class="headerlink" title="Conditioned generation framework"></a>Conditioned generation framework</h2><p>在条件生成框架下，下一个token的产生依赖于两个，一个是过去生成的token，另一个是上下文。</p>
 <script type="math/tex; mode=display">
-L(y, f(x)) = \begin{cases} 1, &  {y \neq f(x) } \\ 0, & {y = f(x)} \end{cases}</script></li>
-<li><p>平方损失函数</p>
+\tilde{t}_{j+1} \approx p(t_{j+1} = k|\tilde{t}_{1:j},c)</script><p>用RNN形式表示就是：</p>
 <script type="math/tex; mode=display">
-L(y, f(x)) = (y - f(x))^2</script></li>
-<li><p>对数损失函数</p>
+p(t_{j+1}=k|\tilde{t}_{1:j},c) = f(O(s_{j+1}))\\
+s_{j+1} = R{s_j,[\tilde{t_j};c]}\\
+\tilde{t}_j\approx p(t_i|\tilde{t}_{1:j-1},c)</script><p>这就是条件生成框架：</p>
+<p><img src="/2020/06/18/NLP/Seq2Seq/Seq2Seq/条件生成框架.PNG" alt="条件生成框架"></p>
+<p>关于上下文c的解释如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">What kind of information can be encoded in the context c? Pretty much any data we can put our hands on during training, and that we find useful. For example, if we have a large corpus of news items categorized into different topics, we can treat the topic as a conditioning context. Our language model will then be able to generate texts conditioned on the topic. If we are interested in movie reviews, we can condition the generation on the genre of</span></span><br><span class="line"><span class="string">the movie, the rating of the review, and perhaps the geographic region of the author. We can then control these aspects when generating text. We can also condition on inferred properties, that we automatically extract from the text. For example, we can derive heuristics to tell us if a given sentence is written in first person, if it contains a passive-voice construction, and the level of vocabulary used in it. We can then use these aspects as conditioning context for training, and, later, for text generation.</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+<p>大体意思就是说，上下文C可以是一个类别信息，比方说电影的类别，文本的话题。或者我们抽象出来的内容，比如机器翻译中输入序列的编码。</p>
+<h2 id="Encoder-Decoder"><a href="#Encoder-Decoder" class="headerlink" title="Encoder-Decoder"></a>Encoder-Decoder</h2><p>encode-decoder框架是针对Seq2Seq问题提出来的,Seq2Seq是指在机器翻译、语音识别等领域需要将任意长度的输入序列转换为任意长度的输出序列。</p>
+<p>RNN（LSTM\GRU）的trasnducer模式本身是符合编码解码模式的，它的输入就是一段序列，输出也是一段序列，只不过在该框架下的输入输出是对称的。</p>
+<p>为了解决输入输出不对称的问题，诞生了encode-decoder框架，这个框架依托于上述描述的条件生成框架。观察上述条件生成框架，我们发现该框架本质是一个序列生成模型，而解码器的功能就是产生一个基于输入序列的转换编码。因此，基于此框架作为解码器是合理的，而条件生成框架中存在一个关于上下文的输入，这个东西可以由输入序列的编码来代替。这样逻辑上是自恰的，给定一个输入序列，编码器将其转换为合适的编码，这个编码后信息可能是句子的主题、句子的语态等等（深度学习的不可知论），依据此编码作为上下文（也可以理解为这个编码内部包含了我们需要预测的句子的指示信息或者上下文，它用于指示我们的解码器需要生成的句子需要在什么样的上下文中）可以作为生成句子的条件（约束）。</p>
+<p><img src="/2020/06/18/NLP/Seq2Seq/Seq2Seq/encoder-decoder.PNG" alt="encoder-decoder"></p>
+<p>编码器和解码器被绑定在一起训练，但是标签只作用于解码器，但是梯度可以经过解码器被传播回编码器。</p>
+<p><img src="/2020/06/18/NLP/Seq2Seq/Seq2Seq/encoder-decoder_loss.PNG" alt="encoder-decoder_loss"></p>
+<p>基本的训练框架就是上图表示的这样，编码器为一个RNN网络比如说LSTM或者GRU。</p>
+<p>解码器也为一个RNN网络（LSTM、GRU、BiRNN、CNN）。</p>
+<h2 id="数学解释"><a href="#数学解释" class="headerlink" title="数学解释"></a>数学解释</h2><p>对Seq2Seq建模：</p>
 <script type="math/tex; mode=display">
-L(y, p(y|x)) = - \log p(y|x)</script></li>
-<li><p>绝对值损失函数</p>
+P(Y|X) = P(y_1,y_2,y_3,...y_t|X)</script><p>$X$为输入序列，$Y$为输出序列。问题的表述为给定任意长度的输入序列，预测出一个概率最大的输出序列。</p>
 <script type="math/tex; mode=display">
-L(y, f(x)) = | y -f(x) |</script></li>
-<li><p>Hinge loss</p>
+argmax_Y log(P(Y|X)) = argmax_Ylog(\prod_{i=1}^tP(y_i|y_{i-1},y_{i-2},...,y_1;X))\\
+=argmax_Y\sum_{i=1}^tlog(P(y_i|y_{i-1},y_{i-2},...,y_1;X))</script><p>观察$P(y_i|y_{i-1},y_{i-2},…,y_1;X)$,$X$为原文输入序列，对于encoder-decoder来说，$X$可以被编码器转化为全局编码$C$.</p>
 <script type="math/tex; mode=display">
-L(w,b) = max \{0, 1-yf(x) \}</script><p>当SVM使用线性核的时候，使用该损失函数。 </p>
-</li>
-</ol>
-<h3 id="AdaBoost-M1"><a href="#AdaBoost-M1" class="headerlink" title="AdaBoost M1"></a>AdaBoost M1</h3><hr>
-<ol>
-<li><p>Initializa the observation weights $w_i = 1/N, i =1,2,…,N.$</p>
-</li>
-<li><p>For $m=1$to M:</p>
-<p>(a) Fit a classifier $G_m(x)$ to the training data using weights $w_i$. </p>
-<p>(b) Compute</p>
+C = ENC(X)</script><p>ENC为编码器，假设编码器采用LSTM，那么编码流程：</p>
 <script type="math/tex; mode=display">
-err_m = \frac{\sum_{i=1}^Nw_i\mathbf{I}(y_i\ne G_m(x_i))}{\sum_{i=1}^Nw_i}</script><p>(c) Compute $a_m = log((1-err_m)/err_mm)$.</p>
-<p>(d) Set $w_i &lt;- w_i<em>exp[a_m</em>\mathbf{I}(y_i \ne G_m(x_i))],i= 1,2,…,N$</p>
-</li>
-<li><p>Output $G(x) = sign[\sum_{m=1}^Ma_mG_m(x)]$.</p>
-</li>
-</ol>
-<hr>
-<p>以上就是1997年 Freund 和Schapire提出的AdaBoost M1算法。可以看得出该算法精简巧妙，令人惊叹。</p>
-<p>但是学术界对该算法有多种推导方式，其中被广泛接受的是Friedman于2000年提出的AdaBoost是一种 <strong>”基于加性模型的最小化指数损失函数的前向分布算法”</strong>。</p>
-<p>西瓜书和李航书给出的AdaBoost具体算法为</p>
-<hr>
-<p>输入： 训练数据集$ D = \{(x_1,y_1),(x_2,y_2),…,(x_m,y_m)\}$</p>
-<p>​         基学习算法G；</p>
-<p>​         训练轮数T。</p>
-<p>过程：</p>
-<ol>
-<li><p>$D_1(x) = \frac{1}{m}$</p>
-</li>
-<li><p>for t = 1,2,…T do</p>
-<p>$h_t = G(D,D_t)$</p>
-<p>$\varepsilon_t = P_{x~D_t}(h_t(x)\ne f(x))$</p>
-<p>if $\varepsilon &gt; 0.5$ then break</p>
-<p>$a_t = \frac{1}{2}ln(\frac{1-\varepsilon_t}{\varepsilon})$;</p>
-<p>$D_{t+1}(x) = \frac{D_t(x)}{Z_t}* \begin{cases} exp(-a_t), &amp; if \quad h_t(x) = f(x) \\ exp(a_t), &amp; if \quad  h_t(x)\ne f(x) \end{cases}$</p>
-<p>​                = $\frac{D_t(x)exp(-a_tf(x)h_t(x))}{Z_t}$</p>
-<ol>
-<li>end for</li>
-</ol>
-</li>
-</ol>
-<p>输出:  $H(x) = sign(\sum_{t=1}^Ta_th_t(x))$</p>
-<hr>
-<p>上述两种算法是等价的。</p>
-<p>Boosting的核心理念是先从初始训练集训练出一个基学习器，然后根据基学习器的表现对数据分布进行调整，使得先前的基学习器做错的训练样本在后续收到更多关注，然后基于调整后的样本分布来训练下一个基学习器，如此重复进行，直至基学习器达到预先指定的某个指标，最终将这T个基学习器加权结合。</p>
-<p>AdaBoot的基本思想和上面介绍的差不多。这类方法被称为串行提升，就像流水线一样是一个串一个地不断改进。</p>
-<p>关于AdaBoost，需要解决两个问题，</p>
-<p>第一：如何更新数据的分布，也就是样本的权重？</p>
-<p>第二：如何确定基学习器结合的权重？</p>
-<p>任何一本教材几乎都会给出AdaBoost详细的推导过程，M1版本的算法已经给出了更新公式。这里我想把这些思路理一理，祈求能够得到一条清楚的逻辑。</p>
-<p>根据Friedman的解释，AdaBoost可以理解为一种<strong>以最小化指数损失函数的前向分布的加性模型。</strong>关于加性模型以及前向分布算法，下面的算法步骤大可帮助理解：</p>
-<hr>
-<p><strong>Forward Stagewise Additive Modeling</strong></p>
-<ol>
-<li><p>Initialize   $f_0(x) = 0$</p>
-</li>
-<li><p>For m =1 to M:</p>
-<p>(a) Compute </p>
+\begin{align}
+&s_{t-1} = [c_{t-1};h_{t-1}]\\
+&i_t = \delta(w^{hi}h_{t-1}+w^{x_i}x_{t})\\
+&f_t = \delta(w^{hf}h_{t-1}+w^{xf}x_t)\\
+&o_t = \delta(w^{ho}h_{t-1}+w^{xo}x_t)\\
+&g_t = tanh(w^{hg}h_{t-1}+w^{xg}x_t)\\
+& c_t = f_t \odot c_{t-1}+i_t \odot g_t\\
+&h_t = o_t \odot tanh(c_t)
+\end{align}</script><p>注意上面过程中的两个tanh函数的位置。</p>
+<p>当遍历完整个输入序列后，得到全局编码$h_T$.此时不能将全局编码$H_T$直接扔进解码器，需要做一步转换。</p>
 <script type="math/tex; mode=display">
-(\beta_m,\gamma_m) = argmin_{\beta,\gamma}\sum_{i=1}^NL(y_i,f_{m-1}(x_i)+\beta b(x_i;\gamma))</script><p>(b) Set $f_m(x) = f_{m-1}(x)+\beta b(x_i;\gamma))$</p>
-</li>
-</ol>
-<hr>
-<p>根据上面的模型，我们可以写出AdaBoost的优化目标，也就是最小化损失函数：</p>
+C  = tanh(V·h_T+b_c)</script><p>这里的激活函数是tanh，有几个作用，一个作用是激活，另一个作用是将编码的值映射到x轴的两侧，这样做可以加速梯度下降，还有一个作用就是维度变换，将向量$h_T$变换成我们需要的维度。</p>
+<p>此时得到的$C$可以作为上下文输入解码器了。对于解码过程</p>
 <script type="math/tex; mode=display">
-min_{\{\beta_m,\gamma_m\}} \sum_{i=1}^NL(y_i.\sum_{m=1}^M\beta_m b(x_i;\gamma_m))</script><p>根据前向分布算法，$\sum_{m=1}^M\beta_m b(x_i;\gamma_m) = f_{m-1}(x_i)+\beta_m b(x_i;\gamma_m)$.</p>
-<p>到这里只是形式化的表示出了损失函数，但并没有给出真正使用哪一种损失函数，常见的损失函数已经在上面列出。</p>
-<p>那为什么就一定是指数损失函数呢？</p>
+h_t = R(h_{t-1},y_{t-1},C)\\
+y_t = softmax(O(h_t,y_{t-1},C))</script><p>另外，对于$h_0$的初始化：</p>
 <script type="math/tex; mode=display">
-L(y,f(x)) = exp(-yf(x))</script><p>由于Friedman对算法给出了解释，大概是说假设采用指数损失函数，那么推导出来的权重更新公式正好和AdaBoost M1 差不多。由此可以认为损失函数是指数的。</p>
-<p>下面我们来看一下，在指数损失函数这个假设下，都能得出一些什么有意思的结论。、</p>
-<p>假设损失函数是指数损失，那么原优化目标为</p>
-<script type="math/tex; mode=display">
-min_HL_{exp}(H|D) = \mathbb{E}_{x~D}[e^{-f(x)H(x)}]</script><p>考虑$L（H|D）$对$H(x)$的偏导得：</p>
-<script type="math/tex; mode=display">
-H(x) = \frac{1}{2}ln\frac{P(f(x) = 1|x)}{p(f(x) = -1|x)}</script><p>到这里，我们得到了最优分类器为对数几率的一半。这个函数很眼熟，在逻辑回归也出现过。对它进行变形可能更好理解</p>
-<script type="math/tex; mode=display">
-P(f(x)=1|x) = \frac{1}{1+e^{-2H(x)}}</script><p>这样的函数称为对数几率函数。</p>
-<script type="math/tex; mode=display">
-sign(H(x)) = sign(\frac{1}{2}ln\frac{P(f(x )=1|x}{P(f(x)=-1|x)})\\
-=\begin{cases} 1 &P(f(x)=1|x )\\
--1 &P(f(x)=-1|x)\end{cases}</script><p>也就是说，它分类错误率上，和逻辑回归一样，AdaBoost也能达到贝叶斯最优错误率。</p>
+h_0 = tanh(V^{ch}C+b_h)</script><p>这样就可以将解码过程与序列生成模型连接起来了。</p>
+<p>局限性：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">encoder-decoder模型虽然非常经典，但是局限性也非常大。最大的局限性就在于编码和解码之间的唯一联系就是一个固定长度的语义向量C。也就是说，编码器要将整个序列的信息压缩进一个固定长度的向量中去。但是这样做有两个弊端，一是语义向量无法完全表示整个序列的信息，还有就是先输入的内容携带的信息会被后输入的信息稀释掉，或者说，被覆盖了。输入序列越长，这个现象就越严重。这就使得在解码的时候一开始就没有获得输入序列足够的信息， 那么解码的准确度自然也就要打个折扣了.</span></span><br><span class="line"><span class="string">https://zhuanlan.zhihu.com/p/48648001</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+<h3 id="一个值得思考的问题"><a href="#一个值得思考的问题" class="headerlink" title="一个值得思考的问题"></a>一个值得思考的问题</h3><p>面对不同语言之间的语义不同的问题，模型是如何解决的？模型真的可以自动学到不同语言之间的特性么？直到目前为止，所有基于词向量的模型的特征抽取本质上都是对token统计特征的抽取，这是否是最好的词表示方式？</p>
 
       
     </div>
@@ -567,7 +514,7 @@ sign(H(x)) = sign(\frac{1}{2}ln\frac{P(f(x )=1|x}{P(f(x)=-1|x)})\\
       
         <div class="post-tags">
           
-            <a href="/tags/ML/" rel="tag"><i class="fa fa-tag"></i>ML</a>
+            <a href="/tags/NLP/" rel="tag"><i class="fa fa-tag"></i>NLP</a>
           
         </div>
       
@@ -580,8 +527,8 @@ sign(H(x)) = sign(\frac{1}{2}ln\frac{P(f(x )=1|x}{P(f(x)=-1|x)})\\
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E7%AE%97%E6%B3%95/%E6%A0%91%E7%B1%BB%E7%AE%97%E6%B3%95/xgboost,lightgbm%E5%92%8Ccatboost/" rel="next" title="基于GBDT的算法">
-                <i class="fa fa-chevron-left"></i> 基于GBDT的算法
+              <a href="/2020/06/16/NLP/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/RNN%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84/" rel="next" title="RNN的基本结构">
+                <i class="fa fa-chevron-left"></i> RNN的基本结构
               </a>
             
           </div>
@@ -590,8 +537,8 @@ sign(H(x)) = sign(\frac{1}{2}ln\frac{P(f(x )=1|x}{P(f(x)=-1|x)})\\
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/06/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%81%9A%E7%B1%BB/EM%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/" rel="prev" title="EM算法的理解">
-                EM算法的理解 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/06/20/NLP/Seq2Seq/Attention/" rel="prev" title="Attention Mechanism">
+                Attention Mechanism <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -761,7 +708,7 @@ sign(H(x)) = sign(\frac{1}{2}ln\frac{P(f(x )=1|x}{P(f(x)=-1|x)})\\
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#常见损失函数"><span class="nav-number">1.</span> <span class="nav-text">常见损失函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AdaBoost-M1"><span class="nav-number">2.</span> <span class="nav-text">AdaBoost M1</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#序列生成模型"><span class="nav-number">1.</span> <span class="nav-text">序列生成模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conditioned-generation-framework"><span class="nav-number">2.</span> <span class="nav-text">Conditioned generation framework</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Encoder-Decoder"><span class="nav-number">3.</span> <span class="nav-text">Encoder-Decoder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数学解释"><span class="nav-number">4.</span> <span class="nav-text">数学解释</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一个值得思考的问题"><span class="nav-number">4.1.</span> <span class="nav-text">一个值得思考的问题</span></a></li></ol></li></ol></div>
             
 
           </div>

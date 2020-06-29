@@ -112,7 +112,7 @@
 
 
 
-  <meta name="keywords" content="ML," />
+  <meta name="keywords" content="NLP," />
 
 
 
@@ -125,17 +125,19 @@
 
 
 
-<meta name="description" content="周志华关于AdaBoost的讲座对理解AdaBoost的前世今生很有帮助。B站上可以搜到相关视屏。 AdaBoost 源于Kearns 和 Valiant的一个提问，强可学习 是否等价于  弱可学习 ？ 在概率近似正确（Probably Approximately correct ,PAC）的框架下，一个概念如果存在一个多项式的学习算法能够学习它，并且正确率很高，那么就称这个概念是强可学习的，若果">
+<meta name="description" content="Attention Mechanism思想：人眼观察事物时，有一个聚焦机制，即只注意和目标物相关的部分，而忽略其他和目标物弱相关的部分。这种机制可以被引进Encoder-Decoder框架。 经典的encoder-decoder模型，编码器和解码器中间的耦合靠上下文向量$C$. 前面讨论过仅依靠上下文向量$C$维持的耦合关系是很弱的。Attention机制带的一个重大改变就是，编码-解码器之间的耦">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Adaboost">
-<meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E7%AE%97%E6%B3%95/Adaboost/AdaBoost/index.html">
+<meta property="og:title" content="Attention Mechanism">
+<meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/20/NLP/Seq2Seq/Attention/index.html">
 <meta property="og:site_name" content="Qingfengbangzuo">
-<meta property="og:description" content="周志华关于AdaBoost的讲座对理解AdaBoost的前世今生很有帮助。B站上可以搜到相关视屏。 AdaBoost 源于Kearns 和 Valiant的一个提问，强可学习 是否等价于  弱可学习 ？ 在概率近似正确（Probably Approximately correct ,PAC）的框架下，一个概念如果存在一个多项式的学习算法能够学习它，并且正确率很高，那么就称这个概念是强可学习的，若果">
-<meta property="article:published_time" content="2020-06-11T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-06-12T10:54:27.471Z">
+<meta property="og:description" content="Attention Mechanism思想：人眼观察事物时，有一个聚焦机制，即只注意和目标物相关的部分，而忽略其他和目标物弱相关的部分。这种机制可以被引进Encoder-Decoder框架。 经典的encoder-decoder模型，编码器和解码器中间的耦合靠上下文向量$C$. 前面讨论过仅依靠上下文向量$C$维持的耦合关系是很弱的。Attention机制带的一个重大改变就是，编码-解码器之间的耦">
+<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/06/20/NLP/Seq2Seq/Attention/Attention.PNG">
+<meta property="article:published_time" content="2020-06-19T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-06-29T09:29:27.915Z">
 <meta property="article:author" content="qingfengbangzuo">
-<meta property="article:tag" content="ML">
+<meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://qingfengbangzuo.github.io/2020/06/20/NLP/Seq2Seq/Attention/Attention.PNG">
 
 
 
@@ -165,13 +167,13 @@
 
 
 
-  <link rel="canonical" href="https://qingfengbangzuo.github.io/2020/06/12/机器学习/集成算法/Adaboost/AdaBoost/"/>
+  <link rel="canonical" href="https://qingfengbangzuo.github.io/2020/06/20/NLP/Seq2Seq/Attention/"/>
 
 
 
 
 
-  <title>Adaboost | Qingfengbangzuo</title>
+  <title>Attention Mechanism | Qingfengbangzuo</title>
   
 
 
@@ -310,7 +312,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://qingfengbangzuo.github.io/2020/06/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E7%AE%97%E6%B3%95/Adaboost/AdaBoost/">
+    <link itemprop="mainEntityOfPage" href="https://qingfengbangzuo.github.io/2020/06/20/NLP/Seq2Seq/Attention/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="qingfengbangzuo">
@@ -327,7 +329,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Adaboost</h1>
+          <h1 class="post-title" itemprop="name headline">Attention Mechanism</h1>
         
 
         <div class="post-meta">
@@ -339,8 +341,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-12T00:00:00+08:00">
-                2020-06-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-20T00:00:00+08:00">
+                2020-06-20
               </time>
             
 
@@ -362,19 +364,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
-                    <span itemprop="name">Machine Learning</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Machine-Learning/%E9%9B%86%E6%88%90%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
-                    <span itemprop="name">集成模型</span>
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
                   </a>
                 </span>
 
@@ -404,7 +395,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.6k
+                  1.3k
                 </span>
               
 
@@ -420,7 +411,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  6
+                  5
                 </span>
               
             </div>
@@ -441,109 +432,52 @@
       
 
       
-        <p>周志华关于AdaBoost的讲座对理解AdaBoost的前世今生很有帮助。B站上可以搜到相关视屏。</p>
-<p>AdaBoost 源于Kearns 和 Valiant的一个提问，强可学习 是否等价于  弱可学习 ？</p>
-<p>在概率近似正确（Probably Approximately correct ,PAC）的框架下，一个概念如果存在一个多项式的学习算法能够学习它，并且正确率很高，那么就称这个概念是强可学习的，若果存在一个多项式的学习算法能够学习它，学习的正确率仅比随机猜测略好，那么就成这个概念是弱可学习的。</p>
-<p>Schapire证明强可学习与弱可学习是等价的，也即是说，在PAC学习的框架下，一个概念是强可学习的充分必要条件是这个概念是弱可学习的。这是一个非常有启发的证明，并且据周志华介绍，当时Schapire不仅给出了理论证明，也指出了具体的实现思路。因为，一般来讲，得到一个弱学习器的代价是相比较小的，由于上面理论的成立，我们可以根据某种方式，将弱学习提升称为强学习器，因为他们是等价的。</p>
-<p>在这个理论成立的前提下，Freund和Schapire于1995年提出AdaBoost.提升树由Friedman于2000年提出。</p>
-<h3 id="常见损失函数"><a href="#常见损失函数" class="headerlink" title="常见损失函数"></a>常见损失函数</h3><p>对于机器学习爱好者，一定要知道这几种损失函数是什么</p>
-<ol>
-<li><p>0-1损失函数</p>
+        <h2 id="Attention-Mechanism"><a href="#Attention-Mechanism" class="headerlink" title="Attention Mechanism"></a>Attention Mechanism</h2><p>思想：人眼观察事物时，有一个聚焦机制，即只注意和目标物相关的部分，而忽略其他和目标物弱相关的部分。这种机制可以被引进Encoder-Decoder框架。</p>
+<p>经典的encoder-decoder模型，编码器和解码器中间的耦合靠上下文向量$C$. 前面讨论过仅依靠上下文向量$C$维持的耦合关系是很弱的。Attention机制带的一个重大改变就是，编码-解码器之间的耦合不再使用单向量$C$. 而是使用编码器在每一个时间步产生的上下文$c_{i:n}$. </p>
 <script type="math/tex; mode=display">
-L(y, f(x)) = \begin{cases} 1, &  {y \neq f(x) } \\ 0, & {y = f(x)} \end{cases}</script></li>
-<li><p>平方损失函数</p>
+c_{1:n} = ENC(x_{1:n}) = biRNN(x_{1:n})</script><p>这里的编码器使用的是双向RNN，因为要对时间步t进行编码，因此，考虑时间步t过去和未来是有必要的。</p>
+<p>编码器产生上下文$c_i$的数学过程：</p>
 <script type="math/tex; mode=display">
-L(y, f(x)) = (y - f(x))^2</script></li>
-<li><p>对数损失函数</p>
+s^f_i = R(s^f_{i-1},x_t)\\
+s^b_i = R(s^b_{n-i+1},x_t)\\
+c_i  = O([s^f_i,s^b_i])</script><p>得到输入序列每一个时间步的上下文编码，接下来考虑解码过程，Attention带来的第二个改变是，解码过程中每一个时间步所使用的上下文向量$c_j$不再是固定的，而是依据当前状态和前面得到的$c_{1:n}$构造出来的。构造过程如下：</p>
 <script type="math/tex; mode=display">
-L(y, p(y|x)) = - \log p(y|x)</script></li>
-<li><p>绝对值损失函数</p>
+c_j = attend(c_{1:n},\hat{t}_{1:j})\\</script><p>式中$c_j$表示解码过程的第$j$个时间步所需要使用的上下文信息，这信息由$c_{1;n}$和$\hat{t}_{i:j}$（状态）构造， attend()是构造函数，是一个可训练(可以做梯度)的带参函数。下面是原版的soft attention机制：</p>
 <script type="math/tex; mode=display">
-L(y, f(x)) = | y -f(x) |</script></li>
-<li><p>Hinge loss</p>
+c_j = \sum_{i=1}^n a^{j}_{[i]}·c_i\\</script><p>$c_i$表示的是原序列中关于时间步$i$的上下文，$a^j_{[i]}$是该时间步上下文对应的权重，也就是说，解码过程中使用的上下文是原序列对应上下文的加权和。那么这个权重是如何得到的呢？原版的soft attention机制是经过一个MLP层训练：</p>
 <script type="math/tex; mode=display">
-L(w,b) = max \{0, 1-yf(x) \}</script><p>当SVM使用线性核的时候，使用该损失函数。 </p>
-</li>
-</ol>
-<h3 id="AdaBoost-M1"><a href="#AdaBoost-M1" class="headerlink" title="AdaBoost M1"></a>AdaBoost M1</h3><hr>
-<ol>
-<li><p>Initializa the observation weights $w_i = 1/N, i =1,2,…,N.$</p>
-</li>
-<li><p>For $m=1$to M:</p>
-<p>(a) Fit a classifier $G_m(x)$ to the training data using weights $w_i$. </p>
-<p>(b) Compute</p>
+\bar{\alpha}_j = \bar{\alpha}^j_{[1]}...\bar{\alpha}^j_{[n]} = MLP([s_j;c_1]),...MLP([s_j;c_n])</script><p>式中的$s_j$是指解码过程中，时间步$j$对应的状态，$c_i$仍然是原序列对应的编码后的上下文，经过MLP层训练之后，我们可以得到一组非规范化的向量$\bar{\alpha}_j = \bar{\alpha}^j_{[1]}…\bar{\alpha}^j_{[n]}$, 然后通过softmax可以将其转化为和为1的概率分布。</p>
 <script type="math/tex; mode=display">
-err_m = \frac{\sum_{i=1}^Nw_i\mathbf{I}(y_i\ne G_m(x_i))}{\sum_{i=1}^Nw_i}</script><p>(c) Compute $a_m = log((1-err_m)/err_mm)$.</p>
-<p>(d) Set $w_i &lt;- w_i<em>exp[a_m</em>\mathbf{I}(y_i \ne G_m(x_i))],i= 1,2,…,N$</p>
-</li>
-<li><p>Output $G(x) = sign[\sum_{m=1}^Ma_mG_m(x)]$.</p>
-</li>
-</ol>
-<hr>
-<p>以上就是1997年 Freund 和Schapire提出的AdaBoost M1算法。可以看得出该算法精简巧妙，令人惊叹。</p>
-<p>但是学术界对该算法有多种推导方式，其中被广泛接受的是Friedman于2000年提出的AdaBoost是一种 <strong>”基于加性模型的最小化指数损失函数的前向分布算法”</strong>。</p>
-<p>西瓜书和李航书给出的AdaBoost具体算法为</p>
-<hr>
-<p>输入： 训练数据集$ D = \{(x_1,y_1),(x_2,y_2),…,(x_m,y_m)\}$</p>
-<p>​         基学习算法G；</p>
-<p>​         训练轮数T。</p>
-<p>过程：</p>
-<ol>
-<li><p>$D_1(x) = \frac{1}{m}$</p>
-</li>
-<li><p>for t = 1,2,…T do</p>
-<p>$h_t = G(D,D_t)$</p>
-<p>$\varepsilon_t = P_{x~D_t}(h_t(x)\ne f(x))$</p>
-<p>if $\varepsilon &gt; 0.5$ then break</p>
-<p>$a_t = \frac{1}{2}ln(\frac{1-\varepsilon_t}{\varepsilon})$;</p>
-<p>$D_{t+1}(x) = \frac{D_t(x)}{Z_t}* \begin{cases} exp(-a_t), &amp; if \quad h_t(x) = f(x) \\ exp(a_t), &amp; if \quad  h_t(x)\ne f(x) \end{cases}$</p>
-<p>​                = $\frac{D_t(x)exp(-a_tf(x)h_t(x))}{Z_t}$</p>
-<ol>
-<li>end for</li>
-</ol>
-</li>
-</ol>
-<p>输出:  $H(x) = sign(\sum_{t=1}^Ta_th_t(x))$</p>
-<hr>
-<p>上述两种算法是等价的。</p>
-<p>Boosting的核心理念是先从初始训练集训练出一个基学习器，然后根据基学习器的表现对数据分布进行调整，使得先前的基学习器做错的训练样本在后续收到更多关注，然后基于调整后的样本分布来训练下一个基学习器，如此重复进行，直至基学习器达到预先指定的某个指标，最终将这T个基学习器加权结合。</p>
-<p>AdaBoot的基本思想和上面介绍的差不多。这类方法被称为串行提升，就像流水线一样是一个串一个地不断改进。</p>
-<p>关于AdaBoost，需要解决两个问题，</p>
-<p>第一：如何更新数据的分布，也就是样本的权重？</p>
-<p>第二：如何确定基学习器结合的权重？</p>
-<p>任何一本教材几乎都会给出AdaBoost详细的推导过程，M1版本的算法已经给出了更新公式。这里我想把这些思路理一理，祈求能够得到一条清楚的逻辑。</p>
-<p>根据Friedman的解释，AdaBoost可以理解为一种<strong>以最小化指数损失函数的前向分布的加性模型。</strong>关于加性模型以及前向分布算法，下面的算法步骤大可帮助理解：</p>
-<hr>
-<p><strong>Forward Stagewise Additive Modeling</strong></p>
-<ol>
-<li><p>Initialize   $f_0(x) = 0$</p>
-</li>
-<li><p>For m =1 to M:</p>
-<p>(a) Compute </p>
+a_j = softmax(\bar{\alpha}^j_{[1]}...\bar{\alpha}^j_{[n]})</script><p>如何解释上面获得权重的过程呢？</p>
+<p>对于机器翻译来说，MLP过程可以认为是在当前解码状态$s_i$（捕捉近期生成的词）和每一个原序列对应的编码后的上下文$c_i$之间软对齐（关联度）的计算过程。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">In the context of machine translation, one can think of MLPatt as computing a soft alignment between the current decoder state sj (capturing the recently produced foreign words) and each of the source sentence components ci.</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+<p>完整的Attention机制的计算过程如下：</p>
 <script type="math/tex; mode=display">
-(\beta_m,\gamma_m) = argmin_{\beta,\gamma}\sum_{i=1}^NL(y_i,f_{m-1}(x_i)+\beta b(x_i;\gamma))</script><p>(b) Set $f_m(x) = f_{m-1}(x)+\beta b(x_i;\gamma))$</p>
-</li>
-</ol>
-<hr>
-<p>根据上面的模型，我们可以写出AdaBoost的优化目标，也就是最小化损失函数：</p>
+\begin{align}
+&attend(c_{1:n},\hat{t}_{1:j}) = c_j\\
+&c_j = \sum_{i=1}^n \alpha^j_{[i]}·c_i\\
+&\alpha^j =softmax(\bar{\alpha}^j_{[1]},...,\bar{\alpha^j_{[n]}})\\
+&\bar{\alpha}^j_{[i]} = MLP([s_j;c_i])
+\end{align}</script><p>完整的基于attention的encoder-decoder模型数学表达如下：</p>
 <script type="math/tex; mode=display">
-min_{\{\beta_m,\gamma_m\}} \sum_{i=1}^NL(y_i.\sum_{m=1}^M\beta_m b(x_i;\gamma_m))</script><p>根据前向分布算法，$\sum_{m=1}^M\beta_m b(x_i;\gamma_m) = f_{m-1}(x_i)+\beta_m b(x_i;\gamma_m)$.</p>
-<p>到这里只是形式化的表示出了损失函数，但并没有给出真正使用哪一种损失函数，常见的损失函数已经在上面列出。</p>
-<p>那为什么就一定是指数损失函数呢？</p>
-<script type="math/tex; mode=display">
-L(y,f(x)) = exp(-yf(x))</script><p>由于Friedman对算法给出了解释，大概是说假设采用指数损失函数，那么推导出来的权重更新公式正好和AdaBoost M1 差不多。由此可以认为损失函数是指数的。</p>
-<p>下面我们来看一下，在指数损失函数这个假设下，都能得出一些什么有意思的结论。、</p>
-<p>假设损失函数是指数损失，那么原优化目标为</p>
-<script type="math/tex; mode=display">
-min_HL_{exp}(H|D) = \mathbb{E}_{x~D}[e^{-f(x)H(x)}]</script><p>考虑$L（H|D）$对$H(x)$的偏导得：</p>
-<script type="math/tex; mode=display">
-H(x) = \frac{1}{2}ln\frac{P(f(x) = 1|x)}{p(f(x) = -1|x)}</script><p>到这里，我们得到了最优分类器为对数几率的一半。这个函数很眼熟，在逻辑回归也出现过。对它进行变形可能更好理解</p>
-<script type="math/tex; mode=display">
-P(f(x)=1|x) = \frac{1}{1+e^{-2H(x)}}</script><p>这样的函数称为对数几率函数。</p>
-<script type="math/tex; mode=display">
-sign(H(x)) = sign(\frac{1}{2}ln\frac{P(f(x )=1|x}{P(f(x)=-1|x)})\\
-=\begin{cases} 1 &P(f(x)=1|x )\\
--1 &P(f(x)=-1|x)\end{cases}</script><p>也就是说，它分类错误率上，和逻辑回归一样，AdaBoost也能达到贝叶斯最优错误率。</p>
+\begin{align}
+&p(t_{j+1}= k|\hat{t}_{1:j},x_{1:n}) = f(O_{dec}(s_{j+1})\\
+&s_{j+1} = R_{dec}(s_j,[\hat{t}_j;c^j])\\
+&c^j = \sum_{i=1}^n \alpha^j_{[i]}·c_i\\
+&c_{1:n} = biRNN_{enc}(x_{1:n})\\
+&\alpha^j =softmax(\bar{\alpha}^j_{[1]},...,\hat{\alpha}^j_{[n]})\\
+&\bar{\alpha}^j_{[i]} = MLP([s_j;c_i])\\
+&\hat{t}_j \approx p(t_j|\hat{t}_{1:j-1},x_{1:n})\\
+&f(z) = softmax(MLP^{out}(z))\\
+& MLP([s_j;c_i]) = v· tanh([s_j;c_i]U+b)
+\end{align}</script><p><img src="/2020/06/20/NLP/Seq2Seq/Attention/Attention.PNG" alt="Attention"></p>
+<h2 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h2><p>为什么要使用BiRNN来训练得到一个上下文$c_{1:n}$而不直接使用原文$x_{1:n}$呢？</p>
+<p>其实是可以使用原文来进行attention机制的计算的，但是我们可以从$c_{1:n}$中得到更多 , 受限BiRNN训练得到的$c_i$不仅对应了序列中对应的$x_i$，它还包含了$x_i$ 的上下文。其次，通过使用一个经过训练的表示$c_i$，可以将编码和解码过程绑定在一起（训练），这样可以使得网络去学习那些对解码过程有用的编码方式，而这种信息一般不会直接体现在原文里。</p>
+<p>这里说的有点绕，其实意思很简单，通过将编码和解码参数绑定在一起训练，使得编码得到的上下文$c_{1:n}$对解码过程是有用的，原始的输入向量表达的信息是有限且固定的，通过一层特征提取，可以使得训练效果更好。</p>
+<p>例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">For example, the biRNN encoder may learn to encode the position of xi within the sequence, and the decoder could use this information to access the elements in order, or learn to pay more attention to elements in the beginning of the sequence then to elements at its end.</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+<h2 id="复杂度"><a href="#复杂度" class="headerlink" title="复杂度"></a>复杂度</h2><p>当不采用Attention的时候，训练的复杂度取决于编码的长度和解码的长度，（不考虑softmax的计算）$O(m+n)$。</p>
+<p>当采用Attention的时候，由于针对每一个解码过程都需要训练一个上下文$c_j$，训练的复杂度为$O(m \times n)$。</p>
 
       
     </div>
@@ -567,7 +501,7 @@ sign(H(x)) = sign(\frac{1}{2}ln\frac{P(f(x )=1|x}{P(f(x)=-1|x)})\\
       
         <div class="post-tags">
           
-            <a href="/tags/ML/" rel="tag"><i class="fa fa-tag"></i>ML</a>
+            <a href="/tags/NLP/" rel="tag"><i class="fa fa-tag"></i>NLP</a>
           
         </div>
       
@@ -580,8 +514,8 @@ sign(H(x)) = sign(\frac{1}{2}ln\frac{P(f(x )=1|x}{P(f(x)=-1|x)})\\
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E7%AE%97%E6%B3%95/%E6%A0%91%E7%B1%BB%E7%AE%97%E6%B3%95/xgboost,lightgbm%E5%92%8Ccatboost/" rel="next" title="基于GBDT的算法">
-                <i class="fa fa-chevron-left"></i> 基于GBDT的算法
+              <a href="/2020/06/18/NLP/Seq2Seq/Seq2Seq/" rel="next" title="Seq2Seq">
+                <i class="fa fa-chevron-left"></i> Seq2Seq
               </a>
             
           </div>
@@ -590,8 +524,8 @@ sign(H(x)) = sign(\frac{1}{2}ln\frac{P(f(x )=1|x}{P(f(x)=-1|x)})\\
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/06/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%81%9A%E7%B1%BB/EM%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/" rel="prev" title="EM算法的理解">
-                EM算法的理解 <i class="fa fa-chevron-right"></i>
+              <a href="/2020/06/20/NLP/%E4%BB%8E%E8%AF%8D%E5%B5%8C%E5%85%A5%E5%88%B0CNN/%E4%BB%8E%E8%AF%8D%E5%B5%8C%E5%85%A5%E5%88%B0CNN/" rel="prev" title="从词嵌入到CNN">
+                从词嵌入到CNN <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -761,7 +695,7 @@ sign(H(x)) = sign(\frac{1}{2}ln\frac{P(f(x )=1|x}{P(f(x)=-1|x)})\\
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#常见损失函数"><span class="nav-number">1.</span> <span class="nav-text">常见损失函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AdaBoost-M1"><span class="nav-number">2.</span> <span class="nav-text">AdaBoost M1</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Attention-Mechanism"><span class="nav-number">1.</span> <span class="nav-text">Attention Mechanism</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题："><span class="nav-number">2.</span> <span class="nav-text">问题：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复杂度"><span class="nav-number">3.</span> <span class="nav-text">复杂度</span></a></li></ol></div>
             
 
           </div>
