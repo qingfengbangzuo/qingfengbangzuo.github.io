@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://qingfengbangzuo.github.io/"/>
-  <updated>2020-07-03T02:59:33.090Z</updated>
+  <updated>2020-07-08T04:40:38.571Z</updated>
   <id>https://qingfengbangzuo.github.io/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>GMM</title>
+    <link href="https://qingfengbangzuo.github.io/2020/07/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%81%9A%E7%B1%BB/%E9%AB%98%E6%96%AF%E6%B7%B7%E5%90%88%E6%A8%A1%E5%9E%8B/"/>
+    <id>https://qingfengbangzuo.github.io/2020/07/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%81%9A%E7%B1%BB/%E9%AB%98%E6%96%AF%E6%B7%B7%E5%90%88%E6%A8%A1%E5%9E%8B/</id>
+    <published>2020-07-08T04:39:37.417Z</published>
+    <updated>2020-07-08T04:40:38.571Z</updated>
+    
+    <content type="html"><![CDATA[<p>高斯模型是上帝创造的模型，因为它超强的数据拟合能力。</p><h2 id="高斯混合分布"><a href="#高斯混合分布" class="headerlink" title="高斯混合分布"></a>高斯混合分布</h2><script type="math/tex; mode=display">P(x) = \sum_{i}\pi_iN(x|u_i,\Sigma_i)</script><p>由中心极限定理可以知道，$P(X)$也是一个高斯分布。</p><p>高斯混合模型对上述混合分布增加了一个假设：</p><script type="math/tex; mode=display">\sum_{i=1}\pi_i  =1,\pi \ge0</script><p>从贝叶斯的角度看，假设x是某一事件，$N(x|\mu_i,\Sigma_i)$就是造成该事件的全部个因素。$P(x)$ 那么上式就可以写成：</p><script type="math/tex; mode=display">p(x) = \sum_{i}p(z_i)p(x|z_i) \\</script><p>那么：</p><script type="math/tex; mode=display">p(z_i|x) = \frac{p(x|z_i)p(z_i)}{p(x)} = \frac{p(x|z_i)p(z_i)}{\sum_{i}p(z_i)p(x|z_i) }</script><p>称为变量$z_i$的后验分布，$p(z_i)$是先验分布。</p><h2 id="高斯混合模型（GMM）"><a href="#高斯混合模型（GMM）" class="headerlink" title="高斯混合模型（GMM）"></a>高斯混合模型（GMM）</h2><p>对分类问题而言，任何一个数据集都可以假设为是在空间中根据各自的类别进行高斯采样得到的。即对于任何数据集都可以假设:</p><script type="math/tex; mode=display">p(X|c_k) = N(c_k|u_k,\Sigma_k)</script><p>回顾一下之前的高斯判别模型的基本假设就是这个。对于有监督类的是数据集，标签的存在与否决定了数据本身本身完整。假如我们将数据生成分为两步来看，第一步是选定一个高斯分布$N(c_k|u_k,\Sigma_i)$，第二步是在该分布下进行采样N次，最终可以得到大小为N的样本。如果两步都是可观测的，那么这个数据集就是完整的，标签是第一步的观测信息，样本X是第二步的观测信息。这样的数据集被称为<strong>完备数据集</strong>。针对这样数据集的参数估计问题是较为简便的，因为每个样本的分布是可知的，因此最直接的思路是构造对数似然函数，然后应用MLP进行相应的参数估计。</p><p>那么还有一种情况是数据生成的过程中，第一步是不可观测的，只有第二步可观测，也就是说标签未知，只有样本数据X可知。在这种情况下直接进行估计是困难的，因为我们丢失了第一步的情况，不知道数据的分布情况，这种情况下无法使用MLP。因此，解决该情况下的参数估计情况，需要引入隐变量，即应用假设来弥补第一步的缺失信息。</p><p>高斯混合模型的给出的隐变量假设是这样的，隐变量$z_i,i=1,2,…k$给出k类的先验概率，但却没有给出样本x具体服从哪一个$z_i$对应的高斯分布。离散隐变量$z_i$服从这样一个先验分布：</p><script type="math/tex; mode=display">p(z_i) = \pi_i \\\sum_{i=1} \pi_i = 1</script><p>那么，根据数据生成过程有样本x的分布：</p><script type="math/tex; mode=display">p(x|z_i) = N(\mu_i,\Sigma_i)</script><p>因为，任何一个高斯分布都可能拟合整个函数空间，因此在采样过程中，任何一个$z_i$对应的高斯分布都有可能生成一个数据x, 因此，下面的式子是成立的:</p><script type="math/tex; mode=display">p(x|z_i) = N(\mu_i,\Sigma_i)\\p(x) = \sum_{i}p(z_i)p(x|z_i) = \sum_{i}\pi_iN(\mu_i,\Sigma_i)\\p(z_i|x) = \frac{p(z_i)p(x|z_i)}{p(x)}=\frac{\pi_iN(\mu_i,\Sigma_i)}{\sum_{i}\pi_iN(\mu_i,\Sigma_i)}</script><p>$p(z_i|x)$是由$z_i$对应的高斯分布生成样本x的概率.</p><p>到目前为止，我们似乎具备了计算参数的一切因素，似乎又不是。这里的违和感主要是来自于类别$z_i$的先验分布是我们假设得到的，而不是真实的先验。如果可以从样本中估计得到真实的先验那就太好了。</p><p>方法是有的就是<strong>EM算法</strong>。</p><p>EM算法估计先验分布的大致思想就是，虽然$z_i$的 先验分布无法得到，但是给定样本后的$z_i$后验分布式是可以知道的，那么就利用后验分布不断去逼近先验，并且在这个过程中能够将其他参数一并估计出来。具体的做法如下：</p><p>由于样本的真实标签是未知的，我们只能根据假设去猜，因此构造似然函数需要采取如下形式：</p><script type="math/tex; mode=display">\begin{align}NLL(\theta) &= -log\prod_{n=1}^N p(x_n)\\&=-\sum_{n=1}^Nlog[\sum_{i}\pi_iN(x_n|\mu_i,\Sigma_i)]\\&s.t. \quad \sum_{i}\pi_i = 1 \end{align}</script><p>直接解上述问题是困难的。EM算法并没有摒弃使用MLE来指导NLL函数的优化以获得参数估计值的思路, 相反, <strong>EM算法延续了MLE的思路, 通过不断地构造对数似然函数的下界函数, 并对这个较为容易求解的下界函数进行最优化, 以增大对数似然函数取值的下界, 使得在不断的迭代操作后, 对数似然函数的取值能逼近最大值, 从而完成参数的估计</strong>.</p><p>Jesson Inequality</p><script type="math/tex; mode=display">\phi(E[x]) \le E[\phi(x)]</script><p>x是随机变量，$\phi()$是凸函数，当x时定值时或者$\phi()$是线性时，等号成立。当原函数$\phi(E[x])$不好解决时，可以构造它的上届函数，可能会有比较好的属性。</p><p>对上式构造期望：</p><script type="math/tex; mode=display">\begin{align}LL(\theta) &= \sum_{n=1}^Nlog\sum_{i}p(x_n,z_i)\\& = \sum_{n=1}^Nlog\sum_{i}p(z_i|x_n)\frac{p(x_n,z_i)}{p(z_i|x_n)}\\& \ge \sum_{n=1}^N\sum_{i}p(z_i|x_n)log(\frac{p(x_n,z_i)}{p(z_i|x_n)})\end{align}</script><p>可以发现，构造后的函数性质相对较好，我们可以通过优化构造后的函数来得到原问题的下届，事实上，EM算法就是通过不断地优化下届函数去逼近原问题的解。这里使用$z_i$的后验分布构造了一个期望：</p><script type="math/tex; mode=display">E[\frac{p(x_n,z_i)}{p(z_i|x_n)}] = \sum_{i}p(z_i|x_n)\frac{p(x_n,z_i)}{p(z_i|x_n)}</script><p>因此有</p><script type="math/tex; mode=display">log(E[\frac{p(x_n,z_i)}{p(z_i|x_n)}]) \ge E[log(\frac{p(x_n,z_i)}{p(z_i|x_n)})] = \sum_{i}p(z_i|x_n)log(\frac{p(x_n,z_i)}{p(z_i|x_n)})</script><p>这里取反号是因为log是一个凹函数，因此要取反号。</p><p>这里构造期望时为什么不用先验呢？这其实是EM算法的精髓，表面上看使用$z_i$先验也可以构造出一个期望，但是要知道我们上述的推导过程一直都没有考虑其他参数，把参数$\mu_i,\Sigma_i$作为$\theta$带入上面的结果：</p><script type="math/tex; mode=display">E[log(\frac{p(x_n,z_i)}{p(z_i|x_n)})] = \sum_{i}p(z_i|x_n,\theta_{t-1})log(\frac{p(x_n,z_i|\theta)}{p(z_i|x_n,\theta_{t-1})})</script><p>可以看到EM是利用初始参数信息(上一轮的参数)来优化模型得到下一轮的参数的最优值，要达到这样的效果需要满足一个条件，每一轮迭代都满足$LL(\theta_t)\ge LL(\theta_{t-1})$.这样才能保证模型最终的收敛。</p><p>而如果使用$p(z_i)$构造，可以发现式子中先验分布于参数无关，因此参数迭代无法对先验分布产生更新，因此这个式子是<strong>死的</strong>。</p><script type="math/tex; mode=display">E[log(\frac{p(x_n,z_i)}{p(z_i|x_n)})] = \sum_{i}p(z_i)log(\frac{p(x_n,z_i|\theta)}{p(z_i)})</script><p>到这里为止，只需要证明$LL(\theta_t)\ge LL(\theta_{t-1})$满足，EM算法就算是可以使用了。</p><p>可以发现如果令：</p><script type="math/tex; mode=display">B(\theta_t,\theta_{t-1}) = \sum_{n=1}^N\sum_{i}p(z_i|x_n)log(\frac{p(x_n,z_i)}{p(z_i|x_n)})=\sum_{i}p(z_i|x_n,\theta_{t-1})log(\frac{p(x_n,z_i|\theta)}{p(z_i|x_n,\theta_{t-1})})</script><p>有$LL(\theta) \ge B(\theta,\theta_{t-1}) $,也就是说$B(\theta,\theta_{t-1}) $是$LL(\theta) $的一个下届。证明这个关系需要从EM的算法流程来看：</p><ol><li><p>E步,根据上一轮的迭代参数$\theta_{t-1}$构造$z$后验分布：</p><script type="math/tex; mode=display">p(z_i|x_n,\theta_{t-1})</script><p>并且根据已知信息，包过$z_i$后验分布和其他参数信息，得到关于$\theta$的函数$B(\theta,\theta_{t-1})$</p><script type="math/tex; mode=display">B(\theta_t,\theta_{t-1}) =\sum_{i}p(z_i|x_n,\theta_{t-1})log(\frac{p(x_n,z_i|\theta)}{p(z_i|x_n,\theta_{t-1})})</script></li><li><p>M步，最优化上述函数，得到新一轮的$\theta$值</p><script type="math/tex; mode=display">\theta_t = argmax_{\theta} B(\theta,\theta_{t-1})</script><p>这里为什么是maximun呢？因为$B(\theta,\theta_{t-1})$是一个下届函数，最大化它相当于提升了原$LL(\theta)$的下届，变相的maximu了原问题。</p></li><li><p>判断是否满足$B(\theta_t)\ge B(\theta_{t-1})$,如果不满足，则还使用原来的参数，即本轮次不做参数更新。</p></li></ol><p>我们发现，当令$\theta = \theta_{t-1}$时，有</p><script type="math/tex; mode=display">(\frac{p(x_n,z_i|\theta)}{p(z_i|x_n,\theta_{t-1})}) = \frac{p(z_i|x_n,\theta_{t-1}) p(x_n|\theta_{t-1})}{p(z_i|x_n,\theta_{t-1})} = p(x_n|\theta_{t-1})</script><p>可以发现，此时$x_n$不受$z_i$影响，是一个常数。因此，Jesson不等式等号成立。即$LL(\theta_{t-1}) = B(\theta_{t-1},\theta_{t-1})$</p><script type="math/tex; mode=display">E[log(\frac{p(x_n,z_i)}{p(z_i|x_n)})] = \sum_{i}p(z_i|x_n,\theta_{t-1})log(\frac{p(x_n,z_i|\theta_{t-1})}{p(z_i|x_n,\theta_{t-1})}) = constant</script><p>由于$B(\theta_t,\theta_{t-1})\ge B(\theta_{t-1},\theta_{t-1})=LL(\theta_{t-1})$(更新规则),因此，根据Jesson不等式有</p><script type="math/tex; mode=display">LL(\theta_t) \ge B(\theta_t,\theta_{t-1})\ge B(\theta_{t-1},\theta_{t-1}=LL(\theta_{t-1}))</script><p>至此，EM算法的推导流程就结束了。</p><p>接下来，就可以使用EM算法来解决我们上述构造的数据不完备的问题了。至于高斯混合模型的具体求解流程，可以参考另一篇介绍EM的文章。</p><h2 id="GMM和Kmeans"><a href="#GMM和Kmeans" class="headerlink" title="GMM和Kmeans"></a>GMM和Kmeans</h2><p>kmeans算法又叫硬间隔GMM，说明它和GMM是同源之水。Kmeans和GMM的最大的分歧在于对$z_i$先验分布的假设，GMM假设是$\sum_{i}z_i = 1$而$\sum_{i}z_i = 1,z_i\in\{1,0\}$.即Kmeans要求样本只能由一个类别对应的高斯分布生成。</p><p>所以kmeans是GMM的一个特例。使用GMM的框架可以推出kmeans。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;高斯模型是上帝创造的模型，因为它超强的数据拟合能力。&lt;/p&gt;
+&lt;h2 id=&quot;高斯混合分布&quot;&gt;&lt;a href=&quot;#高斯混合分布&quot; class=&quot;headerlink&quot; title=&quot;高斯混合分布&quot;&gt;&lt;/a&gt;高斯混合分布&lt;/h2&gt;&lt;script type=&quot;math/tex;
+      
+    
+    </summary>
+    
+    
+      <category term="Machine Learning" scheme="https://qingfengbangzuo.github.io/categories/Machine-Learning/"/>
+    
+      <category term="聚类算法" scheme="https://qingfengbangzuo.github.io/categories/Machine-Learning/%E8%81%9A%E7%B1%BB%E7%AE%97%E6%B3%95/"/>
+    
+    
+      <category term="ML" scheme="https://qingfengbangzuo.github.io/tags/ML/"/>
+    
+  </entry>
   
   <entry>
     <title>高斯过程2</title>
@@ -544,37 +573,6 @@ J = \frac{
     
     
       <category term="RL" scheme="https://qingfengbangzuo.github.io/tags/RL/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>决策树</title>
-    <link href="https://qingfengbangzuo.github.io/2020/06/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A0%91%E7%B1%BB%E6%A8%A1%E5%9E%8B/%E5%86%B3%E7%AD%96%E6%A0%91/"/>
-    <id>https://qingfengbangzuo.github.io/2020/06/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A0%91%E7%B1%BB%E6%A8%A1%E5%9E%8B/%E5%86%B3%E7%AD%96%E6%A0%91/</id>
-    <published>2020-06-11T16:00:00.000Z</published>
-    <updated>2020-06-12T10:53:46.127Z</updated>
-    
-    <content type="html"><![CDATA[<p>决策树</p><h3 id="信息熵的定义"><a href="#信息熵的定义" class="headerlink" title="信息熵的定义"></a>信息熵的定义</h3><ul><li><p>下面是一位大神从编码的角度考虑信息熵的定义</p><p>假如有ABCD四种答案，且每一种答案的概率均为四分之一。那么编码这个答案的所需要的位数为2（基于二进制编码，二进制编码会带来诸多好处）。用数学语言描述就是需要</p><script type="math/tex; mode=display">n = log_2N</script><p>N是事件不同情况的取值,这里是四。下面做一个变换，将对数的变量改为概率：</p><script type="math/tex; mode=display">log_2（4）=log_2(\frac{1}{1/4})=-log_2(1/4) = -log_2(p)</script><p>这里进行了泛化，但在逻辑上并不严谨，因为假设是所有情况出现的概率相等。</p><p>信息熵的定义： </p></li></ul><script type="math/tex; mode=display">H(X) = E[-log(P(X))]= - \sum_{a\in D}P(X)log_2(P(X))</script><p>​    将上面问题的答案带入后会发现$H(X)$和$n$是相等的。所以熵又叫做平均编码长度。</p><p>​    将假设推广之后就是信息熵的正式定义了。但上述的推导是不严谨的，仅限于有助于理解。</p><p>​    当答案出现的的概率不相等时，比如</p><script type="math/tex; mode=display">P(A) = 1/4\quad P(B)=1/8\quad P(C)=1/,2\quad P(D)=1/8</script><p>​    那么编码A,B,C,D所需要的位数会变为：2, 3，1, 3</p><p>​    那么平均编码长度为（按照熵的定义） </p><script type="math/tex; mode=display">H(X) = \frac{1}{4}\times 2+\frac{1}{8}\times3+\frac{1}{2}\times1+\frac{1}{8}\times3 = 1.75</script><p>​    这就是压缩编码。换一个角度来考虑，事件的不确定性降低（C出现的概率最大），对应的熵也    会跟着降低。</p><hr><p>YJango视屏中对熵的又一个解释：</p><ul><li><p>当一个事件 有多种情况时，这件事对观察者来讲具体是某种情况的不确定性叫做熵。</p></li><li><p>而能够消除观察这对这件事情不确定性的事物叫做信息。</p><ol><li>调整概率可以减小不确定性。</li><li>能够排除干扰</li><li>确定情况</li></ol></li></ul><p>信息是相对的，不同的信息对与不同的观察者来讲意义不同，如果小红知道会这道题，不管告不告诉小红正确答案，小红对这到题的熵都为0比特。小名不会这到题，那么小名对这道题的熵为2比特。</p><p>由于事件的不确定性是指数性的，而不是线性的（千克），因此不能用简单的除法，而要用对数，</p><p>参照物是2也就是底。如果事件发生的概率相等，也就是服从均匀分布，那么采用</p><script type="math/tex; mode=display">n = log_2N</script><p>就能计算熵，但是如果概率不相等时，怎么办呢，我们平均的思想来计算</p><script type="math/tex; mode=display">H(X) = E[-log(P(X))]= - \sum_{a\in D}P(X)log_2(P(X))</script><h3 id="Gini指数"><a href="#Gini指数" class="headerlink" title="Gini指数"></a>Gini指数</h3><p>基尼指数反应的也是事件的不确定性，只不过它是从抽样概率的角度来解释的：</p><script type="math/tex; mode=display">Gini（D） = \sum_{x=1}\sum_{y\ne x}P(X_i)P(X_y) = 1-\sum_{x=1}^{|Y|}p_x^2</script><p>基尼指数反应了从数据集中随机抽取两个样本，其类别标记不一致的概率。因此，基尼指数越小，则数据集D的纯度越高。</p><h2 id="ID3、C4-5、CART"><a href="#ID3、C4-5、CART" class="headerlink" title="ID3、C4.5、CART"></a>ID3、C4.5、CART</h2><p>ID3使用的是信息增益准则，即：</p><script type="math/tex; mode=display">a_*=argmax_{a\in A}Gain(D,a)\\Gain(D,a) = Ent(D) - \sum_{v=1}^V\frac{|D^v|}{|D|}Ent(D^v)</script><p>$D^v$是属性$a$上的第$v$个分支结果中包含了D中所有在属性$a$上取值为$a^v$的样本。直观上的理解就是未分支时的熵减去以某个属性为根节点分支后的熵。</p><p><strong>信息增益至少说明了两件事，一件是这个过程是个提取属性的过程，提取属性意味着总体事件取值的种类减少，事实也确实如此，每一次分支，我们都是相当于给定某一些属性变量的确定值的前提下计算熵的。所以总熵必定减小，因为引入了有效信息，这就是信息增益。另一件事是每个属性对于整体的熵贡献不同，属性多的熵贡献程度大，这十分符合我们的常识，我们常说的复杂刻画的就是变量取值太多而造成的熵巨大的情况。</strong></p><p><strong>那么使用信息增益来构建决策树的思想就很清晰了，我们本着一个原则“树的深度最小”，然后逐层熵减，直至熵为0未知，也就是系统中不存在不确定性。那么，为了迎合这个前提，我们减熵的过程就需要按照属性对熵的贡献程度来分支啦。</strong></p><p>ID3存在对多取值属性有偏好的问题，因此 C4.5弥补了这种不足。</p><p>C4.5采用增益率来作为分支决策：</p><script type="math/tex; mode=display">Gain_ratio(D,a) = \frac{Gain(D,a)}{IV(a)}\\其中 \quad IV(a) = -\sum_{v=1}^V\frac{|D^v|}{|D|}log_2 \frac{|D^v|}{|D|}</script><p>其中的$IV(a)$是节点自身的熵。</p><p>CART 是基于Gini指数来进行分支决策的一类决策树。它采用下面的准则来生成树</p><script type="math/tex; mode=display">Gini\_index(D,a) = \sum_{v=1}^V\frac{|D^v|}{|D|}Gini(D^v)</script><p>《统计学习原理》从概率角度给出了决策树的另一个解释。</p><p>决策树本质上是基于条件概率模型的算法。结社X为表示特征变量的随机变量，Y为表示类的随机变量，那么这个条件概率分布可以表示为$P(Y|X)$。X取值于给定划分下单元的集合，Y取值于类的集合，各叶子节点上的条件概率往往偏向与某一个类，即属于某一类的概率比较大。决策树分类时将该节点强行分到概率大的那一类去。那从这个角度来看，决策树的目的就是寻找一组有效的条件$(x_1,x_2,…x_n)$，使得$P(Y|(x_1,x_2,…x_n))$最大，那么如果新样本符合条件(x_1,x_2,…x_n），那么根据条件概率，我们就可以预测它的类别。</p><p>如果任由树形算法生长，那么最终会生成一个一个小单元，也就是叶子节点，每个叶子节点依据上述的的条件概率大小来判断样本的分类。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;决策树&lt;/p&gt;
-&lt;h3 id=&quot;信息熵的定义&quot;&gt;&lt;a href=&quot;#信息熵的定义&quot; class=&quot;headerlink&quot; title=&quot;信息熵的定义&quot;&gt;&lt;/a&gt;信息熵的定义&lt;/h3&gt;&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;下面是一位大神从编码的角度考虑信息熵的定义&lt;/p&gt;
-&lt;p&gt;假如有AB
-      
-    
-    </summary>
-    
-    
-      <category term="Machine Learning" scheme="https://qingfengbangzuo.github.io/categories/Machine-Learning/"/>
-    
-      <category term="树类算法" scheme="https://qingfengbangzuo.github.io/categories/Machine-Learning/%E6%A0%91%E7%B1%BB%E7%AE%97%E6%B3%95/"/>
-    
-    
-      <category term="ML" scheme="https://qingfengbangzuo.github.io/tags/ML/"/>
     
   </entry>
   

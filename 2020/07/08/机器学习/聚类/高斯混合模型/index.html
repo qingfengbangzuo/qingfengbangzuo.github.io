@@ -125,14 +125,14 @@
 
 
 
-<meta name="description" content="周志华关于AdaBoost的讲座对理解AdaBoost的前世今生很有帮助。B站上可以搜到相关视屏。 AdaBoost 源于Kearns 和 Valiant的一个提问，强可学习 是否等价于  弱可学习 ？ 在概率近似正确（Probably Approximately correct ,PAC）的框架下，一个概念如果存在一个多项式的学习算法能够学习它，并且正确率很高，那么就称这个概念是强可学习的，若果">
+<meta name="description" content="高斯模型是上帝创造的模型，因为它超强的数据拟合能力。 高斯混合分布 P(x) &#x3D; \sum_{i}\pi_iN(x|u_i,\Sigma_i)由中心极限定理可以知道，$P(X)$也是一个高斯分布。 高斯混合模型对上述混合分布增加了一个假设：  \sum_{i&#x3D;1}\pi_i  &#x3D;1,\pi \ge0从贝叶斯的角度看，假设x是某一事件，$N(x|\mu_i,\Sigma_i)$就是造成该事件的全部个">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Adaboost">
-<meta property="og:url" content="https://qingfengbangzuo.github.io/2020/06/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E7%AE%97%E6%B3%95/Adaboost/AdaBoost/index.html">
+<meta property="og:title" content="GMM">
+<meta property="og:url" content="https://qingfengbangzuo.github.io/2020/07/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%81%9A%E7%B1%BB/%E9%AB%98%E6%96%AF%E6%B7%B7%E5%90%88%E6%A8%A1%E5%9E%8B/index.html">
 <meta property="og:site_name" content="Qingfengbangzuo">
-<meta property="og:description" content="周志华关于AdaBoost的讲座对理解AdaBoost的前世今生很有帮助。B站上可以搜到相关视屏。 AdaBoost 源于Kearns 和 Valiant的一个提问，强可学习 是否等价于  弱可学习 ？ 在概率近似正确（Probably Approximately correct ,PAC）的框架下，一个概念如果存在一个多项式的学习算法能够学习它，并且正确率很高，那么就称这个概念是强可学习的，若果">
-<meta property="article:published_time" content="2020-06-11T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-06-12T10:54:27.471Z">
+<meta property="og:description" content="高斯模型是上帝创造的模型，因为它超强的数据拟合能力。 高斯混合分布 P(x) &#x3D; \sum_{i}\pi_iN(x|u_i,\Sigma_i)由中心极限定理可以知道，$P(X)$也是一个高斯分布。 高斯混合模型对上述混合分布增加了一个假设：  \sum_{i&#x3D;1}\pi_i  &#x3D;1,\pi \ge0从贝叶斯的角度看，假设x是某一事件，$N(x|\mu_i,\Sigma_i)$就是造成该事件的全部个">
+<meta property="article:published_time" content="2020-07-08T04:39:37.417Z">
+<meta property="article:modified_time" content="2020-07-08T04:40:38.571Z">
 <meta property="article:author" content="qingfengbangzuo">
 <meta property="article:tag" content="ML">
 <meta name="twitter:card" content="summary">
@@ -165,13 +165,13 @@
 
 
 
-  <link rel="canonical" href="https://qingfengbangzuo.github.io/2020/06/12/机器学习/集成算法/Adaboost/AdaBoost/"/>
+  <link rel="canonical" href="https://qingfengbangzuo.github.io/2020/07/08/机器学习/聚类/高斯混合模型/"/>
 
 
 
 
 
-  <title>Adaboost | Qingfengbangzuo</title>
+  <title>GMM | Qingfengbangzuo</title>
   
 
 
@@ -310,7 +310,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://qingfengbangzuo.github.io/2020/06/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E7%AE%97%E6%B3%95/Adaboost/AdaBoost/">
+    <link itemprop="mainEntityOfPage" href="https://qingfengbangzuo.github.io/2020/07/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%81%9A%E7%B1%BB/%E9%AB%98%E6%96%AF%E6%B7%B7%E5%90%88%E6%A8%A1%E5%9E%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="qingfengbangzuo">
@@ -327,7 +327,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Adaboost</h1>
+          <h1 class="post-title" itemprop="name headline">GMM</h1>
         
 
         <div class="post-meta">
@@ -339,8 +339,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-12T00:00:00+08:00">
-                2020-06-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-08T12:39:37+08:00">
+                2020-07-08
               </time>
             
 
@@ -373,8 +373,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Machine-Learning/%E9%9B%86%E6%88%90%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
-                    <span itemprop="name">集成模型</span>
+                  <a href="/categories/Machine-Learning/%E8%81%9A%E7%B1%BB%E7%AE%97%E6%B3%95/" itemprop="url" rel="index">
+                    <span itemprop="name">聚类算法</span>
                   </a>
                 </span>
 
@@ -404,7 +404,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1.6k
+                  2.5k
                 </span>
               
 
@@ -420,7 +420,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  6
+                  10
                 </span>
               
             </div>
@@ -441,109 +441,87 @@
       
 
       
-        <p>周志华关于AdaBoost的讲座对理解AdaBoost的前世今生很有帮助。B站上可以搜到相关视屏。</p>
-<p>AdaBoost 源于Kearns 和 Valiant的一个提问，强可学习 是否等价于  弱可学习 ？</p>
-<p>在概率近似正确（Probably Approximately correct ,PAC）的框架下，一个概念如果存在一个多项式的学习算法能够学习它，并且正确率很高，那么就称这个概念是强可学习的，若果存在一个多项式的学习算法能够学习它，学习的正确率仅比随机猜测略好，那么就成这个概念是弱可学习的。</p>
-<p>Schapire证明强可学习与弱可学习是等价的，也即是说，在PAC学习的框架下，一个概念是强可学习的充分必要条件是这个概念是弱可学习的。这是一个非常有启发的证明，并且据周志华介绍，当时Schapire不仅给出了理论证明，也指出了具体的实现思路。因为，一般来讲，得到一个弱学习器的代价是相比较小的，由于上面理论的成立，我们可以根据某种方式，将弱学习提升称为强学习器，因为他们是等价的。</p>
-<p>在这个理论成立的前提下，Freund和Schapire于1995年提出AdaBoost.提升树由Friedman于2000年提出。</p>
-<h3 id="常见损失函数"><a href="#常见损失函数" class="headerlink" title="常见损失函数"></a>常见损失函数</h3><p>对于机器学习爱好者，一定要知道这几种损失函数是什么</p>
+        <p>高斯模型是上帝创造的模型，因为它超强的数据拟合能力。</p>
+<h2 id="高斯混合分布"><a href="#高斯混合分布" class="headerlink" title="高斯混合分布"></a>高斯混合分布</h2><script type="math/tex; mode=display">
+P(x) = \sum_{i}\pi_iN(x|u_i,\Sigma_i)</script><p>由中心极限定理可以知道，$P(X)$也是一个高斯分布。</p>
+<p>高斯混合模型对上述混合分布增加了一个假设：</p>
+<script type="math/tex; mode=display">
+\sum_{i=1}\pi_i  =1,\pi \ge0</script><p>从贝叶斯的角度看，假设x是某一事件，$N(x|\mu_i,\Sigma_i)$就是造成该事件的全部个因素。$P(x)$ 那么上式就可以写成：</p>
+<script type="math/tex; mode=display">
+p(x) = \sum_{i}p(z_i)p(x|z_i) \\</script><p>那么：</p>
+<script type="math/tex; mode=display">
+p(z_i|x) = \frac{p(x|z_i)p(z_i)}{p(x)} = \frac{p(x|z_i)p(z_i)}{\sum_{i}p(z_i)p(x|z_i) }</script><p>称为变量$z_i$的后验分布，$p(z_i)$是先验分布。</p>
+<h2 id="高斯混合模型（GMM）"><a href="#高斯混合模型（GMM）" class="headerlink" title="高斯混合模型（GMM）"></a>高斯混合模型（GMM）</h2><p>对分类问题而言，任何一个数据集都可以假设为是在空间中根据各自的类别进行高斯采样得到的。即对于任何数据集都可以假设:</p>
+<script type="math/tex; mode=display">
+p(X|c_k) = N(c_k|u_k,\Sigma_k)</script><p>回顾一下之前的高斯判别模型的基本假设就是这个。对于有监督类的是数据集，标签的存在与否决定了数据本身本身完整。假如我们将数据生成分为两步来看，第一步是选定一个高斯分布$N(c_k|u_k,\Sigma_i)$，第二步是在该分布下进行采样N次，最终可以得到大小为N的样本。如果两步都是可观测的，那么这个数据集就是完整的，标签是第一步的观测信息，样本X是第二步的观测信息。这样的数据集被称为<strong>完备数据集</strong>。针对这样数据集的参数估计问题是较为简便的，因为每个样本的分布是可知的，因此最直接的思路是构造对数似然函数，然后应用MLP进行相应的参数估计。</p>
+<p>那么还有一种情况是数据生成的过程中，第一步是不可观测的，只有第二步可观测，也就是说标签未知，只有样本数据X可知。在这种情况下直接进行估计是困难的，因为我们丢失了第一步的情况，不知道数据的分布情况，这种情况下无法使用MLP。因此，解决该情况下的参数估计情况，需要引入隐变量，即应用假设来弥补第一步的缺失信息。</p>
+<p>高斯混合模型的给出的隐变量假设是这样的，隐变量$z_i,i=1,2,…k$给出k类的先验概率，但却没有给出样本x具体服从哪一个$z_i$对应的高斯分布。离散隐变量$z_i$服从这样一个先验分布：</p>
+<script type="math/tex; mode=display">
+p(z_i) = \pi_i \\
+\sum_{i=1} \pi_i = 1</script><p>那么，根据数据生成过程有样本x的分布：</p>
+<script type="math/tex; mode=display">
+p(x|z_i) = N(\mu_i,\Sigma_i)</script><p>因为，任何一个高斯分布都可能拟合整个函数空间，因此在采样过程中，任何一个$z_i$对应的高斯分布都有可能生成一个数据x, 因此，下面的式子是成立的:</p>
+<script type="math/tex; mode=display">
+p(x|z_i) = N(\mu_i,\Sigma_i)\\
+p(x) = \sum_{i}p(z_i)p(x|z_i) = \sum_{i}\pi_iN(\mu_i,\Sigma_i)\\
+p(z_i|x) = \frac{p(z_i)p(x|z_i)}{p(x)}=\frac{\pi_iN(\mu_i,\Sigma_i)}{\sum_{i}\pi_iN(\mu_i,\Sigma_i)}</script><p>$p(z_i|x)$是由$z_i$对应的高斯分布生成样本x的概率.</p>
+<p>到目前为止，我们似乎具备了计算参数的一切因素，似乎又不是。这里的违和感主要是来自于类别$z_i$的先验分布是我们假设得到的，而不是真实的先验。如果可以从样本中估计得到真实的先验那就太好了。</p>
+<p>方法是有的就是<strong>EM算法</strong>。</p>
+<p>EM算法估计先验分布的大致思想就是，虽然$z_i$的 先验分布无法得到，但是给定样本后的$z_i$后验分布式是可以知道的，那么就利用后验分布不断去逼近先验，并且在这个过程中能够将其他参数一并估计出来。具体的做法如下：</p>
+<p>由于样本的真实标签是未知的，我们只能根据假设去猜，因此构造似然函数需要采取如下形式：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+NLL(\theta) &= -log\prod_{n=1}^N p(x_n)\\
+
+&=-\sum_{n=1}^Nlog[\sum_{i}\pi_iN(x_n|\mu_i,\Sigma_i)]\\
+&s.t. \quad \sum_{i}\pi_i = 1 
+\end{align}</script><p>直接解上述问题是困难的。EM算法并没有摒弃使用MLE来指导NLL函数的优化以获得参数估计值的思路, 相反, <strong>EM算法延续了MLE的思路, 通过不断地构造对数似然函数的下界函数, 并对这个较为容易求解的下界函数进行最优化, 以增大对数似然函数取值的下界, 使得在不断的迭代操作后, 对数似然函数的取值能逼近最大值, 从而完成参数的估计</strong>.</p>
+<p>Jesson Inequality</p>
+<script type="math/tex; mode=display">
+\phi(E[x]) \le E[\phi(x)]</script><p>x是随机变量，$\phi()$是凸函数，当x时定值时或者$\phi()$是线性时，等号成立。当原函数$\phi(E[x])$不好解决时，可以构造它的上届函数，可能会有比较好的属性。</p>
+<p>对上式构造期望：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+LL(\theta) &= \sum_{n=1}^Nlog\sum_{i}p(x_n,z_i)\\
+& = \sum_{n=1}^Nlog\sum_{i}p(z_i|x_n)\frac{p(x_n,z_i)}{p(z_i|x_n)}\\
+& \ge \sum_{n=1}^N\sum_{i}p(z_i|x_n)log(\frac{p(x_n,z_i)}{p(z_i|x_n)})
+\end{align}</script><p>可以发现，构造后的函数性质相对较好，我们可以通过优化构造后的函数来得到原问题的下届，事实上，EM算法就是通过不断地优化下届函数去逼近原问题的解。这里使用$z_i$的后验分布构造了一个期望：</p>
+<script type="math/tex; mode=display">
+E[\frac{p(x_n,z_i)}{p(z_i|x_n)}] = \sum_{i}p(z_i|x_n)\frac{p(x_n,z_i)}{p(z_i|x_n)}</script><p>因此有</p>
+<script type="math/tex; mode=display">
+log(E[\frac{p(x_n,z_i)}{p(z_i|x_n)}]) \ge E[log(\frac{p(x_n,z_i)}{p(z_i|x_n)})] = \sum_{i}p(z_i|x_n)log(\frac{p(x_n,z_i)}{p(z_i|x_n)})</script><p>这里取反号是因为log是一个凹函数，因此要取反号。</p>
+<p>这里构造期望时为什么不用先验呢？这其实是EM算法的精髓，表面上看使用$z_i$先验也可以构造出一个期望，但是要知道我们上述的推导过程一直都没有考虑其他参数，把参数$\mu_i,\Sigma_i$作为$\theta$带入上面的结果：</p>
+<script type="math/tex; mode=display">
+E[log(\frac{p(x_n,z_i)}{p(z_i|x_n)})] = \sum_{i}p(z_i|x_n,\theta_{t-1})log(\frac{p(x_n,z_i|\theta)}{p(z_i|x_n,\theta_{t-1})})</script><p>可以看到EM是利用初始参数信息(上一轮的参数)来优化模型得到下一轮的参数的最优值，要达到这样的效果需要满足一个条件，每一轮迭代都满足$LL(\theta_t)\ge LL(\theta_{t-1})$.这样才能保证模型最终的收敛。</p>
+<p>而如果使用$p(z_i)$构造，可以发现式子中先验分布于参数无关，因此参数迭代无法对先验分布产生更新，因此这个式子是<strong>死的</strong>。</p>
+<script type="math/tex; mode=display">
+E[log(\frac{p(x_n,z_i)}{p(z_i|x_n)})] = \sum_{i}p(z_i)log(\frac{p(x_n,z_i|\theta)}{p(z_i)})</script><p>到这里为止，只需要证明$LL(\theta_t)\ge LL(\theta_{t-1})$满足，EM算法就算是可以使用了。</p>
+<p>可以发现如果令：</p>
+<script type="math/tex; mode=display">
+B(\theta_t,\theta_{t-1}) = \sum_{n=1}^N\sum_{i}p(z_i|x_n)log(\frac{p(x_n,z_i)}{p(z_i|x_n)})=\sum_{i}p(z_i|x_n,\theta_{t-1})log(\frac{p(x_n,z_i|\theta)}{p(z_i|x_n,\theta_{t-1})})</script><p>有$LL(\theta) \ge B(\theta,\theta_{t-1}) $,也就是说$B(\theta,\theta_{t-1}) $是$LL(\theta) $的一个下届。证明这个关系需要从EM的算法流程来看：</p>
 <ol>
-<li><p>0-1损失函数</p>
+<li><p>E步,根据上一轮的迭代参数$\theta_{t-1}$构造$z$后验分布：</p>
 <script type="math/tex; mode=display">
-L(y, f(x)) = \begin{cases} 1, &  {y \neq f(x) } \\ 0, & {y = f(x)} \end{cases}</script></li>
-<li><p>平方损失函数</p>
+p(z_i|x_n,\theta_{t-1})</script><p>并且根据已知信息，包过$z_i$后验分布和其他参数信息，得到关于$\theta$的函数$B(\theta,\theta_{t-1})$</p>
 <script type="math/tex; mode=display">
-L(y, f(x)) = (y - f(x))^2</script></li>
-<li><p>对数损失函数</p>
+B(\theta_t,\theta_{t-1}) =\sum_{i}p(z_i|x_n,\theta_{t-1})log(\frac{p(x_n,z_i|\theta)}{p(z_i|x_n,\theta_{t-1})})</script></li>
+<li><p>M步，最优化上述函数，得到新一轮的$\theta$值</p>
 <script type="math/tex; mode=display">
-L(y, p(y|x)) = - \log p(y|x)</script></li>
-<li><p>绝对值损失函数</p>
-<script type="math/tex; mode=display">
-L(y, f(x)) = | y -f(x) |</script></li>
-<li><p>Hinge loss</p>
-<script type="math/tex; mode=display">
-L(w,b) = max \{0, 1-yf(x) \}</script><p>当SVM使用线性核的时候，使用该损失函数。 </p>
+\theta_t = argmax_{\theta} B(\theta,\theta_{t-1})</script><p>这里为什么是maximun呢？因为$B(\theta,\theta_{t-1})$是一个下届函数，最大化它相当于提升了原$LL(\theta)$的下届，变相的maximu了原问题。</p>
+</li>
+<li><p>判断是否满足$B(\theta_t)\ge B(\theta_{t-1})$,如果不满足，则还使用原来的参数，即本轮次不做参数更新。</p>
 </li>
 </ol>
-<h3 id="AdaBoost-M1"><a href="#AdaBoost-M1" class="headerlink" title="AdaBoost M1"></a>AdaBoost M1</h3><hr>
-<ol>
-<li><p>Initializa the observation weights $w_i = 1/N, i =1,2,…,N.$</p>
-</li>
-<li><p>For $m=1$to M:</p>
-<p>(a) Fit a classifier $G_m(x)$ to the training data using weights $w_i$. </p>
-<p>(b) Compute</p>
+<p>我们发现，当令$\theta = \theta_{t-1}$时，有</p>
 <script type="math/tex; mode=display">
-err_m = \frac{\sum_{i=1}^Nw_i\mathbf{I}(y_i\ne G_m(x_i))}{\sum_{i=1}^Nw_i}</script><p>(c) Compute $a_m = log((1-err_m)/err_mm)$.</p>
-<p>(d) Set $w_i &lt;- w_i<em>exp[a_m</em>\mathbf{I}(y_i \ne G_m(x_i))],i= 1,2,…,N$</p>
-</li>
-<li><p>Output $G(x) = sign[\sum_{m=1}^Ma_mG_m(x)]$.</p>
-</li>
-</ol>
-<hr>
-<p>以上就是1997年 Freund 和Schapire提出的AdaBoost M1算法。可以看得出该算法精简巧妙，令人惊叹。</p>
-<p>但是学术界对该算法有多种推导方式，其中被广泛接受的是Friedman于2000年提出的AdaBoost是一种 <strong>”基于加性模型的最小化指数损失函数的前向分布算法”</strong>。</p>
-<p>西瓜书和李航书给出的AdaBoost具体算法为</p>
-<hr>
-<p>输入： 训练数据集$ D = \{(x_1,y_1),(x_2,y_2),…,(x_m,y_m)\}$</p>
-<p>​         基学习算法G；</p>
-<p>​         训练轮数T。</p>
-<p>过程：</p>
-<ol>
-<li><p>$D_1(x) = \frac{1}{m}$</p>
-</li>
-<li><p>for t = 1,2,…T do</p>
-<p>$h_t = G(D,D_t)$</p>
-<p>$\varepsilon_t = P_{x~D_t}(h_t(x)\ne f(x))$</p>
-<p>if $\varepsilon &gt; 0.5$ then break</p>
-<p>$a_t = \frac{1}{2}ln(\frac{1-\varepsilon_t}{\varepsilon})$;</p>
-<p>$D_{t+1}(x) = \frac{D_t(x)}{Z_t}* \begin{cases} exp(-a_t), &amp; if \quad h_t(x) = f(x) \\ exp(a_t), &amp; if \quad  h_t(x)\ne f(x) \end{cases}$</p>
-<p>​                = $\frac{D_t(x)exp(-a_tf(x)h_t(x))}{Z_t}$</p>
-<ol>
-<li>end for</li>
-</ol>
-</li>
-</ol>
-<p>输出:  $H(x) = sign(\sum_{t=1}^Ta_th_t(x))$</p>
-<hr>
-<p>上述两种算法是等价的。</p>
-<p>Boosting的核心理念是先从初始训练集训练出一个基学习器，然后根据基学习器的表现对数据分布进行调整，使得先前的基学习器做错的训练样本在后续收到更多关注，然后基于调整后的样本分布来训练下一个基学习器，如此重复进行，直至基学习器达到预先指定的某个指标，最终将这T个基学习器加权结合。</p>
-<p>AdaBoot的基本思想和上面介绍的差不多。这类方法被称为串行提升，就像流水线一样是一个串一个地不断改进。</p>
-<p>关于AdaBoost，需要解决两个问题，</p>
-<p>第一：如何更新数据的分布，也就是样本的权重？</p>
-<p>第二：如何确定基学习器结合的权重？</p>
-<p>任何一本教材几乎都会给出AdaBoost详细的推导过程，M1版本的算法已经给出了更新公式。这里我想把这些思路理一理，祈求能够得到一条清楚的逻辑。</p>
-<p>根据Friedman的解释，AdaBoost可以理解为一种<strong>以最小化指数损失函数的前向分布的加性模型。</strong>关于加性模型以及前向分布算法，下面的算法步骤大可帮助理解：</p>
-<hr>
-<p><strong>Forward Stagewise Additive Modeling</strong></p>
-<ol>
-<li><p>Initialize   $f_0(x) = 0$</p>
-</li>
-<li><p>For m =1 to M:</p>
-<p>(a) Compute </p>
+(\frac{p(x_n,z_i|\theta)}{p(z_i|x_n,\theta_{t-1})}) = \frac{p(z_i|x_n,\theta_{t-1}) p(x_n|\theta_{t-1})}{p(z_i|x_n,\theta_{t-1})} = p(x_n|\theta_{t-1})</script><p>可以发现，此时$x_n$不受$z_i$影响，是一个常数。因此，Jesson不等式等号成立。即$LL(\theta_{t-1}) = B(\theta_{t-1},\theta_{t-1})$</p>
 <script type="math/tex; mode=display">
-(\beta_m,\gamma_m) = argmin_{\beta,\gamma}\sum_{i=1}^NL(y_i,f_{m-1}(x_i)+\beta b(x_i;\gamma))</script><p>(b) Set $f_m(x) = f_{m-1}(x)+\beta b(x_i;\gamma))$</p>
-</li>
-</ol>
-<hr>
-<p>根据上面的模型，我们可以写出AdaBoost的优化目标，也就是最小化损失函数：</p>
+E[log(\frac{p(x_n,z_i)}{p(z_i|x_n)})] = \sum_{i}p(z_i|x_n,\theta_{t-1})log(\frac{p(x_n,z_i|\theta_{t-1})}{p(z_i|x_n,\theta_{t-1})}) = constant</script><p>由于$B(\theta_t,\theta_{t-1})\ge B(\theta_{t-1},\theta_{t-1})=LL(\theta_{t-1})$(更新规则),因此，根据Jesson不等式有</p>
 <script type="math/tex; mode=display">
-min_{\{\beta_m,\gamma_m\}} \sum_{i=1}^NL(y_i.\sum_{m=1}^M\beta_m b(x_i;\gamma_m))</script><p>根据前向分布算法，$\sum_{m=1}^M\beta_m b(x_i;\gamma_m) = f_{m-1}(x_i)+\beta_m b(x_i;\gamma_m)$.</p>
-<p>到这里只是形式化的表示出了损失函数，但并没有给出真正使用哪一种损失函数，常见的损失函数已经在上面列出。</p>
-<p>那为什么就一定是指数损失函数呢？</p>
-<script type="math/tex; mode=display">
-L(y,f(x)) = exp(-yf(x))</script><p>由于Friedman对算法给出了解释，大概是说假设采用指数损失函数，那么推导出来的权重更新公式正好和AdaBoost M1 差不多。由此可以认为损失函数是指数的。</p>
-<p>下面我们来看一下，在指数损失函数这个假设下，都能得出一些什么有意思的结论。、</p>
-<p>假设损失函数是指数损失，那么原优化目标为</p>
-<script type="math/tex; mode=display">
-min_HL_{exp}(H|D) = \mathbb{E}_{x~D}[e^{-f(x)H(x)}]</script><p>考虑$L（H|D）$对$H(x)$的偏导得：</p>
-<script type="math/tex; mode=display">
-H(x) = \frac{1}{2}ln\frac{P(f(x) = 1|x)}{p(f(x) = -1|x)}</script><p>到这里，我们得到了最优分类器为对数几率的一半。这个函数很眼熟，在逻辑回归也出现过。对它进行变形可能更好理解</p>
-<script type="math/tex; mode=display">
-P(f(x)=1|x) = \frac{1}{1+e^{-2H(x)}}</script><p>这样的函数称为对数几率函数。</p>
-<script type="math/tex; mode=display">
-sign(H(x)) = sign(\frac{1}{2}ln\frac{P(f(x )=1|x}{P(f(x)=-1|x)})\\
-=\begin{cases} 1 &P(f(x)=1|x )\\
--1 &P(f(x)=-1|x)\end{cases}</script><p>也就是说，它分类错误率上，和逻辑回归一样，AdaBoost也能达到贝叶斯最优错误率。</p>
+LL(\theta_t) \ge B(\theta_t,\theta_{t-1})\ge B(\theta_{t-1},\theta_{t-1}=LL(\theta_{t-1}))</script><p>至此，EM算法的推导流程就结束了。</p>
+<p>接下来，就可以使用EM算法来解决我们上述构造的数据不完备的问题了。至于高斯混合模型的具体求解流程，可以参考另一篇介绍EM的文章。</p>
+<h2 id="GMM和Kmeans"><a href="#GMM和Kmeans" class="headerlink" title="GMM和Kmeans"></a>GMM和Kmeans</h2><p>kmeans算法又叫硬间隔GMM，说明它和GMM是同源之水。Kmeans和GMM的最大的分歧在于对$z_i$先验分布的假设，GMM假设是$\sum_{i}z_i = 1$而$\sum_{i}z_i = 1,z_i\in\{1,0\}$.即Kmeans要求样本只能由一个类别对应的高斯分布生成。</p>
+<p>所以kmeans是GMM的一个特例。使用GMM的框架可以推出kmeans。</p>
 
       
     </div>
@@ -580,8 +558,8 @@ sign(H(x)) = sign(\frac{1}{2}ln\frac{P(f(x )=1|x}{P(f(x)=-1|x)})\\
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/06/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%9B%86%E6%88%90%E7%AE%97%E6%B3%95/%E6%A0%91%E7%B1%BB%E7%AE%97%E6%B3%95/xgboost,lightgbm%E5%92%8Ccatboost/" rel="next" title="基于GBDT的算法">
-                <i class="fa fa-chevron-left"></i> 基于GBDT的算法
+              <a href="/2020/07/03/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E9%AB%98%E6%96%AF%E8%BF%87%E7%A8%8B/%E9%AB%98%E6%96%AF%E8%BF%87%E7%A8%8B2/" rel="next" title="高斯过程2">
+                <i class="fa fa-chevron-left"></i> 高斯过程2
               </a>
             
           </div>
@@ -589,10 +567,6 @@ sign(H(x)) = sign(\frac{1}{2}ln\frac{P(f(x )=1|x}{P(f(x)=-1|x)})\\
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/06/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%81%9A%E7%B1%BB/EM%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/" rel="prev" title="EM算法的理解">
-                EM算法的理解 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -761,7 +735,7 @@ sign(H(x)) = sign(\frac{1}{2}ln\frac{P(f(x )=1|x}{P(f(x)=-1|x)})\\
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#常见损失函数"><span class="nav-number">1.</span> <span class="nav-text">常见损失函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AdaBoost-M1"><span class="nav-number">2.</span> <span class="nav-text">AdaBoost M1</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#高斯混合分布"><span class="nav-number">1.</span> <span class="nav-text">高斯混合分布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#高斯混合模型（GMM）"><span class="nav-number">2.</span> <span class="nav-text">高斯混合模型（GMM）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GMM和Kmeans"><span class="nav-number">3.</span> <span class="nav-text">GMM和Kmeans</span></a></li></ol></div>
             
 
           </div>
