@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ML," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Qingfengbangzuo" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="关于异常点检测的几种常用算法：  OCSVM的主要思想是利用超平面对数据进行划分，约束是距离原点越远越好。（这里不是很明白为什么离原点越远可以将数据分的越开）  \min_{w,b} \frac{1}{2}||w||^2+\frac{1}{vn}\sum_{i&#x3D;1}^n\xi_i-b\\ s.t. (w^T\phi(x_i))&gt;b-\xi_i,i&#x3D;1,2,...\\ \xi_i&gt;0具体可以参考这篇">
+<meta property="og:type" content="article">
+<meta property="og:title" content="异常值检测">
+<meta property="og:url" content="https://qingfengbangzuo.github.io/2020/07/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%85%B6%E4%BB%96/%E5%BC%82%E5%B8%B8%E5%80%BC%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95/%E5%BC%82%E5%B8%B8%E5%80%BC%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="Qingfengbangzuo">
+<meta property="og:description" content="关于异常点检测的几种常用算法：  OCSVM的主要思想是利用超平面对数据进行划分，约束是距离原点越远越好。（这里不是很明白为什么离原点越远可以将数据分的越开）  \min_{w,b} \frac{1}{2}||w||^2+\frac{1}{vn}\sum_{i&#x3D;1}^n\xi_i-b\\ s.t. (w^T\phi(x_i))&gt;b-\xi_i,i&#x3D;1,2,...\\ \xi_i&gt;0具体可以参考这篇">
+<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/07/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%85%B6%E4%BB%96/%E5%BC%82%E5%B8%B8%E5%80%BC%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95/%E5%BC%82%E5%B8%B8%E5%80%BC%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95/%E4%B8%8D%E5%90%8C%E7%AE%97%E6%B3%95%E4%B9%8B%E9%97%B4%E7%9A%84%E6%AF%94%E8%BE%83.PNG">
+<meta property="og:image" content="https://qingfengbangzuo.github.io/2020/07/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%85%B6%E4%BB%96/%E5%BC%82%E5%B8%B8%E5%80%BC%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95/%E5%BC%82%E5%B8%B8%E5%80%BC%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95/IF%E6%80%9D%E6%83%B3.PNG">
+<meta property="article:published_time" content="2020-07-21T03:25:26.676Z">
+<meta property="article:modified_time" content="2020-07-21T06:03:37.953Z">
+<meta property="article:author" content="qingfengbangzuo">
+<meta property="article:tag" content="ML">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://qingfengbangzuo.github.io/2020/07/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%85%B6%E4%BB%96/%E5%BC%82%E5%B8%B8%E5%80%BC%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95/%E5%BC%82%E5%B8%B8%E5%80%BC%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95/%E4%B8%8D%E5%90%8C%E7%AE%97%E6%B3%95%E4%B9%8B%E9%97%B4%E7%9A%84%E6%AF%94%E8%BE%83.PNG">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":20,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://qingfengbangzuo.github.io/2020/07/21/机器学习/其他/异常值检测算法/异常值检测算法/"/>
+
+
+
+
+
+  <title>异常值检测 | Qingfengbangzuo</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    
+    <a href="https://your-url" target="_blank" rel="noopener" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+    
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Qingfengbangzuo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">私人博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://qingfengbangzuo.github.io/2020/07/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%85%B6%E4%BB%96/%E5%BC%82%E5%B8%B8%E5%80%BC%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95/%E5%BC%82%E5%B8%B8%E5%80%BC%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="qingfengbangzuo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Qingfengbangzuo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">异常值检测</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-21T11:25:26+08:00">
+                2020-07-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Machine Learning</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/%E5%BC%82%E5%B8%B8%E5%80%BC%E6%A3%80%E6%B5%8B/" itemprop="url" rel="index">
+                    <span itemprop="name">异常值检测</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.9k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  6
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>关于异常点检测的几种常用算法：</p>
+<p><img src="/2020/07/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%85%B6%E4%BB%96/%E5%BC%82%E5%B8%B8%E5%80%BC%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95/%E5%BC%82%E5%B8%B8%E5%80%BC%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95/不同算法之间的比较.PNG" alt="不同算法之间的比较"></p>
+<p>OCSVM的主要思想是利用超平面对数据进行划分，约束是距离原点越远越好。（这里不是很明白为什么离原点越远可以将数据分的越开）</p>
+<script type="math/tex; mode=display">
+\min_{w,b} \frac{1}{2}||w||^2+\frac{1}{vn}\sum_{i=1}^n\xi_i-b\\
+s.t. (w^T\phi(x_i))>b-\xi_i,i=1,2,...\\
+\xi_i>0</script><p>具体可以参考这篇博客：</p>
+<p><a href="https://zhuanlan.zhihu.com/p/32784067" target="_blank" rel="noopener">Schölkopf的OCSVM</a> </p>
+<p>上述的one-class svm的实现是Schölkopf的OCSVM，下面介绍另一种one-class svm。</p>
+<h2 id="SVDD（Support-Vector-Data-Description-by-Tax-and-Duin）"><a href="#SVDD（Support-Vector-Data-Description-by-Tax-and-Duin）" class="headerlink" title="SVDD（Support Vector Data Description by Tax and Duin）"></a>SVDD（Support Vector Data Description by Tax and Duin）</h2><p>背景：</p>
+<p>​    SVDD属于一类SVM，常见的两类SVM要求给出数据集的正负标签，这样的模式在数据集正负类别相对均衡的条件下表现较好。（倘若将正负样本视为在进行一场拔河比赛，分界面就是中心的红绳，正负样本的数量决定的了胜利的天平的走向，越少越向自己靠近）而当正负样本比例失调后，这样的模式不再使用，因为占多数的类别样本会将平面压向另一侧，最终造成所预测的结果偏向多类样本。</p>
+<p>​    这是一种类别不平衡问题，解决这个问题的一种方法是使用单类SVM.</p>
+<p>SVDD主要思想：</p>
+<p>​    SVDD是一种常见的一类SVM，它的主要思想是构造一个<strong>超球面</strong>尽可能将所有训练数据包含在内，但同时要求这个超球面的体积尽可能小，同样引入带惩罚项的松弛变量，这样就可以通过控制罚项C来控制球的半径了，至于半径由支持向量的线性组合确定。这样球内的样本被视为正例，而球外的数据被视为负类。</p>
+<p>倘若 将异常值视为负类，将剩余样本视为正类，我们就可以将问题转换为一类SVM分类问题。</p>
+<script type="math/tex; mode=display">
+\min_{R,\alpha} R^2 + C\sum_{i=1}^n\xi_i\\
+s.t. \quad ||x_i-\alpha||^2 \le R^2+\xi_i,i=1,2,...\\
+\xi_i>0,i=1,2,...</script><p>按照经典的SVM算求解之后，得到R和$\alpha$可以通过判断新样本点是否在球内来决定其是否是异常点：</p>
+<script type="math/tex; mode=display">
+||z-x||^2 = \sum_{i=1}^n\alpha_i\exp(\frac{1||z-x_i||^2}{\delta^2} )\ge -R^2/2+C_R</script><p>这里引入了高斯核函数作为距离度量。直接使用点到球心的距离$||x-\alpha||$也可以。</p>
+<h2 id="Isolation-Forest"><a href="#Isolation-Forest" class="headerlink" title="Isolation Forest"></a>Isolation Forest</h2><p>IF算法的思想十分简单，它利用了这样一个思想：</p>
+<p><img src="/2020/07/21/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E5%85%B6%E4%BB%96/%E5%BC%82%E5%B8%B8%E5%80%BC%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95/%E5%BC%82%E5%B8%B8%E5%80%BC%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95/IF思想.PNG" alt="IF思想"></p>
+<p>对于一个离群点，需要较少的切分次数就可以将其切分出来，这个切分规则是随机的。图中，点A被切分出来的次数就要远小于点B被切分出来的次数。</p>
+<p>IF是利用二叉树对数据进行切分，并且利用这一个假设：异常点即与大部分点相隔较远的点且在数据集中占很少的一部分。IF的流程如下，首先是对数据集进行采样，由于是过滤异常值，因此并不需要对全部数据集进行采样，而是只需部分采样就可以将异常点检测出来了。然后是建立itree(IF中的子树都被称为itree，因为彼此之间的建立过程是独立的)的过程，先随机选择一个特征作为预分裂特征，其次在该特征上随机选择分裂点进行分裂。直到树深度达到指定阈值，或者叶子节点只剩一个数据点。可以观察到这个过程是完全随机的。最后独立地建立指定数目的itree，并计算每个数据点在任意itree上的高度（根节点的高度为0）取平均，利用公式判断是否为异常点。</p>
+<p>计算样本深度的方式与传统二叉树 有些许不同：</p>
+<script type="math/tex; mode=display">
+h(x) = e+C(T.size)</script><p>$C(T.size)$作为一个修正项，表示和样本x同落在一个叶子节点的样本数目。这个修正项的计算方式由如下式子给出：</p>
+<script type="math/tex; mode=display">
+C(n) = 2H(n-1)-\frac{2(n-1)}{n}</script><p>其中$H(n-1)$可用$ln(n-1)+0.5772156649$（欧拉常数）估计。</p>
+<p>这里添加一个修正项的理由是，假如没有同样本x落在同一片叶子的其他样本点，那么根据假设可以判断该样本极有可能是个异常点。不过，当同样本x落在同一片叶子中的样本点较多时（这里是截止条件导致的），可以预见该点大概率不是一个异常点，由此可见，同一片叶子中的样本点多少对于判断样本点x是有影响的。</p>
+<script type="math/tex; mode=display">
+Score (x) = 2^{-\frac{E[h(x)]}{c(\phi)}}</script><p>上式中$h(x)$表示样本点x在多颗itree的路径长度的均值，$\phi$表示单棵itree的训练样本的样本数，$C(\phi)$表示用$\phi$条数据构建的二叉树的平均轮径长度，它在这里主要用来做归一化。</p>
+<p>从异常分值的公式看，如果数据 x 在多棵 iTree 中的平均路径长度越短，得分越接近 1，表明数据 x 越异常；如果数据 x 在多棵 iTree 中的平均路径长度越长，得分越接近 0，表示数据 x 越正常；如果数据 x 在多棵 iTree 中的平均路径长度接近整体均值，则打分会在 0.5 附近。</p>
+<p>可以事先规定一个阈值，将大于该阈值的点视为异常点。</p>
+<h2 id="Local-Outlier-Factor"><a href="#Local-Outlier-Factor" class="headerlink" title="Local Outlier Factor"></a>Local Outlier Factor</h2><p>这是一种基于knn的异常检测手段，思想也十分简单。</p>
+<p>给定一个样本的k个nearest neighbors，根据该样本点到其k个邻居的距离计算它本身的密度分数，如果该样本点越稀疏，那么它极有可能是离群点，如果该点密度比较稠密，说明它坐落在群点之间，大概率不是一个离群点。</p>
+<p>这样也是通过比较density score来判断某样本点是否是离群点。</p>
+<p>这个算法有几个参数需要指定，一个是k-neighbors的大小，另一个是距离度量。高维空间对欧式距离比较敏感，因此可以考虑其他的距离度量比方说l1，或者马氏距离。</p>
+<p>下面比较一下各算法的优势和劣势：</p>
+<ol>
+<li>SVDD使用了核函数，因此面对大规模数据集，可能并不合适。因此one-class svm适用于小型数据分析，用起来也比较顺手。</li>
+<li>IF是比较流行的异常检测算法，它的优点非常突出，具有线性时间复杂度。通常来讲每个树不必适用全部数据集，且易于并行化。树越多算法越稳定。但是IF的缺点是对高维稀疏数据敏感，由于树深度的限制，很多特征都用不到，这样会降低算法的可靠性。此时推荐先降维再使用IF，或者考虑使用one-class svm。</li>
+<li>个人认为LOF算法相对于其他两种算法是最好用的，因为其原理简单，复杂度低，但是缺点是由于是基于Knn且涉及到距离计算，虽然本身已经采用的了ball树或者kd树优化但是对大规模数据可能要打个折扣。</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+    
+    <div>
+      
+        
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ML/" rel="tag"><i class="fa fa-tag"></i>ML</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/07/08/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%81%9A%E7%B1%BB/%E9%AB%98%E6%96%AF%E6%B7%B7%E5%90%88%E6%A8%A1%E5%9E%8B/" rel="next" title="GMM">
+                <i class="fa fa-chevron-left"></i> GMM
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/08/18/%E6%9D%82%E8%B0%88/%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9%E6%8B%96%E5%BB%B6%E7%97%87/" rel="prev" title="如何应对拖延症">
+                如何应对拖延症 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">qingfengbangzuo</p>
+              <p class="site-description motion-element" itemprop="description">世界上只有一种英雄主义，那就是看清生活的真相之后依然热爱生活。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7Carchive">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/qingfengbangzuo" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="cqupt_lixz@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-globe"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                推荐阅读
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://ife.baidu.com/" title="百度前端技术学院" target="_blank">百度前端技术学院</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SVDD（Support-Vector-Data-Description-by-Tax-and-Duin）"><span class="nav-number">1.</span> <span class="nav-text">SVDD（Support Vector Data Description by Tax and Duin）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Isolation-Forest"><span class="nav-number">2.</span> <span class="nav-text">Isolation Forest</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Local-Outlier-Factor"><span class="nav-number">3.</span> <span class="nav-text">Local Outlier Factor</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">qingfengbangzuo</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">59.4k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  
+  
+
+
+
+  
+  
+
+
+
+  
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/three/three.min.js"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="https://github.com/jjandxa/canvas_sphere"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="https://github.com/zproo/canvas-ribbon"></script>
+  
+
+  
+  
+    <script id="ribbon" type="text/javascript" size="300" alpha="0.6"  zIndex="-1" src="https://github.com/ethantw/Han"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+
+  
+  <script src="/live2d-widget/autoload.js"></script>
+  
+</body>
+</html>
